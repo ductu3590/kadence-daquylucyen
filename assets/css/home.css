@@ -1,0 +1,883 @@
+/*
+ * Trang chủ — bố cục "Cổng kiến thức".
+ *
+ * Chỉ nạp ở trang chủ. Giữ riêng khỏi main.css để các trang khác không phải
+ * tải CSS mà chúng không dùng.
+ *
+ * Dùng biến --global-palette* của Kadence, không viết mã màu trực tiếp.
+ */
+
+/*
+ * .dql-container và .dql-section đã chuyển sang main.css — chúng được dùng ở
+ * cả trang chủ lẫn trang từ điển, nên không còn thuộc về riêng file này.
+ */
+
+.dql-home {
+	display: block;
+}
+
+/* ---------------------------------------------------------------------------
+ * Dải nền xen kẽ
+ *
+ * Đây là thứ chữa cảm giác "rời rạc". Khi mọi khối cùng nền trắng, chúng trôi
+ * liền một mạch và mắt không nhận ra ranh giới giữa các phần. Nền đổi qua lại
+ * làm ranh giới hiện ra mà không cần vẽ thêm đường kẻ nào.
+ *
+ *   hero      xám nhạt
+ *   featured  trắng
+ *   pillars   xám nhạt
+ *   menh      XANH ĐẬM  ← điểm nhấn
+ *   latest    trắng
+ * ------------------------------------------------------------------------- */
+
+.dql-hero,
+.dql-pillars,
+.dql-newsletter {
+	background: var(--global-palette8);
+}
+
+.dql-featured,
+.dql-latest {
+	background: var(--global-palette9);
+}
+
+/* ---------------------------------------------------------------------------
+ * Nhãn khối
+ *
+ * Dòng chữ ngắn dẫn vào mỗi khối. Không có nó, người đọc gặp một lưới ảnh mà
+ * không biết mình đang xem gì.
+ * ------------------------------------------------------------------------- */
+
+.dql-eyebrow {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--global-palette1);
+	margin: 0 0 1.25rem;
+}
+
+.dql-eyebrow::after {
+	content: "";
+	flex: 1;
+	height: 1px;
+	background: var(--global-palette7);
+}
+
+/* ---------------------------------------------------------------------------
+ * Hiệu ứng hiện dần khi cuộn
+ *
+ * Chỉ ẩn khi JavaScript đã chạy và gắn class lên thẻ html. JS hỏng thì mọi thứ
+ * hiện bình thường — không bao giờ có chuyện trang trắng xóa vì hiệu ứng lỗi.
+ * ------------------------------------------------------------------------- */
+
+.dql-reveal-ready [data-reveal] {
+	opacity: 0;
+	transform: translateY(18px);
+	transition: opacity 0.55s ease, transform 0.55s ease;
+	will-change: opacity, transform;
+}
+
+.dql-reveal-ready [data-reveal].is-hien {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dql-reveal-ready [data-reveal] {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * Khối bài nổi bật
+ * ------------------------------------------------------------------------- */
+
+/*
+ * Lưới: cột trái rộng hơn, cột phải chia đôi theo chiều dọc.
+ *
+ * grid-template-rows: 1fr 1fr ở cột phải chỉ hoạt động đúng khi thẻ tự lấp đầy
+ * ô được chia. Với thẻ kiểu chữ-dưới-ảnh, thẻ chỉ cao bằng nội dung nên hai thẻ
+ * bị đẩy ra hai đầu, để lại khoảng trắng lớn ở giữa — lỗi đã gặp thật. Thẻ kiểu
+ * chữ-đè-lên-ảnh luôn cao 100% nên không còn chuyện đó.
+ */
+.dql-featured__grid {
+	display: grid;
+	grid-template-columns: 1.5fr 1fr;
+	gap: 1.25rem;
+}
+
+.dql-featured__phu {
+	display: grid;
+	grid-template-rows: 1fr 1fr;
+	gap: 1.25rem;
+	min-height: 0;
+}
+
+/* --- Thẻ: ảnh nền, chữ đè lên --- */
+
+.dql-feat {
+	position: relative;
+	overflow: hidden;
+	border-radius: 14px;
+	background: var(--global-palette3);
+	min-height: 0;
+}
+
+.dql-feat__link {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+}
+
+.dql-feat__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.6s ease;
+}
+
+.dql-feat:hover .dql-feat__img {
+	transform: scale(1.05);
+}
+
+/* Lớp phủ chuyển dần từ đáy lên. Không có nó, chữ trắng đặt lên ảnh sáng sẽ
+   không đọc được — và ảnh đá quý thường chụp trên nền trắng. */
+.dql-feat__phu {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		to top,
+		rgba(10, 24, 46, 0.92) 0%,
+		rgba(10, 24, 46, 0.72) 28%,
+		rgba(10, 24, 46, 0.18) 62%,
+		rgba(10, 24, 46, 0) 100%
+	);
+	transition: opacity 0.3s ease;
+}
+
+.dql-feat:hover .dql-feat__phu {
+	opacity: 0.88;
+}
+
+.dql-feat__body {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: block;
+	padding: 1.25rem 1.4rem 1.35rem;
+}
+
+/* Nhãn chuyên mục có gạch chân ngắn — mượn ý từ trang mẫu, nó giúp nhãn không
+   bị chìm vào ảnh phía sau. */
+.dql-feat__cat {
+	display: inline-block;
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: #fff;
+	padding-bottom: 0.3rem;
+	margin-bottom: 0.55rem;
+	border-bottom: 2px solid var(--global-palette1);
+}
+
+.dql-feat__title {
+	display: block;
+	color: #fff;
+	font-family: var(--global-heading-font-family, inherit);
+	font-weight: 600;
+	margin: 0 0 0.4rem;
+	text-wrap: pretty;
+}
+
+.dql-feat__meta {
+	display: block;
+	font-size: 0.82rem;
+	color: rgba(255, 255, 255, 0.72);
+}
+
+/* --- Thẻ lớn --- */
+
+.dql-feat--lon {
+	aspect-ratio: 4 / 3.1;
+}
+
+.dql-feat--lon .dql-feat__title {
+	font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+	line-height: 1.28;
+}
+
+.dql-feat--lon .dql-feat__body {
+	padding: 1.6rem 1.75rem 1.7rem;
+	max-width: 34rem;
+}
+
+/* --- Hai thẻ nhỏ --- */
+
+.dql-feat--nho .dql-feat__title {
+	font-size: 1.05rem;
+	line-height: 1.38;
+}
+
+@media (max-width: 900px) {
+	.dql-featured__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.dql-featured__phu {
+		grid-template-rows: none;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.dql-feat--lon {
+		aspect-ratio: 16 / 10;
+	}
+
+	.dql-feat--nho {
+		aspect-ratio: 4 / 3;
+	}
+}
+
+@media (max-width: 560px) {
+	.dql-featured__phu {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * Câu định vị và ô tìm kiếm
+ * ------------------------------------------------------------------------- */
+
+/* Khối câu định vị và khối ba trụ dính liền nhau thành một mảng mở đầu, nên
+   khoảng đệm giữa chúng được cắt bớt. Bản đầu để cả hai cùng padding lớn, tạo
+   ra một dải trống hơn 120px giữa ô tìm kiếm và hàng thẻ — nhìn như trang bị
+   thiếu nội dung. */
+.dql-hero {
+	background: var(--global-palette8);
+	text-align: center;
+	padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+.dql-pillars {
+	padding-top: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.dql-hero__title {
+	font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+	line-height: 1.25;
+	color: var(--global-palette3);
+	margin: 0 0 0.6em;
+	text-wrap: balance;
+}
+
+.dql-hero__sub {
+	font-size: clamp(1rem, 2vw, 1.125rem);
+	line-height: 1.7;
+	color: var(--global-palette5);
+	max-width: 34em;
+	margin: 0 auto 2em;
+}
+
+.dql-search {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	max-width: 32rem;
+	margin: 0 auto;
+	background: var(--global-palette9);
+	border: 1px solid var(--global-palette7);
+	border-radius: 999px;
+	padding: 0.35rem 0.35rem 0.35rem 1rem;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Viền sáng lên khi con trỏ đang ở trong ô. :focus-within bắt được cả trường hợp
+   người dùng đang gõ, chứ không chỉ lúc di chuột qua. */
+.dql-search:focus-within {
+	border-color: var(--global-palette1);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--global-palette1) 15%, transparent);
+}
+
+.dql-search__icon {
+	width: 20px;
+	height: 20px;
+	flex: none;
+	color: var(--global-palette6);
+}
+
+.dql-search__field {
+	flex: 1;
+	min-width: 0;
+	border: 0;
+	background: none;
+	padding: 0.5rem 0;
+	font-size: 1rem;
+	color: var(--global-palette3);
+}
+
+/* Ô tìm kiếm đã có viền sáng ở cấp bao ngoài, nên bỏ viền focus riêng của input
+   để tránh hai vòng viền lồng nhau. */
+.dql-search__field:focus {
+	outline: none;
+}
+
+.dql-search__field::placeholder {
+	color: var(--global-palette6);
+}
+
+.dql-search__submit {
+	flex: none;
+	border: 0;
+	border-radius: 999px;
+	background: var(--global-palette1);
+	color: var(--global-palette9);
+	font-size: 0.95rem;
+	font-weight: 500;
+	padding: 0.6rem 1.4rem;
+	cursor: pointer;
+	transition: background-color 0.18s ease;
+}
+
+.dql-search__submit:hover {
+	background: var(--global-palette2);
+}
+
+/* ---------------------------------------------------------------------------
+ * Ba trụ nội dung
+ * ------------------------------------------------------------------------- */
+
+.dql-pillars__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+	gap: 1.25rem;
+}
+
+.dql-pillar {
+	display: block;
+	background: var(--global-palette9);
+	border: 1px solid var(--global-palette7);
+	border-radius: 14px;
+	overflow: hidden;
+	text-decoration: none;
+	transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dql-pillar:hover {
+	border-color: var(--global-palette1);
+	transform: translateY(-3px);
+	box-shadow: 0 12px 28px -18px rgba(15, 46, 95, 0.55);
+}
+
+/* --- Ảnh của thẻ --- */
+
+.dql-pillar__media {
+	position: relative;
+	display: block;
+	aspect-ratio: 16 / 10;
+	background: var(--global-palette7);
+	overflow: hidden;
+}
+
+.dql-pillar__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.4s ease;
+}
+
+.dql-pillar:hover .dql-pillar__media img {
+	transform: scale(1.04);
+}
+
+/* Lớp phủ tối nhẹ ở góc dưới trái để biểu tượng luôn đọc được, bất kể ảnh
+   phía sau sáng hay tối. */
+.dql-pillar__media::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(15, 46, 95, 0.35), transparent 55%);
+}
+
+.dql-pillar__icon-wrap {
+	position: absolute;
+	left: 0.85rem;
+	bottom: 0.85rem;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	border-radius: 50%;
+	background: var(--global-palette9);
+}
+
+.dql-pillar__icon {
+	width: 22px;
+	height: 22px;
+	color: var(--global-palette1);
+}
+
+/* --- Phần chữ --- */
+
+.dql-pillar__body {
+	display: block;
+	padding: 1.1rem 1.25rem 1.3rem;
+}
+
+.dql-pillar__name {
+	font-size: 1.15rem;
+	line-height: 1.35;
+	color: var(--global-palette3);
+	margin: 0 0 0.35rem;
+}
+
+.dql-pillar__desc {
+	display: block;
+	font-size: 0.92rem;
+	line-height: 1.6;
+	color: var(--global-palette5);
+	margin-bottom: 0.5rem;
+}
+
+.dql-pillar__count {
+	display: block;
+	font-size: 0.85rem;
+	color: var(--global-palette6);
+}
+
+/* ---------------------------------------------------------------------------
+ * Ô tra đá hợp mệnh
+ * ------------------------------------------------------------------------- */
+
+/*
+ * Dải xanh đậm — điểm nhấn của trang chủ.
+ *
+ * Đây là khối duy nhất đảo ngược tông màu. Nó có hai việc: cắt nhịp trang để
+ * người đọc không bị trôi qua một dải trắng dài, và làm nổi công cụ có giá trị
+ * nhất của site.
+ *
+ * Công cụ bên trong do plugin dql-core in ra và tự lấy màu từ các biến
+ * --dql-menh-*. Ta chỉ cần đặt lại các biến đó trong phạm vi dải này, không
+ * phải ghi đè từng bộ chọn của plugin.
+ */
+.dql-menh {
+	background: var(--global-palette2);
+	color: var(--global-palette9);
+}
+
+.dql-menh .dql-menh-tool {
+	--dql-menh-nhan: var(--global-palette9);
+	--dql-menh-dam: var(--global-palette2);
+	--dql-menh-chu: rgba(255, 255, 255, 0.88);
+	--dql-menh-nhat: rgba(255, 255, 255, 0.6);
+	--dql-menh-vien: rgba(255, 255, 255, 0.22);
+	--dql-menh-nen: rgba(255, 255, 255, 0.08);
+
+	/* Ô nhập: nền mờ, chữ trắng. Phải đặt cả hai cùng chỗ — đặt mỗi màu chữ
+	   thành trắng rồi để nền cho theme cha quyết là cách năm sinh gõ xong biến
+	   thành chữ trắng trên nền trắng. Nền mờ cũng để nút "Xem kết quả" màu
+	   trắng đặc nổi lên như hành động chính, thay vì lẫn vào ô nhập. */
+	--dql-menh-o-nen: rgba(255, 255, 255, 0.08);
+	--dql-menh-o-chu: var(--global-palette9);
+}
+
+/* Nút bấm trên nền tối: nền trắng, chữ xanh đậm — đảo ngược so với bản sáng. */
+.dql-menh .dql-menh-form__submit {
+	background: var(--global-palette9);
+	color: var(--global-palette2);
+}
+
+.dql-menh .dql-menh-form__submit:hover {
+	background: rgba(255, 255, 255, 0.85);
+}
+
+.dql-menh .dql-menh-form__input::placeholder {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.dql-menh .dql-menh-ketqua__menh,
+.dql-menh .dql-menh-ketqua__ten,
+.dql-menh .dql-menh-ghichu strong {
+	color: var(--global-palette9);
+}
+
+.dql-menh .dql-menh-da a,
+.dql-menh .dql-menh-bai {
+	color: var(--global-palette9);
+}
+
+.dql-menh .dql-menh-da a:hover {
+	border-color: var(--global-palette9);
+	color: var(--global-palette9);
+}
+
+.dql-menh__box {
+	border-radius: 14px;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 2rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.dql-menh__text {
+	flex: 1 1 20rem;
+}
+
+.dql-menh__title {
+	font-size: clamp(1.4rem, 3vw, 2rem);
+	line-height: 1.25;
+	color: var(--global-palette9);
+	margin: 0 0 0.6rem;
+}
+
+.dql-menh__desc {
+	font-size: 1rem;
+	line-height: 1.7;
+	color: rgba(255, 255, 255, 0.75);
+	margin: 0;
+	max-width: 34em;
+}
+
+.dql-menh__form {
+	flex: 1 1 16rem;
+}
+
+/*
+ * Sau khi tra xong.
+ *
+ * Bố cục hai cột chỉ đúng khi hai bên nặng ngang nhau — tức là lúc bên phải
+ * mới chỉ có ô nhập năm. Có kết quả rồi thì bên phải dài gấp mấy lần lời mời
+ * bên trái, và align-items: center thả câu hỏi lơ lửng giữa một khoảng trống
+ * cao bằng nửa màn hình.
+ *
+ * Nên khi có kết quả, khối chuyển thành một cột: lời mời thu lại thành một
+ * dòng tiêu đề (phần mô tả đã hết việc — người dùng vừa dùng công cụ xong),
+ * còn công cụ lấy trọn chiều ngang để lưới kết quả trải ra theo hàng.
+ */
+.dql-menh__box:has(.dql-menh-ketqua) {
+	display: block;
+}
+
+.dql-menh__box:has(.dql-menh-ketqua) .dql-menh__text {
+	margin-bottom: 1.25rem;
+}
+
+.dql-menh__box:has(.dql-menh-ketqua) .dql-menh__title {
+	font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+	margin-bottom: 0;
+}
+
+.dql-menh__box:has(.dql-menh-ketqua) .dql-menh__desc {
+	display: none;
+}
+
+/* Trạng thái chờ plugin — chỉ quản trị viên thấy. Kẻ viền đứt để phân biệt rõ
+   với thành phần thật, tránh nhầm là giao diện đã xong. */
+.dql-menh--placeholder .dql-menh__box {
+	border: 1px dashed rgba(255, 255, 255, 0.4);
+	padding: 1.5rem;
+}
+
+.dql-menh__notice {
+	font-size: 0.9rem;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.7);
+	margin: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Bài mới nhất
+ * ------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+ * Khối đăng ký email
+ * ------------------------------------------------------------------------- */
+
+.dql-newsletter__box {
+	background: var(--global-palette9);
+	border: 1px solid var(--global-palette7);
+	border-radius: 14px;
+	padding: clamp(1.5rem, 4vw, 2.5rem);
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 1.5rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.dql-newsletter__text {
+	flex: 1 1 22rem;
+}
+
+.dql-newsletter__title {
+	font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+	line-height: 1.3;
+	color: var(--global-palette3);
+	margin: 0 0 0.5rem;
+}
+
+.dql-newsletter__desc {
+	font-size: 0.98rem;
+	line-height: 1.7;
+	color: var(--global-palette5);
+	margin: 0;
+	max-width: 34em;
+}
+
+.dql-newsletter__form {
+	flex: 1 1 18rem;
+}
+
+/* Form do plugin sinh ra, nên chỉ chỉnh những gì cần để nó vừa khung. */
+.dql-newsletter__form input[type="email"],
+.dql-newsletter__form input[type="text"] {
+	width: 100%;
+}
+
+.dql-newsletter--placeholder .dql-newsletter__box {
+	border-style: dashed;
+	border-color: var(--global-palette6);
+}
+
+.dql-newsletter__notice {
+	margin: 0;
+	font-size: 0.9rem;
+	line-height: 1.6;
+	color: var(--global-palette6);
+}
+
+/* ---------------------------------------------------------------------------
+ * Bài mới nhất
+ * ------------------------------------------------------------------------- */
+
+.dql-latest__head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.dql-latest__title {
+	font-size: clamp(1.25rem, 3vw, 1.6rem);
+	color: var(--global-palette3);
+	margin: 0;
+}
+
+.dql-latest__all {
+	flex: none;
+	font-size: 0.95rem;
+	color: var(--global-palette1);
+	text-decoration: none;
+}
+
+.dql-latest__all:hover {
+	text-decoration: underline;
+}
+
+/* Hai cột: danh sách bài bên trái, cột bên bên phải.
+   Cột bên trống thì class --co-cot không được thêm và khối tự về một cột. */
+.dql-latest__bo-cuc {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 2.5rem;
+}
+
+.dql-latest--co-cot .dql-latest__bo-cuc {
+	grid-template-columns: minmax(0, 1fr) 300px;
+	gap: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+@media (max-width: 900px) {
+	.dql-latest--co-cot .dql-latest__bo-cuc {
+		grid-template-columns: 1fr;
+	}
+}
+
+/*
+ * Kiểu dáng bên trong cột bên nằm ở sidebar.css, dùng chung với cột bên trang
+ * bài viết và trang chuyên mục.
+ *
+ * Trước đây ở đây có .dql-latest__cot-dinh { position: sticky } cho CẢ cột. Nó
+ * chưa bao giờ chạy: Kadence đặt #wrapper { overflow: clip } để chặn tràn ngang,
+ * và một tổ tiên có overflow khác visible là đủ để sticky im lặng không làm gì.
+ * Cách xử lý mới nằm ở mục 1 của sidebar.css.
+ */
+.dql-latest__cot {
+	min-width: 0;
+}
+
+/* --- Danh sách bài dạng ngang --- */
+
+.dql-latest__ds {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-tin {
+	margin: 0;
+	border-bottom: 1px solid var(--global-palette7);
+}
+
+.dql-tin:last-child {
+	border-bottom: 0;
+}
+
+.dql-tin__link {
+	display: grid;
+	grid-template-columns: 11rem 1fr;
+	gap: 1.25rem;
+	align-items: start;
+	padding: 1.25rem 0;
+	text-decoration: none;
+	border: 0;
+}
+
+.dql-tin__anh {
+	display: block;
+	aspect-ratio: 4 / 3;
+	overflow: hidden;
+	border-radius: 10px;
+	background: var(--global-palette7);
+}
+
+.dql-tin__anh img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.4s ease;
+}
+
+.dql-tin__link:hover .dql-tin__anh img {
+	transform: scale(1.05);
+}
+
+.dql-tin__cat {
+	display: inline-block;
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--global-palette1);
+	padding-bottom: 0.25rem;
+	margin-bottom: 0.45rem;
+	border-bottom: 2px solid var(--global-palette1);
+}
+
+.dql-tin__ten {
+	display: block;
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.15rem;
+	font-weight: 600;
+	line-height: 1.38;
+	color: var(--global-palette3);
+	margin-bottom: 0.4rem;
+	transition: color 0.18s ease;
+	text-wrap: pretty;
+}
+
+.dql-tin__link:hover .dql-tin__ten {
+	color: var(--global-palette1);
+}
+
+.dql-tin__trich {
+	display: block;
+	font-size: 0.94rem;
+	line-height: 1.7;
+	color: var(--global-palette5);
+	margin-bottom: 0.4rem;
+}
+
+.dql-tin__meta {
+	display: block;
+	font-size: 0.83rem;
+	color: var(--global-palette6);
+}
+
+@media (max-width: 560px) {
+	.dql-tin__link {
+		grid-template-columns: 6.5rem 1fr;
+		gap: 0.9rem;
+	}
+
+	.dql-tin__trich {
+		display: none;
+	}
+}
+
+.dql-card__link {
+	display: block;
+	text-decoration: none;
+	height: 100%;
+}
+
+.dql-card__media {
+	position: relative;
+	aspect-ratio: 3 / 2;
+	overflow: hidden;
+	border-radius: 10px;
+	background: var(--global-palette7);
+	margin-bottom: 0.9rem;
+}
+
+.dql-card__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.3s ease;
+}
+
+.dql-card__link:hover .dql-card__media img {
+	transform: scale(1.03);
+}
+
+.dql-card__placeholder {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: var(--global-palette7);
+}
+
+.dql-card__cat {
+	display: block;
+	font-size: 0.78rem;
+	font-weight: 500;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--global-palette1);
+	margin-bottom: 0.4rem;
+}
+
+.dql-card__title {
+	font-size: 1.05rem;
+	line-height: 1.45;
+	color: var(--global-palette3);
+	margin: 0 0 0.5rem;
+	transition: color 0.18s ease;
+}
+
+.dql-card__link:hover .dql-card__title {
+	color: var(--global-palette1);
+}
+
+.dql-card__meta {
+	font-size: 0.85rem;
+	color: var(--global-palette6);
+}

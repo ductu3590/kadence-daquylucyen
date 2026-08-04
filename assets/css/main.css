@@ -1,0 +1,480 @@
+/*
+ * Đá Quý Lục Yên — CSS ngoài trang.
+ *
+ * Quy ước:
+ *   - Luôn dùng biến --global-palette* của Kadence, không viết mã màu trực tiếp.
+ *     Nhờ vậy đổi màu trong Customizer là cả trang đổi theo.
+ *   - Không dùng !important. File này đã được nạp sau Kadence nên không cần.
+ *   - Đặt tên class bắt đầu bằng .dql- để không đụng tên với Kadence.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. Biến riêng của site
+ * ------------------------------------------------------------------------- */
+
+:root {
+	--dql-radius: 10px;
+	--dql-radius-sm: 6px;
+	--dql-border: 1px solid var(--global-palette7);
+	--dql-transition: 0.18s ease;
+}
+
+/* ---------------------------------------------------------------------------
+ * 1b. Khung dựng dùng chung
+ *
+ * Dùng ở trang chủ và trang từ điển — những template tự dựng bố cục thay vì
+ * đi qua khung nội dung của Kadence.
+ * ------------------------------------------------------------------------- */
+
+.dql-container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding-inline: 1.25rem;
+}
+
+.dql-container--narrow {
+	max-width: 780px;
+}
+
+.dql-section {
+	padding-block: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+/* ---------------------------------------------------------------------------
+ * 1c. Thanh điều hướng
+ *
+ * Đo được: 8 mục ở cấp một cần 1064px trong khi chỉ có 786px — menu tràn xuống
+ * hai dòng và mục cuối bị dropdown che. Đã bớt hai mục sang menu chân trang và
+ * rút gọn nhãn; phần dưới đây thu thêm cỡ chữ và khoảng đệm cho chắc.
+ * ------------------------------------------------------------------------- */
+
+.header-navigation .header-menu-container > ul > li > a {
+	font-size: 0.95rem;
+}
+
+.header-navigation .header-menu-container > ul > li {
+	margin-inline: 0.15rem;
+}
+
+/* --- Menu con ---------------------------------------------------------------
+ *
+ * Mặc định của Kadence là hộp nền xanh đậm, góc vuông, sát mép chữ — nặng nề và
+ * lạc tông với phần còn lại của site vốn sáng và nhiều khoảng thở. Đổi sang hộp
+ * trắng có viền mảnh và bóng đổ nhẹ, giống hệ thẻ dùng khắp nơi.
+ */
+
+.header-navigation .header-menu-container ul ul.sub-menu {
+	background: var(--global-palette9);
+	border: 1px solid var(--global-palette7);
+	border-radius: 12px;
+	box-shadow: 0 18px 40px -24px rgba(15, 46, 95, 0.5);
+	padding: 0.4rem;
+	min-width: 15rem;
+}
+
+.header-navigation .header-menu-container ul ul.sub-menu li a {
+	border: 0;
+	border-radius: 8px;
+	padding: 0.55rem 0.8rem;
+	font-size: 0.92rem;
+	color: var(--global-palette4);
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.header-navigation .header-menu-container ul ul.sub-menu li a:hover,
+.header-navigation .header-menu-container ul ul.sub-menu li a:focus-visible {
+	background: var(--global-palette8);
+	color: var(--global-palette1);
+}
+
+/* Mục đang xem trong menu con. */
+.header-navigation .header-menu-container ul ul.sub-menu li.current-menu-item > a {
+	color: var(--global-palette1);
+	font-weight: 500;
+}
+
+/* ---------------------------------------------------------------------------
+ * 1d. Footer
+ *
+ * Hai tầng: tầng nội dung nền xanh đậm, tầng bản quyền đậm hơn một bậc. Đây là
+ * cấu trúc footer tiêu chuẩn của báo và tạp chí — tầng dưới tách bạch phần pháp
+ * lý khỏi phần điều hướng.
+ * ------------------------------------------------------------------------- */
+
+.dql-footer__main {
+	background: var(--global-palette2);
+	color: rgba(255, 255, 255, 0.78);
+	padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+.dql-footer__grid {
+	display: grid;
+	grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+	gap: 2rem clamp(1.5rem, 3vw, 3rem);
+}
+
+.dql-footer__logo {
+	display: inline-block;
+	margin-bottom: 0.9rem;
+	max-width: 230px;
+}
+
+.dql-footer__logo img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.dql-footer__ten {
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #fff;
+	margin: 0 0 0.6rem;
+}
+
+.dql-footer__mota {
+	font-size: 0.92rem;
+	line-height: 1.7;
+	color: rgba(255, 255, 255, 0.7);
+	margin: 0 0 1rem;
+	max-width: 26em;
+}
+
+.dql-footer__tieude {
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.55);
+	margin: 0 0 0.9rem;
+}
+
+.dql-footer__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-footer__list li {
+	margin-bottom: 0.55rem;
+}
+
+.dql-footer__list a {
+	color: rgba(255, 255, 255, 0.82);
+	text-decoration: none;
+	font-size: 0.95rem;
+	border-bottom: 1px solid transparent;
+	transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.dql-footer__list a:hover {
+	color: #fff;
+	border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+
+.dql-footer__nut {
+	display: inline-block;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 999px;
+	padding: 0.5rem 1.2rem;
+	font-size: 0.9rem;
+	color: #fff;
+	text-decoration: none;
+	transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.dql-footer__nut:hover {
+	background: rgba(255, 255, 255, 0.12);
+	border-color: rgba(255, 255, 255, 0.6);
+}
+
+.dql-footer__day {
+	background: var(--global-palette3);
+	padding-block: 1rem;
+}
+
+.dql-footer__banquyen {
+	margin: 0;
+	font-size: 0.85rem;
+	color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 900px) {
+	.dql-footer__grid {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (max-width: 540px) {
+	.dql-footer__grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * 1e. Vùng quảng cáo
+ *
+ * Chỉ in ra khi vùng widget có nội dung, nên không bao giờ để lại khoảng trống.
+ * Nhãn "Quảng cáo" là bắt buộc về mặt minh bạch: người đọc có quyền biết đâu là
+ * nội dung, đâu là quảng cáo.
+ * ------------------------------------------------------------------------- */
+
+.dql-ad {
+	padding-block: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.dql-ad::before {
+	content: "Quảng cáo";
+	display: block;
+	font-size: 0.68rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--global-palette6);
+	text-align: center;
+	margin-bottom: 0.6rem;
+}
+
+/*
+ * PHẢI là display: block, không được dùng flex.
+ *
+ * Quảng cáo responsive của Google AdSense là thẻ <ins class="adsbygoogle"> rỗng.
+ * Script của Google đo chiều rộng phần tử CHA để chọn cỡ quảng cáo. Trong một
+ * flex container, thẻ ins rỗng trở thành flex item và co về chiều rộng 0 —
+ * AdSense đọc được 0px nên không trả quảng cáo nào về.
+ *
+ * Lỗi này hoàn toàn im lặng: không thông báo, không lỗi console, chỉ là chỗ đó
+ * trống mãi mãi. Đã mắc một lần ở bản đầu.
+ *
+ * Căn giữa bằng text-align và margin auto, không bằng flex.
+ */
+.dql-ad__item {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	text-align: center;
+}
+
+.dql-ad__item img {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Quảng cáo cỡ cố định rộng hơn khung: cho cuộn ngang trong khung riêng thay vì
+   đẩy cả trang rộng ra. */
+.dql-ad__item > * {
+	max-width: 100%;
+}
+
+.dql-ad__item .adsbygoogle {
+	display: block;
+	margin-inline: auto;
+}
+
+.dql-ad--bai {
+	margin-top: 2rem;
+	border-top: 1px solid var(--global-palette7);
+}
+
+/* Quảng cáo chèn giữa bài đã nằm sẵn trong khung nội dung, nên bỏ lớp container
+   thừa — nếu không nó sẽ có thêm một lớp lề nữa và lệch khỏi cột chữ. */
+.dql-ad--trong-bai .dql-container {
+	max-width: none;
+	padding-inline: 0;
+}
+
+.dql-ad--trong-bai {
+	margin-block: 2rem;
+	padding-block: 1.25rem;
+	border-block: 1px solid var(--global-palette7);
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Tinh chỉnh chữ tiếng Việt
+ *
+ * Tiếng Việt có dấu chồng hai tầng (ế, ữ, ỗ). Với các font phương Tây,
+ * dấu tầng trên dễ bị cắt hoặc chạm dòng phía trên. Ba chỉnh sửa dưới đây
+ * xử lý chuyện đó.
+ * ------------------------------------------------------------------------- */
+
+body {
+	/* Không giãn chữ. Font Việt đã được thiết kế với khoảng cách vừa đủ cho dấu. */
+	letter-spacing: 0;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	/* Tiêu đề cỡ lớn cần khoảng thở trên để dấu không chạm phần tử phía trước. */
+	letter-spacing: -0.01em;
+	overflow-wrap: break-word;
+}
+
+/* Tiêu đề đứng sau đoạn văn cần khoảng cách rõ hơn khoảng cách trước đoạn kế tiếp.
+   Đây là quy tắc "gần nhau thì thuộc về nhau" — tiêu đề phải dính với nội dung
+   bên dưới nó, không lơ lửng giữa hai khối. */
+.entry-content h2 {
+	margin-top: 2.5em;
+	margin-bottom: 0.6em;
+}
+
+.entry-content h3 {
+	margin-top: 2em;
+	margin-bottom: 0.5em;
+}
+
+.entry-content > *:first-child {
+	margin-top: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Liên kết trong bài
+ *
+ * Gạch chân bằng border thay vì text-decoration để điều khiển được khoảng cách
+ * với chữ — gạch chân mặc định cắt ngang phần đuôi của chữ g, y, và cắt cả
+ * dấu nặng ở dưới chữ.
+ * ------------------------------------------------------------------------- */
+
+.entry-content a:not(.button):not(.wp-block-button__link) {
+	color: var(--global-palette1);
+	text-decoration: none;
+	border-bottom: 1px solid var(--global-palette6);
+	border-bottom-color: color-mix(in srgb, var(--global-palette1) 35%, transparent);
+	transition: border-color var(--dql-transition), color var(--dql-transition);
+}
+
+.entry-content a:not(.button):not(.wp-block-button__link):hover {
+	color: var(--global-palette2);
+	border-bottom-color: var(--global-palette2);
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Nhịp đọc trong bài
+ * ------------------------------------------------------------------------- */
+
+.entry-content p {
+	margin-bottom: 1.4em;
+}
+
+.entry-content ul,
+.entry-content ol {
+	margin-bottom: 1.4em;
+	padding-left: 1.4em;
+}
+
+.entry-content li {
+	margin-bottom: 0.5em;
+}
+
+.entry-content li::marker {
+	color: var(--global-palette6);
+}
+
+/* Trích dẫn: dùng vạch màu bên trái, không bo góc.
+   Bo góc chỉ hợp khi có viền cả bốn phía. */
+.entry-content blockquote {
+	border-left: 3px solid var(--global-palette1);
+	border-radius: 0;
+	background: var(--global-palette8);
+	margin: 2em 0;
+	padding: 1.25em 1.5em;
+	font-size: 1.02em;
+	color: var(--global-palette3);
+}
+
+.entry-content blockquote p:last-child {
+	margin-bottom: 0;
+}
+
+/* Ảnh và chú thích ảnh — dùng nhiều trong bài về đá quý. */
+.entry-content figure {
+	margin: 2em 0;
+}
+
+.entry-content figcaption,
+.wp-element-caption {
+	color: var(--global-palette6);
+	font-size: 0.875rem;
+	line-height: 1.6;
+	text-align: center;
+	margin-top: 0.75em;
+}
+
+.entry-content img {
+	border-radius: var(--dql-radius);
+}
+
+/* Bảng — dùng cho bảng thông số đá và bảng so sánh. */
+.entry-content table {
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 0.95rem;
+	margin: 2em 0;
+}
+
+.entry-content th,
+.entry-content td {
+	border: var(--dql-border);
+	padding: 0.7em 0.9em;
+	text-align: left;
+	vertical-align: top;
+}
+
+.entry-content th {
+	background: var(--global-palette7);
+	color: var(--global-palette3);
+	font-weight: 600;
+}
+
+/* Bảng nhiều cột trên điện thoại: cho cuộn ngang trong khung riêng,
+   không để cả trang bị đẩy rộng ra. */
+.entry-content .wp-block-table {
+	overflow-x: auto;
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Thành phần riêng của site
+ * ------------------------------------------------------------------------- */
+
+.dql-reading-time {
+	color: var(--global-palette6);
+	font-size: 0.875rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Khả năng tiếp cận
+ *
+ * Viền focus phải luôn nhìn thấy được. Nhiều theme xóa outline cho "sạch",
+ * khiến người dùng bàn phím không biết mình đang ở đâu trên trang.
+ * ------------------------------------------------------------------------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+	outline: 2px solid var(--global-palette1);
+	outline-offset: 2px;
+	border-radius: var(--dql-radius-sm);
+}
+
+::selection {
+	background: color-mix(in srgb, var(--global-palette1) 20%, transparent);
+	color: var(--global-palette3);
+}
+
+/* Tôn trọng thiết lập giảm chuyển động của người dùng.
+   Đây là ngoại lệ duy nhất được dùng !important trong file này: khối lệnh phải
+   thắng mọi animation do plugin hoặc theme cha khai báo, kể cả inline style. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

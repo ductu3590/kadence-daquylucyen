@@ -1,0 +1,24 @@
+/*
+Theme Name: Đá Quý Lục Yên
+Theme URI: https://daquylucyen.net.vn
+Description: Child theme của Kadence, thiết kế riêng cho blog chia sẻ kiến thức về đá quý và trang sức Lục Yên. Bảng màu Sapphire sáng, chữ Be Vietnam Pro và Inter, tối ưu cho bài đọc dài tiếng Việt.
+Author: daquylucyen.net.vn
+Author URI: https://daquylucyen.net.vn
+Template: kadence
+Version: 1.2.0
+License: GNU General Public License v3.0 (or later)
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Text Domain: kadence-daquylucyen
+Requires PHP: 7.4
+Tags: blog, custom-colors, custom-menu, featured-images, translation-ready
+*/
+
+/*
+ * Không viết CSS trong file này.
+ *
+ * WordPress bắt buộc child theme phải có style.css để đọc phần header ở trên,
+ * nhưng file này không được nạp ra trang. Toàn bộ CSS nằm ở:
+ *
+ *   assets/css/main.css     giao diện ngoài trang
+ *   assets/css/editor.css   trình soạn thảo trong admin
+ */

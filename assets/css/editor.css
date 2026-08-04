@@ -1,0 +1,63 @@
+/*
+ * CSS cho trình soạn thảo khối trong admin.
+ *
+ * Mục đích: bài viết lúc soạn trông gần giống lúc đăng, để người viết ước lượng
+ * được độ dài đoạn và nhịp tiêu đề mà không phải xem trước liên tục.
+ *
+ * Chỉ chép sang đây những quy tắc ảnh hưởng tới cảm giác đọc. Không chép phần
+ * bố cục trang, header, footer — trình soạn thảo không có những thứ đó.
+ */
+
+.editor-styles-wrapper {
+	--dql-radius: 10px;
+}
+
+.editor-styles-wrapper .wp-block h2 {
+	margin-top: 2.5em;
+	margin-bottom: 0.6em;
+	letter-spacing: -0.01em;
+}
+
+.editor-styles-wrapper .wp-block h3 {
+	margin-top: 2em;
+	margin-bottom: 0.5em;
+	letter-spacing: -0.01em;
+}
+
+.editor-styles-wrapper p {
+	margin-bottom: 1.4em;
+}
+
+.editor-styles-wrapper li {
+	margin-bottom: 0.5em;
+}
+
+.editor-styles-wrapper blockquote {
+	border-left: 3px solid var(--global-palette1);
+	border-radius: 0;
+	background: var(--global-palette8);
+	padding: 1.25em 1.5em;
+	color: var(--global-palette3);
+}
+
+.editor-styles-wrapper figcaption {
+	color: var(--global-palette6);
+	font-size: 0.875rem;
+	text-align: center;
+}
+
+.editor-styles-wrapper img {
+	border-radius: var(--dql-radius);
+}
+
+.editor-styles-wrapper th {
+	background: var(--global-palette7);
+	color: var(--global-palette3);
+	font-weight: 600;
+}
+
+.editor-styles-wrapper th,
+.editor-styles-wrapper td {
+	border: 1px solid var(--global-palette7);
+	padding: 0.7em 0.9em;
+}

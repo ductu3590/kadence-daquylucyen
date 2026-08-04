@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup — Trang chuyên mục · Đá Quý Lục Yên</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================================
+   Mockup trang chuyên mục — Đá Quý Lục Yên
+   Dùng đúng bảng màu "Sapphire sáng" và cặp font của theme.
+   File này CHỈ để xem trước, không nạp vào WordPress.
+   ========================================================================= */
+
+:root{
+	--p1:#2563AC; --p2:#0F2E5F; --p3:#16203A; --p4:#3D4759; --p5:#5A6478;
+	--p6:#7E93AE; --p7:#EEF2F8; --p8:#F7F9FC; --p9:#FFFFFF;
+	--ok:#137A4C; --warn:#C9770B; --err:#B82105;
+	--r:14px;
+	--sh:0 1px 2px rgba(22,32,58,.04), 0 8px 24px -12px rgba(22,32,58,.18);
+}
+
+*{box-sizing:border-box}
+body{
+	margin:0; background:#E9EDF3; color:var(--p4);
+	font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+	font-size:16px; line-height:1.7;
+	-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.f-head{font-family:"Be Vietnam Pro",Inter,sans-serif; color:var(--p3); font-weight:600; margin:0}
+a{color:inherit; text-decoration:none}
+img{max-width:100%; display:block}
+
+/* --- Khung trang tài liệu ------------------------------------------------ */
+.doc{max-width:1360px; margin:0 auto; padding:32px 24px 96px}
+.doc-head{
+	background:var(--p9); border-radius:20px; padding:32px 36px; box-shadow:var(--sh);
+	border:1px solid #dfe6f0; margin-bottom:28px;
+}
+.doc-head h1{font-size:30px; line-height:1.25; letter-spacing:-.01em}
+.doc-head .sub{color:var(--p5); margin:10px 0 0; max-width:74ch}
+.doc-kicker{
+	font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+	color:var(--p1); margin:0 0 10px;
+}
+
+.probs{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin-top:24px}
+.prob{
+	background:var(--p8); border:1px solid var(--p7); border-radius:12px; padding:14px 16px;
+	font-size:13.5px; line-height:1.6;
+}
+.prob b{display:block; color:var(--p3); font-family:"Be Vietnam Pro",sans-serif; font-size:14px; margin-bottom:3px}
+.prob i{font-style:normal; color:var(--err); font-weight:600}
+
+/* --- Thanh chuyển phương án --------------------------------------------- */
+.bar{
+	position:sticky; top:0; z-index:40; display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+	background:rgba(255,255,255,.92); backdrop-filter:blur(8px);
+	border:1px solid #dfe6f0; border-radius:999px; padding:8px 10px; box-shadow:var(--sh);
+	margin-bottom:26px;
+}
+.bar .lbl{font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--p6); padding-left:12px}
+.bar button{
+	font:inherit; font-size:14px; font-weight:500; cursor:pointer;
+	border:1px solid transparent; background:none; color:var(--p4);
+	padding:8px 16px; border-radius:999px; transition:.16s;
+}
+.bar button:hover{color:var(--p1)}
+.bar button.on{background:var(--p1); color:#fff; box-shadow:0 4px 12px -4px rgba(37,99,172,.6)}
+.bar .sep{flex:1}
+
+/* --- Khung trình duyệt giả ---------------------------------------------- */
+.frame{
+	background:var(--p9); border-radius:16px; overflow:hidden; box-shadow:var(--sh);
+	border:1px solid #dfe6f0; margin-bottom:14px;
+}
+.frame__bar{
+	display:flex; align-items:center; gap:8px; padding:10px 14px;
+	background:#F1F4F9; border-bottom:1px solid #e3e9f2;
+}
+.dot{width:10px; height:10px; border-radius:50%; background:#d6dde8}
+.frame__url{
+	margin-left:8px; font-size:12px; color:var(--p6); background:#fff;
+	border:1px solid #e3e9f2; border-radius:999px; padding:3px 12px;
+}
+.frame__note{margin-left:auto; font-size:12px; color:var(--p6)}
+
+.view{display:none}
+.view.on{display:block}
+
+.stage{width:100%; overflow-x:auto}
+.stage--mb{background:#EDF1F7; padding:26px 0; display:flex; justify-content:center}
+.stage--mb .site{width:390px; box-shadow:0 10px 40px -18px rgba(22,32,58,.5); border-radius:22px; overflow:hidden}
+
+/* ===========================================================================
+   TỪ ĐÂY XUỐNG LÀ GIAO DIỆN SITE (phần sẽ code thật)
+   ========================================================================= */
+.site{background:var(--p9); font-size:17px}
+.container{max-width:1200px; margin:0 auto; padding:0 24px}
+
+/* Header rút gọn — chỉ để mockup có ngữ cảnh, KHÔNG nằm trong phạm vi sửa */
+.top{border-bottom:1px solid var(--p7); background:#fff}
+.top__in{display:flex; align-items:center; gap:28px; height:72px}
+.logo{font-family:"Be Vietnam Pro",sans-serif; font-weight:700; color:var(--p2); font-size:17px; letter-spacing:-.01em; white-space:nowrap}
+.logo span{color:var(--p1)}
+.menu{display:flex; gap:22px; font-size:14.5px; color:var(--p4)}
+.menu .cur{color:var(--p1); font-weight:500}
+.top__act{margin-left:auto; display:flex; align-items:center; gap:14px; color:var(--p6)}
+
+/* ---------------------------------------------------------------------------
+   1. ĐẦU TRANG CHUYÊN MỤC
+   ------------------------------------------------------------------------- */
+.chead{
+	background:var(--p8);
+	border-bottom:1px solid var(--p7);
+	padding:26px 0 0;
+	position:relative; overflow:hidden;
+}
+/* vệt sapphire rất nhạt ở góc — đủ để đầu trang không phẳng lì, không phủ xanh */
+.chead::after{
+	content:""; position:absolute; right:-120px; top:-160px; width:460px; height:460px;
+	border-radius:50%; background:radial-gradient(circle, rgba(37,99,172,.10), transparent 70%);
+	pointer-events:none;
+}
+.chead__in{position:relative; z-index:1}
+
+.crumb{display:flex; flex-wrap:wrap; align-items:center; gap:6px; font-size:13.5px; color:var(--p6)}
+.crumb a:hover{color:var(--p1)}
+.crumb svg{width:14px; height:14px; opacity:.7}
+.crumb .now{color:var(--p4)}
+
+.chead h1{font-size:40px; line-height:1.25; margin:12px 0 0; letter-spacing:-.015em}
+.chead .lead{max-width:64ch; margin:12px 0 0; color:var(--p5); font-size:17px; line-height:1.7}
+
+.facts{display:flex; flex-wrap:wrap; align-items:center; gap:8px 18px; margin-top:16px; font-size:13.5px; color:var(--p6)}
+.facts b{color:var(--p4); font-weight:600}
+.facts .sep{width:4px; height:4px; border-radius:50%; background:var(--p6); opacity:.55}
+
+/* Dải chip — gắn liền đáy đầu trang, không còn trôi nổi giữa nội dung */
+.chips{display:flex; flex-wrap:wrap; gap:8px; padding:20px 0 22px; margin-top:18px; border-top:1px solid var(--p7)}
+.chip{
+	display:inline-flex; align-items:center; gap:7px; background:var(--p9);
+	border:1px solid #e2e8f2; border-radius:999px; padding:7px 15px;
+	font-size:14px; color:var(--p4); transition:.16s;
+}
+.chip:hover{border-color:var(--p1); color:var(--p1)}
+.chip.on{background:var(--p1); border-color:var(--p1); color:#fff; font-weight:500}
+.chip__n{font-size:12.5px; color:var(--p6); font-variant-numeric:tabular-nums}
+.chip.on .chip__n{color:#fff; opacity:.72}
+.chip--up{background:none; border-color:transparent; color:var(--p6); padding-left:6px}
+.chip--up:hover{border-color:transparent}
+.chip--up svg{width:15px; height:15px}
+.chips .div{width:1px; align-self:stretch; background:var(--p7); margin:2px 6px}
+
+/* ---------------------------------------------------------------------------
+   2. BÀI MỞ ĐẦU (chỉ ở trang 1)
+   ------------------------------------------------------------------------- */
+.main{padding:38px 0 56px}
+
+.spot{
+	display:grid; grid-template-columns:minmax(0,46%) minmax(0,1fr); gap:32px; align-items:center;
+	background:var(--p9); border:1px solid var(--p7); border-radius:var(--r);
+	padding:18px; margin-bottom:40px; transition:.2s;
+}
+.spot:hover{border-color:#d5e0ee; box-shadow:var(--sh)}
+.spot__media{border-radius:10px; overflow:hidden; aspect-ratio:16/10; background:var(--p7)}
+.spot__media img{width:100%; height:100%; object-fit:cover; transition:transform .5s ease}
+.spot:hover .spot__media img{transform:scale(1.035)}
+.spot__body{padding-right:16px}
+.eyebrow{
+	display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:600;
+	letter-spacing:.1em; text-transform:uppercase; color:var(--p1); margin-bottom:12px;
+}
+.eyebrow svg{width:14px; height:14px}
+.spot h2{font-size:27px; line-height:1.3; letter-spacing:-.01em}
+.spot h2 a:hover{color:var(--p1)}
+.spot p{margin:12px 0 0; color:var(--p5); font-size:15.5px; line-height:1.7}
+.meta{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin-top:16px; font-size:13px; color:var(--p6)}
+.meta .sep{width:3px; height:3px; border-radius:50%; background:var(--p6); opacity:.6}
+.meta svg{width:14px; height:14px; margin-right:5px; vertical-align:-2px}
+
+/* ---------------------------------------------------------------------------
+   3. LƯỚI BÀI
+   ------------------------------------------------------------------------- */
+.grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:30px}
+
+.card{display:flex; flex-direction:column; height:100%; background:var(--p9)}
+.card__media{
+	border-radius:12px; overflow:hidden; aspect-ratio:3/2; background:var(--p7);
+	position:relative;
+}
+.card__media img{width:100%; height:100%; object-fit:cover; transition:transform .5s ease}
+.card:hover .card__media img{transform:scale(1.04)}
+.card__body{padding-top:14px; display:flex; flex-direction:column; flex:1}
+.card h3{
+	font-size:18.5px; line-height:1.45; letter-spacing:-.005em;
+	display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+	text-wrap:pretty;
+}
+.card h3 a:hover{color:var(--p1)}
+.card p{
+	margin:9px 0 0; font-size:14.5px; line-height:1.65; color:var(--p5);
+	display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.card .meta{margin-top:auto; padding-top:12px}
+
+/* ---------------------------------------------------------------------------
+   4. PHÂN TRANG
+   ------------------------------------------------------------------------- */
+.pager{
+	display:flex; align-items:center; justify-content:center; gap:8px;
+	margin-top:52px; padding-top:36px; border-top:1px solid var(--p7);
+}
+.pager a,.pager span{
+	min-width:42px; height:42px; display:inline-flex; align-items:center; justify-content:center;
+	border-radius:10px; border:1px solid var(--p7); font-size:15px; color:var(--p4);
+	padding:0 12px; transition:.16s;
+}
+.pager a:hover{border-color:var(--p1); color:var(--p1)}
+.pager .cur{background:var(--p1); border-color:var(--p1); color:#fff; font-weight:600}
+.pager .dots{border:none; color:var(--p6)}
+.pager .nav{gap:6px; font-size:14px}
+.pager .nav svg{width:15px; height:15px}
+.pager__info{text-align:center; margin-top:14px; font-size:13.5px; color:var(--p6)}
+
+/* ---------------------------------------------------------------------------
+   5. DẢI CUỐI TRANG — thay cho sidebar
+   ------------------------------------------------------------------------- */
+.strip{background:var(--p8); border-top:1px solid var(--p7); padding:44px 0 52px}
+.strip__head{display:flex; align-items:baseline; gap:14px; margin-bottom:22px}
+.strip__head h2{font-size:22px}
+.strip__head .all{margin-left:auto; font-size:14px; color:var(--p1); font-weight:500}
+.top4{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px}
+.tin{display:flex; gap:12px; background:var(--p9); border:1px solid var(--p7); border-radius:12px; padding:12px; transition:.16s}
+.tin:hover{border-color:#d5e0ee; box-shadow:var(--sh)}
+.tin__n{
+	flex:none; width:26px; height:26px; border-radius:8px; background:var(--p7); color:var(--p1);
+	font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;
+	font-family:"Be Vietnam Pro",sans-serif;
+}
+.tin__t{font-family:"Be Vietnam Pro",sans-serif; font-size:14.5px; line-height:1.45; color:var(--p3); font-weight:600;
+	display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+.tin__m{font-size:12.5px; color:var(--p6); margin-top:5px}
+
+/* ---------------------------------------------------------------------------
+   PHƯƠNG ÁN B — đầu trang chia đôi + danh sách dày
+   ------------------------------------------------------------------------- */
+.chead--b .split{display:grid; grid-template-columns:minmax(0,1fr) 348px; gap:44px; align-items:start; padding-bottom:28px}
+.startbox{
+	background:var(--p9); border:1px solid var(--p7); border-radius:var(--r); padding:20px 22px;
+	box-shadow:var(--sh);
+}
+.startbox h2{font-size:16.5px; display:flex; align-items:center; gap:9px}
+.startbox h2 svg{width:17px; height:17px; color:var(--p1)}
+.startbox .hint{font-size:13.5px; color:var(--p6); margin:6px 0 14px; line-height:1.6}
+.startbox ol{list-style:none; margin:0; padding:0; counter-reset:s}
+.startbox li{counter-increment:s; padding:10px 0; border-top:1px solid var(--p7); display:flex; gap:11px}
+.startbox li:first-of-type{border-top:none; padding-top:0}
+.startbox li::before{
+	content:counter(s); flex:none; width:22px; height:22px; border-radius:7px;
+	background:var(--p7); color:var(--p1); font-size:12px; font-weight:700;
+	display:flex; align-items:center; justify-content:center; font-family:"Be Vietnam Pro",sans-serif;
+}
+.startbox li b{font-family:"Be Vietnam Pro",sans-serif; font-size:14.5px; font-weight:600; color:var(--p3); line-height:1.45; display:block}
+.startbox li em{font-style:normal; font-size:12.5px; color:var(--p6)}
+
+.rows{border-top:1px solid var(--p7)}
+.row{display:grid; grid-template-columns:132px minmax(0,1fr) auto; gap:22px; align-items:center;
+	padding:20px 0; border-bottom:1px solid var(--p7); transition:.16s}
+.row:hover{background:var(--p8)}
+.row__media{border-radius:10px; overflow:hidden; aspect-ratio:4/3; background:var(--p7)}
+.row__media img{width:100%; height:100%; object-fit:cover}
+.row h3{font-size:19px; line-height:1.42; letter-spacing:-.005em}
+.row h3 a:hover{color:var(--p1)}
+.row p{margin:6px 0 0; font-size:14.5px; color:var(--p5);
+	display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.row .meta{margin-top:9px}
+.row__go{flex:none; width:38px; height:38px; border-radius:50%; border:1px solid var(--p7);
+	display:flex; align-items:center; justify-content:center; color:var(--p6); transition:.16s}
+.row:hover .row__go{border-color:var(--p1); color:var(--p1); background:#fff}
+.row__go svg{width:16px; height:16px}
+
+.cta{
+	display:flex; align-items:center; gap:20px; background:var(--p2); color:#fff;
+	border-radius:var(--r); padding:22px 26px; margin:26px 0;
+}
+.cta svg{width:34px; height:34px; flex:none; opacity:.9}
+.cta b{display:block; font-family:"Be Vietnam Pro",sans-serif; font-size:18px; font-weight:600}
+.cta span{font-size:14.5px; opacity:.82}
+.cta a{margin-left:auto; flex:none; background:#fff; color:var(--p2); font-weight:600; font-size:14.5px;
+	padding:10px 20px; border-radius:999px; white-space:nowrap}
+
+/* ---------------------------------------------------------------------------
+   Chú thích số trên mockup
+   ------------------------------------------------------------------------- */
+.pin{
+	position:absolute; z-index:5; width:24px; height:24px; border-radius:50%;
+	background:var(--err); color:#fff; font-size:12px; font-weight:700;
+	display:flex; align-items:center; justify-content:center;
+	font-family:"Be Vietnam Pro",sans-serif; box-shadow:0 2px 8px rgba(184,33,5,.45);
+}
+body.nopins .pin{display:none}
+.rel{position:relative}
+
+.notes{background:var(--p9); border:1px solid #dfe6f0; border-radius:16px; padding:26px 30px; box-shadow:var(--sh); margin-bottom:30px}
+.notes h3{font-size:17px; margin-bottom:14px}
+.notes ol{margin:0; padding-left:0; list-style:none; counter-reset:n}
+.notes li{counter-increment:n; display:flex; gap:12px; padding:9px 0; border-top:1px solid var(--p7); font-size:14.5px; line-height:1.65}
+.notes li:first-child{border-top:none}
+.notes li::before{
+	content:counter(n); flex:none; width:22px; height:22px; border-radius:50%;
+	background:var(--err); color:#fff; font-size:11.5px; font-weight:700;
+	display:flex; align-items:center; justify-content:center; margin-top:3px;
+	font-family:"Be Vietnam Pro",sans-serif;
+}
+.notes li b{color:var(--p3); font-family:"Be Vietnam Pro",sans-serif}
+.notes li .why{color:var(--p5)}
+
+.legend{display:flex; flex-wrap:wrap; gap:10px; margin:0 0 26px}
+.tag{
+	font-size:12.5px; padding:5px 12px; border-radius:999px; background:var(--p9);
+	border:1px solid #dfe6f0; color:var(--p5);
+}
+.tag b{color:var(--p3)}
+
+/* --- Điện thoại ---------------------------------------------------------- */
+.stage--mb .container{padding:0 18px}
+.stage--mb .top__in{height:58px}
+.stage--mb .menu,.stage--mb .top__act{display:none}
+.stage--mb .chead{padding-top:18px}
+.stage--mb .chead h1{font-size:28px}
+.stage--mb .chead .lead{font-size:15.5px}
+.stage--mb .chips{flex-wrap:nowrap; overflow-x:auto; padding:16px 0; margin-top:14px; scrollbar-width:none}
+.stage--mb .chips::-webkit-scrollbar{display:none}
+.stage--mb .chip{white-space:nowrap; flex:none}
+.stage--mb .main{padding:26px 0 40px}
+.stage--mb .spot{grid-template-columns:1fr; gap:16px; padding:14px; margin-bottom:30px}
+.stage--mb .spot__body{padding-right:0}
+.stage--mb .spot h2{font-size:21px}
+.stage--mb .grid{grid-template-columns:1fr; gap:26px}
+.stage--mb .card h3{font-size:18px}
+.stage--mb .top4{grid-template-columns:1fr}
+.stage--mb .row{grid-template-columns:96px minmax(0,1fr); gap:14px; padding:16px 0}
+.stage--mb .row__go{display:none}
+.stage--mb .row h3{font-size:16.5px}
+.stage--mb .row p{display:none}
+.stage--mb .chead--b .split{grid-template-columns:1fr; gap:22px}
+.stage--mb .cta{flex-direction:column; align-items:flex-start; gap:12px}
+.stage--mb .cta a{margin-left:0}
+</style>
+</head>
+<body>
+<div class="doc">
+
+	<div class="doc-head">
+		<p class="doc-kicker">Mockup · chưa code · 04/08/2026</p>
+		<h1>Thiết kế lại trang chuyên mục</h1>
+		<p class="sub">
+			Dựng bằng đúng bảng màu “Sapphire sáng”, đúng cặp font Be Vietnam Pro / Inter và
+			đúng nội dung thật của chuyên mục <b>Đá quý</b> (25 bài). Xem xong, chọn một phương án
+			rồi tôi mới viết code vào <code>inc/archive.php</code> và <code>assets/css/archive.css</code>.
+		</p>
+
+		<div class="probs">
+			<div class="prob"><b>Đầu trang trống</b>Chỉ có mỗi chữ “Đá quý”. <i>Không breadcrumb, không mô tả, không số bài</i> — người đọc không biết mình đang ở nhánh nào.</div>
+			<div class="prob"><b>Nhãn chuyên mục lặp 25 lần</b>Mỗi thẻ bài lại in “Đá quý”, đúng cái tên đang là tiêu đề trang. <i>Không mang thêm thông tin nào.</i></div>
+			<div class="prob"><b>Ngày 2019–2020 nổi bật</b>Bài đã cập nhật 8/2026 nhưng trang hiện ngày đăng gốc. <i>Nội dung trông như bỏ hoang 6 năm.</i></div>
+			<div class="prob"><b>Ảnh tỉ lệ 2:3</b>Kadence đang cắt ảnh dọc trong khi ảnh gốc phần lớn nằm ngang. <i>Ảnh bị cắt cụt, thẻ cao vống.</i></div>
+			<div class="prob"><b>25 thẻ giống hệt nhau</b>Không có điểm dừng cho mắt, không có bài nào được ưu tiên.</div>
+			<div class="prob"><b>Sidebar ăn mất một cột</b>Cột bên 300px kéo lưới từ 3 xuống 2 cột. Bản spec đã chốt: <i>archive không sidebar mặc định.</i></div>
+		</div>
+	</div>
+
+	<div class="bar">
+		<span class="lbl">Phương án</span>
+		<button class="on" data-v="a">A · Tinh gọn</button>
+		<button data-v="b">B · Cổng chủ đề</button>
+		<span class="sep"></span>
+		<span class="lbl">Màn hình</span>
+		<button class="on" data-s="dt">Desktop</button>
+		<button data-s="mb">Điện thoại</button>
+		<span class="sep"></span>
+		<button id="pin" class="on">Chú thích</button>
+	</div>
+
+	<!-- =====================================================================
+	     PHƯƠNG ÁN A
+	     ================================================================== -->
+	<div class="view on" id="v-a">
+
+		<div class="legend">
+			<span class="tag"><b>Giữ nguyên:</b> lưới bài, phân trang, thẻ bài của Kadence</span>
+			<span class="tag"><b>Sửa:</b> đầu trang, dải chip, meta thẻ bài, tỉ lệ ảnh</span>
+			<span class="tag"><b>Thêm:</b> bài mở đầu, dải “Đọc nhiều nhất” cuối trang</span>
+			<span class="tag"><b>Bỏ:</b> sidebar, nhãn chuyên mục trên thẻ, ngày đăng gốc</span>
+		</div>
+
+		<div class="frame">
+			<div class="frame__bar">
+				<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+				<span class="frame__url">daquylucyen.net.vn/category/kien-thuc-da-quy/da-quy/</span>
+				<span class="frame__note">Phương án A — Tinh gọn</span>
+			</div>
+			<div class="stage" id="stage-a">
+				<div class="site">
+
+					<!-- Header (không thuộc phạm vi sửa) -->
+					<div class="top"><div class="container top__in">
+						<span class="logo">ĐÁ QUÝ <span>LỤC YÊN</span></span>
+						<nav class="menu">
+							<a class="cur">Kiến thức đá quý</a><a>Trang sức</a><a>Tư vấn chọn mua</a><a>Từ điển</a>
+						</nav>
+						<span class="top__act">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+						</span>
+					</div></div>
+
+					<!-- 1. ĐẦU TRANG -->
+					<header class="chead rel">
+						<span class="pin" style="left:14px; top:14px">1</span>
+						<div class="container chead__in">
+							<nav class="crumb">
+								<a>Trang chủ</a>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+								<a>Kiến thức đá quý</a>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+								<span class="now">Đá quý</span>
+							</nav>
+
+							<h1>Đá quý</h1>
+
+							<p class="lead">
+								Nhận mặt, phân loại và hiểu giá trị của từng loại đá quý — ruby, sapphire, spinel,
+								thạch anh và những họ đá thường gặp ở Lục Yên. Viết cho người mua lần đầu, không dùng
+								thuật ngữ mà không giải thích.
+								<span class="pin" style="position:static; display:inline-flex; margin-left:6px; vertical-align:1px">2</span>
+							</p>
+
+							<div class="facts">
+								<span><b>25</b> bài viết</span>
+								<span class="sep"></span>
+								<span>Cập nhật gần nhất <b>03/08/2026</b></span>
+								<span class="sep"></span>
+								<span>Trung bình <b>9 phút</b>/bài</span>
+								<span class="pin" style="position:static; display:inline-flex">3</span>
+							</div>
+
+							<nav class="chips rel">
+								<span class="pin" style="left:-30px; top:22px">4</span>
+								<a class="chip chip--up">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+									Kiến thức đá quý
+								</a>
+								<span class="div"></span>
+								<a class="chip on">Đá quý <span class="chip__n">25</span></a>
+								<a class="chip">Đá bán quý <span class="chip__n">28</span></a>
+							</nav>
+						</div>
+					</header>
+
+					<!-- 2 + 3. NỘI DUNG -->
+					<main class="main"><div class="container">
+
+						<!-- Bài mở đầu -->
+						<article class="spot rel">
+							<span class="pin" style="left:-30px; top:0">5</span>
+							<div class="spot__media">
+								<img src="http://daquylucyen.local/wp-content/uploads/2019/09/kim-cuong-la-gi-1-768x507.jpg" alt="">
+							</div>
+							<div class="spot__body">
+								<span class="eyebrow">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
+									Nên đọc trước
+								</span>
+								<h2><a>Kim cương là gì? Bạn biết gì về kim cương?</a></h2>
+								<p>
+									Kim cương là gì chắc không cần phải nói nhiều, nhưng thực chất nó là gì thì không phải
+									ai cũng biết. Vì sao kim cương đắt đỏ, và người ta đo giá trị của nó bằng những tiêu chí nào?
+								</p>
+								<div class="meta">
+									<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>9 phút đọc</span>
+									<span class="sep"></span>
+									<span>Cập nhật 8/2026</span>
+								</div>
+							</div>
+						</article>
+
+						<!-- Lưới -->
+						<div class="grid rel">
+							<span class="pin" style="left:-30px; top:0">6</span>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2020/01/thach-anh-toc-1.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Thạch anh tóc — Lá bùa hộ mệnh tài lộc và tình duyên</a></h3>
+									<p>Loại đá quý sở hữu vẻ đẹp thuần khiết với những sợi tóc đặc trưng đầy mê hoặc.</p>
+									<div class="meta"><span>10 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2020/01/thach-anh-tinh-the-1.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Thạch anh tinh thể là gì? Phân loại thạch anh tinh thể</a></h3>
+									<p>Đa dạng kích cỡ, màu sắc và hình dáng — và cách phân biệt từng nhóm.</p>
+									<div class="meta"><span>6 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2020/01/da-Diopside-1.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Đá Diopside — Khám phá vẻ đẹp thanh khiết, hữu xạ tự nhiên hương</a></h3>
+									<p>Nhóm đá quý hiếm mới xuất hiện tại thị trường Việt Nam, đặc biệt là Chrome Diopside.</p>
+									<div class="meta"><span>5 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/09/ngoc-bich-nephrite-jade-la-gi-1-768x768.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Ngọc Bích nephrite Jade là gì? 5 sai lầm cần tránh khi đeo</a></h3>
+									<p>Tính chất, đặc điểm của ngọc bích và những lỗi thường gặp khi sử dụng hằng ngày.</p>
+									<div class="meta"><span>10 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/10/corundum-la-gi-1-768x610.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Corundum là gì? Bạn đã biết gì về Corundum?</a></h3>
+									<p>Họ khoáng vật sinh ra cả ruby lẫn sapphire — nền tảng để hiểu hai loại đá đắt nhất.</p>
+									<div class="meta"><span>9 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/10/cordierit-la-gi-1-768x511.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Cordierit là gì? Bạn biết gì về Cordierit?</a></h3>
+									<p>Tính chất, đặc điểm, công dụng và ý nghĩa của một loại đá ít người gọi đúng tên.</p>
+									<div class="meta"><span>8 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/09/da-chiastolite-la-gi-1-768x576.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Đá Chiastolite là gì? Bạn đã biết gì về đá Chiastolite?</a></h3>
+									<p>Loại đá mang hình chữ thập tự nhiên trong lõi, và vì sao nó được săn tìm.</p>
+									<div class="meta"><span>8 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/09/da-idocrase-la-gi-1-768x768.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Đá Idocrase là gì? Bạn biết gì về đá Idocrase?</a></h3>
+									<p>Khoáng vật thiên nhiên được xếp vào hàng đá quý, thường bị nhầm với ngọc bích.</p>
+									<div class="meta"><span>8 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+
+							<article class="card">
+								<div class="card__media"><img src="http://daquylucyen.local/wp-content/uploads/2020/01/ty-huu-1-e1579865160406.jpg" alt=""></div>
+								<div class="card__body">
+									<h3><a>Tỳ Hưu — Linh vật phong thủy chiêu tài lộc, công danh, sức khỏe</a></h3>
+									<p>Vì sao Tỳ Hưu được tạc từ đá quý, và cách nhận biết một tượng tạc đúng.</p>
+									<div class="meta"><span>15 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+							</article>
+						</div>
+
+						<!-- Phân trang -->
+						<nav class="pager rel">
+							<span class="pin" style="left:-30px; top:36px">7</span>
+							<span class="cur">1</span>
+							<a>2</a>
+							<a>3</a>
+							<a class="nav">Sau
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+							</a>
+						</nav>
+						<p class="pager__info">Trang 1 / 3 — đang xem bài 1–10 trong 25 bài</p>
+
+					</div></main>
+
+					<!-- 5. DẢI CUỐI -->
+					<section class="strip rel">
+						<span class="pin" style="left:14px; top:14px">8</span>
+						<div class="container">
+							<div class="strip__head">
+								<h2>Đọc nhiều nhất trong Đá quý</h2>
+								<a class="all">Xem tất cả →</a>
+							</div>
+							<div class="top4">
+								<a class="tin"><span class="tin__n">1</span><span><span class="tin__t">Kim cương là gì? Bạn biết gì về kim cương?</span><span class="tin__m">9 phút đọc</span></span></a>
+								<a class="tin"><span class="tin__n">2</span><span><span class="tin__t">Ngọc Bích nephrite Jade là gì? 5 sai lầm cần tránh</span><span class="tin__m">10 phút đọc</span></span></a>
+								<a class="tin"><span class="tin__n">3</span><span><span class="tin__t">Thạch anh tóc — Lá bùa hộ mệnh tài lộc</span><span class="tin__m">10 phút đọc</span></span></a>
+								<a class="tin"><span class="tin__n">4</span><span><span class="tin__t">Corundum là gì? Bạn đã biết gì về Corundum?</span><span class="tin__m">9 phút đọc</span></span></a>
+							</div>
+						</div>
+					</section>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="notes">
+			<h3>Chú thích phương án A</h3>
+			<ol>
+				<li><span><b>Đầu trang có nền sương + breadcrumb.</b> <span class="why">Nền <code>palette8</code> tách đầu trang khỏi lưới bài mà không cần kẻ đường. Breadcrumb trả lời “tôi đang ở đâu” và cho Google hiểu cây chuyên mục — hiện đang thiếu hẳn.</span></span></li>
+				<li><span><b>Mô tả chuyên mục, giới hạn 64 ký tự/dòng.</b> <span class="why">Lấy từ ô “Mô tả” của chuyên mục trong WP Admin. <b>Cần bạn viết mô tả cho 7 chuyên mục</b> — chưa có thì khối này tự ẩn, không để lại khoảng trống.</span></span></li>
+				<li><span><b>Ba con số thay cho khoảng trắng.</b> <span class="why">Số bài · ngày cập nhật gần nhất · thời gian đọc trung bình. “Cập nhật 03/08/2026” xoá cảm giác site bỏ hoang mà dãy ngày 2019 đang tạo ra.</span></span></li>
+				<li><span><b>Chip gắn liền đáy đầu trang.</b> <span class="why">Hiện chip nằm lửng trong vùng nội dung (do hook <code>kadence_before_main_content</code>) nên trông rời rạc. Đặt trong đầu trang, ngăn bằng một đường kẻ, có gạch phân cách giữa nút “lên cha” và nhóm anh em.</span></span></li>
+				<li><span><b>Bài mở đầu, chỉ ở trang 1.</b> <span class="why">Cho mắt một điểm dừng và cho chuyên mục một “cửa vào”. Chọn bài theo lượt xem (plugin <code>dql-core</code> đã đếm sẵn) hoặc theo bài ghim. Từ trang 2 trở đi bỏ, vì người lật sang trang 2 là người đang quét chứ không cần được dẫn.</span></span></li>
+				<li><span><b>Thẻ bài: ảnh 3:2, bỏ nhãn chuyên mục, chiều cao đều.</b> <span class="why">Ảnh gốc phần lớn nằm ngang nên 3:2 cắt ít nhất. Tiêu đề khoá 3 dòng, mô tả 2 dòng, meta luôn dính đáy thẻ — hàng nào cũng thẳng. Nhãn “Đá quý” bỏ đi vì trùng tiêu đề trang; ở trang danh sách bài chung thì vẫn giữ.</span></span></li>
+				<li><span><b>Phân trang có dòng vị trí.</b> <span class="why">“Trang 1/3 — bài 1–10 trong 25” cho người đọc biết còn bao nhiêu, thứ mà dãy số trần không nói.</span></span></li>
+				<li><span><b>“Đọc nhiều nhất” chuyển xuống dải cuối, bỏ sidebar.</b> <span class="why">Đổi lại được lưới 3 cột trên toàn bộ 1200px thay vì 2 cột. Đúng với bản spec mục 6.2 (“archive không sidebar mặc định”). Khối này vẫn tắt/bật được trong Customizer như hiện nay.</span></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<!-- =====================================================================
+	     PHƯƠNG ÁN B
+	     ================================================================== -->
+	<div class="view" id="v-b">
+
+		<div class="legend">
+			<span class="tag"><b>Khác A ở:</b> đầu trang chia đôi có hộp “Bắt đầu từ đâu”</span>
+			<span class="tag"><b>Khác A ở:</b> danh sách hàng ngang thay lưới thẻ</span>
+			<span class="tag"><b>Khác A ở:</b> chèn dải tra mệnh giữa danh sách</span>
+			<span class="tag"><b>Rủi ro:</b> nhiều code riêng hơn, xa Kadence hơn</span>
+		</div>
+
+		<div class="frame">
+			<div class="frame__bar">
+				<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+				<span class="frame__url">daquylucyen.net.vn/category/kien-thuc-da-quy/da-quy/</span>
+				<span class="frame__note">Phương án B — Cổng chủ đề</span>
+			</div>
+			<div class="stage" id="stage-b">
+				<div class="site">
+
+					<div class="top"><div class="container top__in">
+						<span class="logo">ĐÁ QUÝ <span>LỤC YÊN</span></span>
+						<nav class="menu">
+							<a class="cur">Kiến thức đá quý</a><a>Trang sức</a><a>Tư vấn chọn mua</a><a>Từ điển</a>
+						</nav>
+						<span class="top__act">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+						</span>
+					</div></div>
+
+					<header class="chead chead--b rel">
+						<span class="pin" style="left:14px; top:14px">1</span>
+						<div class="container chead__in">
+							<div class="split">
+								<div>
+									<nav class="crumb">
+										<a>Trang chủ</a>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+										<a>Kiến thức đá quý</a>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+										<span class="now">Đá quý</span>
+									</nav>
+									<h1>Đá quý</h1>
+									<p class="lead">
+										Nhận mặt, phân loại và hiểu giá trị của từng loại đá quý — ruby, sapphire, spinel,
+										thạch anh và những họ đá thường gặp ở Lục Yên. Viết cho người mua lần đầu,
+										không dùng thuật ngữ mà không giải thích.
+									</p>
+									<div class="facts">
+										<span><b>25</b> bài viết</span>
+										<span class="sep"></span>
+										<span>Cập nhật gần nhất <b>03/08/2026</b></span>
+										<span class="sep"></span>
+										<span>Trung bình <b>9 phút</b>/bài</span>
+									</div>
+								</div>
+
+								<aside class="startbox rel">
+									<span class="pin" style="left:-30px; top:0">2</span>
+									<h2>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v6c0 5 3.4 7.4 8 8 4.6-.6 8-3 8-8V7l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+										Chưa biết bắt đầu từ đâu?
+									</h2>
+									<p class="hint">Ba bài nền tảng. Đọc xong là hiểu được phần còn lại của chuyên mục.</p>
+									<ol>
+										<li><span><b>Kim cương là gì? Bạn biết gì về kim cương?</b><em>9 phút đọc</em></span></li>
+										<li><span><b>Corundum là gì? Họ đá sinh ra ruby và sapphire</b><em>9 phút đọc</em></span></li>
+										<li><span><b>Ngọc Bích nephrite Jade và 5 sai lầm khi đeo</b><em>10 phút đọc</em></span></li>
+									</ol>
+								</aside>
+							</div>
+
+							<nav class="chips">
+								<a class="chip chip--up">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+									Kiến thức đá quý
+								</a>
+								<span class="div"></span>
+								<a class="chip on">Đá quý <span class="chip__n">25</span></a>
+								<a class="chip">Đá bán quý <span class="chip__n">28</span></a>
+							</nav>
+						</div>
+					</header>
+
+					<main class="main"><div class="container">
+						<div class="rows rel">
+							<span class="pin" style="left:-30px; top:0">3</span>
+
+							<article class="row">
+								<div class="row__media"><img src="http://daquylucyen.local/wp-content/uploads/2020/01/thach-anh-toc-1.jpg" alt=""></div>
+								<div>
+									<h3><a>Thạch anh tóc — Lá bùa hộ mệnh tài lộc và tình duyên</a></h3>
+									<p>Loại đá quý sở hữu vẻ đẹp thuần khiết, tự nhiên với những sợi tóc đặc trưng đầy mê hoặc. Không chỉ đẹp, chúng còn mang ý nghĩa phong thủy rất lớn.</p>
+									<div class="meta"><span>10 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+								<span class="row__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></span>
+							</article>
+
+							<article class="row">
+								<div class="row__media"><img src="http://daquylucyen.local/wp-content/uploads/2020/01/thach-anh-tinh-the-1.jpg" alt=""></div>
+								<div>
+									<h3><a>Thạch anh tinh thể là gì? Phân loại thạch anh tinh thể</a></h3>
+									<p>Đa dạng kích cỡ, màu sắc và hình dáng. Không chỉ là vật trang trí mà còn là món đồ phong thủy ẩn chứa sức mạnh của Trái Đất.</p>
+									<div class="meta"><span>6 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+								<span class="row__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></span>
+							</article>
+
+							<article class="row">
+								<div class="row__media"><img src="http://daquylucyen.local/wp-content/uploads/2020/01/da-Diopside-1.jpg" alt=""></div>
+								<div>
+									<h3><a>Đá Diopside — Khám phá vẻ đẹp thanh khiết</a></h3>
+									<p>Nhóm đá quý hiếm được phát hiện năm 1988. Dù mới xuất hiện tại Việt Nam nhưng Chrome Diopside nhanh chóng được săn tìm.</p>
+									<div class="meta"><span>5 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+								<span class="row__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></span>
+							</article>
+
+							<article class="row">
+								<div class="row__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/09/ngoc-bich-nephrite-jade-la-gi-1-768x768.jpg" alt=""></div>
+								<div>
+									<h3><a>Ngọc Bích nephrite Jade là gì? 5 sai lầm cần tránh khi đeo</a></h3>
+									<p>Tính chất, đặc điểm của loại đá này như thế nào, và những lỗi thường gặp khiến người đeo mất tiền oan.</p>
+									<div class="meta"><span>10 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+								<span class="row__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></span>
+							</article>
+						</div>
+
+						<div class="cta rel">
+							<span class="pin" style="left:-30px; top:0">4</span>
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9"/></svg>
+							<span>
+								<b>Đá nào hợp mệnh bạn?</b>
+								<span>Nhập năm sinh, biết ngay mệnh của bạn và những loại đá đi cùng.</span>
+							</span>
+							<a>Tra ngay</a>
+						</div>
+
+						<div class="rows">
+							<article class="row">
+								<div class="row__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/10/corundum-la-gi-1-768x610.jpg" alt=""></div>
+								<div>
+									<h3><a>Corundum là gì? Bạn đã biết gì về Corundum?</a></h3>
+									<p>Họ khoáng vật sinh ra cả ruby lẫn sapphire — nền tảng để hiểu vì sao hai loại đá này đắt nhất trong nhóm màu.</p>
+									<div class="meta"><span>9 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+								<span class="row__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></span>
+							</article>
+
+							<article class="row">
+								<div class="row__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/10/cordierit-la-gi-1-768x511.jpg" alt=""></div>
+								<div>
+									<h3><a>Cordierit là gì? Bạn biết gì về Cordierit?</a></h3>
+									<p>Tính chất, đặc điểm cũng như công dụng và ý nghĩa của một loại đá mà ít người gọi đúng tên.</p>
+									<div class="meta"><span>8 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+								<span class="row__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></span>
+							</article>
+
+							<article class="row">
+								<div class="row__media"><img src="http://daquylucyen.local/wp-content/uploads/2019/09/da-idocrase-la-gi-1-768x768.jpg" alt=""></div>
+								<div>
+									<h3><a>Đá Idocrase là gì? Bạn biết gì về đá Idocrase?</a></h3>
+									<p>Khoáng vật thiên nhiên được xếp vào hàng đá quý, rất hay bị nhầm với ngọc bích khi mua ngoài chợ đá.</p>
+									<div class="meta"><span>8 phút đọc</span><span class="sep"></span><span>Cập nhật 8/2026</span></div>
+								</div>
+								<span class="row__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></span>
+							</article>
+						</div>
+
+						<nav class="pager">
+							<span class="cur">1</span><a>2</a><a>3</a>
+							<a class="nav">Sau <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></a>
+						</nav>
+						<p class="pager__info">Trang 1 / 3 — đang xem bài 1–10 trong 25 bài</p>
+					</div></main>
+
+					<section class="strip">
+						<div class="container">
+							<div class="strip__head">
+								<h2>Đọc nhiều nhất trong Đá quý</h2>
+								<a class="all">Xem tất cả →</a>
+							</div>
+							<div class="top4">
+								<a class="tin"><span class="tin__n">1</span><span><span class="tin__t">Kim cương là gì? Bạn biết gì về kim cương?</span><span class="tin__m">9 phút đọc</span></span></a>
+								<a class="tin"><span class="tin__n">2</span><span><span class="tin__t">Ngọc Bích nephrite Jade là gì? 5 sai lầm cần tránh</span><span class="tin__m">10 phút đọc</span></span></a>
+								<a class="tin"><span class="tin__n">3</span><span><span class="tin__t">Thạch anh tóc — Lá bùa hộ mệnh tài lộc</span><span class="tin__m">10 phút đọc</span></span></a>
+								<a class="tin"><span class="tin__n">4</span><span><span class="tin__t">Corundum là gì? Bạn đã biết gì về Corundum?</span><span class="tin__m">9 phút đọc</span></span></a>
+							</div>
+						</div>
+					</section>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="notes">
+			<h3>Chú thích phương án B</h3>
+			<ol>
+				<li><span><b>Đầu trang chia đôi.</b> <span class="why">Chữ bên trái, hộp dẫn đường bên phải. Cao hơn A khoảng 90px — vẫn dưới trần 220px mà spec đặt ra, nhưng lưới bài bị đẩy sâu hơn dưới màn hình đầu.</span></span></li>
+				<li><span><b>Hộp “Chưa biết bắt đầu từ đâu?”.</b> <span class="why">Ba bài nền tảng do bạn tự chọn cho mỗi chuyên mục. Đây là thứ A không có: người mới vào chuyên mục 25 bài không biết bài nào là gốc. <b>Cần thêm một ô chọn bài trong màn sửa chuyên mục.</b></span></span></li>
+				<li><span><b>Danh sách hàng ngang thay lưới thẻ.</b> <span class="why">Mỗi màn hình hiện được 4–5 bài kèm mô tả 2 dòng, so với 3 bài của lưới. Hợp với blog kiến thức — người đọc quét tiêu đề để tìm đúng bài, không lướt xem ảnh. Đổi lại: ảnh nhỏ, trang trông “ít đẹp” hơn khi chụp màn hình khoe.</span></span></li>
+				<li><span><b>Dải tra mệnh chèn sau bài thứ tư.</b> <span class="why">Công cụ có giá trị nhất của site, đặt ở chỗ người đọc đã cuộn qua bốn bài mà chưa bấm gì. Chỉ chèn ở trang 1.</span></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="notes">
+		<h3>Việc cần bạn quyết trước khi tôi code</h3>
+		<ol>
+			<li><span><b>Chọn A hay B.</b> <span class="why">A bám sát Kadence, ít code riêng, dễ bảo trì. B đẹp riêng hơn và dẫn người mới tốt hơn, nhưng phải tự dựng vòng lặp bài và thêm một ô cấu hình mới.</span></span></li>
+			<li><span><b>Bỏ sidebar ở trang chuyên mục?</b> <span class="why">Cả hai phương án đều bỏ để lấy đủ chiều rộng. Nếu bạn định bán quảng cáo ở cột bên trang chuyên mục thì phải giữ, và lưới sẽ chỉ còn 2 cột.</span></span></li>
+			<li><span><b>Mô tả cho 7 chuyên mục.</b> <span class="why">Khối mô tả ở đầu trang chỉ hiện khi chuyên mục có mô tả. Hiện cả 7 đều trống. Tôi có thể soạn nháp để bạn sửa lại.</span></span></li>
+			<li><span><b>Ngày hiển thị.</b> <span class="why">Đề xuất bỏ ngày đăng gốc, chỉ hiện “Cập nhật T8/2026”. Nếu bạn muốn giữ cả hai thì nói, nhưng dãy ngày 2019–2020 đang làm chuyên mục trông cũ.</span></span></li>
+			<li><span><b>Chuyên mục cha (Kiến thức đá quý, Trang sức, Tư vấn).</b> <span class="why">Ba cái này không có bài gán trực tiếp, chỉ có bài của con. Tôi định cho chúng một biến thể riêng: đầu trang giống nhau, nhưng dưới chip là dải thẻ chuyên mục con có ảnh, rồi mới tới bài. Cần mockup riêng cho biến thể này không?</span></span></li>
+		</ol>
+	</div>
+
+</div>
+
+<script>
+(function(){
+	var views = {a:document.getElementById('v-a'), b:document.getElementById('v-b')};
+	var stages = [document.getElementById('stage-a'), document.getElementById('stage-b')];
+
+	document.querySelectorAll('.bar button[data-v]').forEach(function(btn){
+		btn.addEventListener('click', function(){
+			document.querySelectorAll('.bar button[data-v]').forEach(function(b){b.classList.remove('on');});
+			btn.classList.add('on');
+			for (var k in views) views[k].classList.toggle('on', k === btn.dataset.v);
+		});
+	});
+
+	document.querySelectorAll('.bar button[data-s]').forEach(function(btn){
+		btn.addEventListener('click', function(){
+			document.querySelectorAll('.bar button[data-s]').forEach(function(b){b.classList.remove('on');});
+			btn.classList.add('on');
+			var mb = btn.dataset.s === 'mb';
+			stages.forEach(function(s){ s.classList.toggle('stage--mb', mb); });
+			document.body.classList.toggle('nopins', mb);
+		});
+	});
+
+	var pin = document.getElementById('pin');
+	pin.addEventListener('click', function(){
+		pin.classList.toggle('on');
+		document.body.classList.toggle('nopins', !pin.classList.contains('on'));
+	});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+/*
+ * Kiểu dáng cho các mẫu khối riêng của site.
+ *
+ * File này nạp ở CẢ hai nơi: ngoài trang và trong trình soạn thảo. Nhờ vậy
+ * người viết bài thấy đúng thứ độc giả sẽ thấy, và không có bản sao nào của
+ * các quy tắc dưới đây phải giữ đồng bộ bằng tay.
+ *
+ * Vì thế mọi bộ chọn ở đây phải hoạt động được ở cả hai môi trường — tức là
+ * chỉ dựa vào class của chính khối, không dựa vào cấu trúc trang bao ngoài.
+ */
+
+/* ---------------------------------------------------------------------------
+ * Hộp nhấn mạnh: tóm tắt đầu bài, cảnh báo hàng giả
+ * ------------------------------------------------------------------------- */
+
+.dql-callout {
+	border-radius: 10px;
+	padding: 1.25rem 1.5rem;
+	margin-block: 2rem;
+}
+
+.dql-callout > *:last-child {
+	margin-bottom: 0;
+}
+
+.dql-callout__label {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	margin-bottom: 0.75rem;
+}
+
+/* Biểu tượng vẽ bằng mask thay vì ảnh nền màu cố định. Nhờ mask, màu biểu tượng
+   lấy từ background-color nên tự đi theo bảng màu trong Customizer — đổi màu
+   thương hiệu thì biểu tượng đổi theo, không phải sửa lại file này. */
+.dql-callout__label::before {
+	content: "";
+	width: 18px;
+	height: 18px;
+	flex: none;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+/* --- Tóm tắt đầu bài --- */
+
+.dql-callout--summary {
+	background: var(--global-palette8);
+	border-left: 3px solid var(--global-palette1);
+	border-radius: 0;
+}
+
+.dql-callout--summary .dql-callout__label {
+	color: var(--global-palette2);
+}
+
+.dql-callout--summary .dql-callout__label::before {
+	background-color: var(--global-palette1);
+	-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 11l3 3L22 4'/%3E%3Cpath d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'/%3E%3C/svg%3E");
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 11l3 3L22 4'/%3E%3Cpath d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'/%3E%3C/svg%3E");
+}
+
+/* --- Cảnh báo hàng giả --- */
+
+.dql-callout--warning {
+	background: color-mix(in srgb, var(--global-palette14) 8%, transparent);
+	border-left: 3px solid var(--global-palette14);
+	border-radius: 0;
+}
+
+.dql-callout--warning .dql-callout__label {
+	color: var(--global-palette14);
+}
+
+.dql-callout--warning .dql-callout__label::before {
+	background-color: var(--global-palette14);
+	-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3 2 20h20z'/%3E%3Cpath d='M12 9v5'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3 2 20h20z'/%3E%3Cpath d='M12 9v5'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------------------------------------
+ * Bảng thông số đá
+ * ------------------------------------------------------------------------- */
+
+.dql-spec {
+	border: 1px solid var(--global-palette7);
+	border-radius: 10px;
+	padding: 1.25rem 1.5rem;
+	margin-block: 2rem;
+}
+
+.dql-spec__title {
+	font-size: 1rem;
+	letter-spacing: 0.02em;
+	color: var(--global-palette3);
+	margin: 0 0 0.75rem;
+}
+
+.dql-spec__table {
+	margin: 0;
+}
+
+.dql-spec__table table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.95rem;
+}
+
+/* Viền ngang giữa các dòng thay vì kẻ ô đầy đủ. Bảng hai cột kiểu tra cứu
+   đọc nhanh hơn khi mắt không phải vượt qua đường kẻ dọc. */
+.dql-spec__table th,
+.dql-spec__table td {
+	border: 0;
+	border-bottom: 1px solid var(--global-palette7);
+	padding: 0.6rem 0;
+	text-align: left;
+	vertical-align: top;
+}
+
+.dql-spec__table tr:last-child th,
+.dql-spec__table tr:last-child td {
+	border-bottom: 0;
+}
+
+.dql-spec__table th {
+	background: none;
+	color: var(--global-palette5);
+	font-weight: 400;
+	width: 42%;
+	padding-right: 1rem;
+}
+
+.dql-spec__table td {
+	color: var(--global-palette3);
+	font-weight: 500;
+}
+
+/* ---------------------------------------------------------------------------
+ * Bảng so sánh thật và giả
+ * ------------------------------------------------------------------------- */
+
+.dql-compare {
+	margin-block: 2rem;
+}
+
+.dql-compare__col {
+	border-radius: 10px;
+	padding: 1.25rem 1.4rem;
+}
+
+.dql-compare__col--yes {
+	background: color-mix(in srgb, var(--global-palette11) 7%, transparent);
+}
+
+.dql-compare__col--no {
+	background: color-mix(in srgb, var(--global-palette13) 6%, transparent);
+}
+
+.dql-compare__head {
+	font-size: 1rem;
+	margin: 0 0 0.75rem;
+}
+
+.dql-compare__col--yes .dql-compare__head {
+	color: var(--global-palette11);
+}
+
+.dql-compare__col--no .dql-compare__head {
+	color: var(--global-palette13);
+}
+
+.dql-compare__col ul {
+	margin: 0;
+	padding-left: 1.15rem;
+}
+
+.dql-compare__col li {
+	margin-bottom: 0.5rem;
+	font-size: 0.95rem;
+	line-height: 1.6;
+}
+
+.dql-compare__col li:last-child {
+	margin-bottom: 0;
+}
+
+/* Hai cột xếp chồng trên điện thoại: thêm khoảng cách để không dính nhau.
+   Khối cột của WordPress bỏ khoảng cách khi xuống một cột. */
+@media (max-width: 781px) {
+	.dql-compare__cols > .wp-block-column + .wp-block-column {
+		margin-top: 1rem;
+	}
+}

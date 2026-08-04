@@ -1,0 +1,254 @@
+/*
+ * Trang bài viết đơn — bố cục "một cột, mục lục dính bên trái".
+ *
+ * Chỉ nạp ở bài viết đơn.
+ */
+
+/* ---------------------------------------------------------------------------
+ * Thời gian đọc
+ * ------------------------------------------------------------------------- */
+
+.dql-single-meta {
+	margin: 0 0 1.75rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--global-palette7);
+}
+
+/* ---------------------------------------------------------------------------
+ * Neo tiêu đề
+ *
+ * Kadence có tùy chọn header dính. Không có dòng này, bấm vào mục lục sẽ nhảy
+ * tới tiêu đề rồi bị header che mất.
+ * ------------------------------------------------------------------------- */
+
+.single-content h2[id],
+.single-content h3[id] {
+	scroll-margin-top: 100px;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * Mục lục — dạng mặc định (màn hình hẹp): thanh gập ở đầu bài
+ * ------------------------------------------------------------------------- */
+
+.dql-toc {
+	margin: 0 0 1.75rem;
+}
+
+.dql-toc__inner {
+	border: 1px solid var(--global-palette7);
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.dql-toc__toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	width: 100%;
+	background: var(--global-palette8);
+	border: 0;
+	padding: 0.85rem 1rem;
+	font-family: inherit;
+	font-size: 0.95rem;
+	font-weight: 500;
+	color: var(--global-palette3);
+	text-align: left;
+	cursor: pointer;
+}
+
+.dql-toc__chevron {
+	width: 18px;
+	height: 18px;
+	flex: none;
+	color: var(--global-palette6);
+	transition: transform 0.2s ease;
+}
+
+.dql-toc__toggle[aria-expanded="false"] .dql-toc__chevron {
+	transform: rotate(-90deg);
+}
+
+/*
+ * Nút đóng mở có tác dụng ở MỌI trường hợp, TRỪ chế độ cột lề trái.
+ *
+ * Hai lỗi đã gặp thật ở chỗ này, sửa lần lượt:
+ *
+ *   1. Ban đầu quy tắc ẩn áp dụng mọi khổ màn hình. Ở chế độ cột lề, nếu
+ *      aria-expanded còn sót giá trị "false" thì mục lục biến mất mà không có
+ *      cách nào mở lại — vì ở chế độ đó nút chỉ đóng vai trò tiêu đề.
+ *
+ *   2. Sửa lần một bằng cách bọc trong @media (max-width: 1319px). Nhưng khi
+ *      bài có cột bên, mục lục ở dạng thanh gập ngay cả trên màn 1440px — và
+ *      quy tắc ẩn không với tới, nên bấm nút không đóng được gì.
+ *
+ * Cách đúng: ẩn là hành vi MẶC ĐỊNH, chỉ vô hiệu hóa nó ở đúng chế độ cột lề.
+ * Điều kiện khớp chính xác với điều kiện tạo ra chế độ cột lề bên dưới.
+ */
+.dql-toc__toggle[aria-expanded="false"] + .dql-toc__nav {
+	display: none;
+}
+
+@media (min-width: 1320px) {
+	body:not(.has-sidebar) .dql-toc__toggle[aria-expanded="false"] + .dql-toc__nav {
+		display: block;
+	}
+}
+
+.dql-toc__nav {
+	padding: 0.85rem 1rem 1rem;
+}
+
+.dql-toc__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: dql-toc;
+}
+
+.dql-toc__item {
+	margin: 0 0 0.5rem;
+	line-height: 1.5;
+}
+
+.dql-toc__item:last-child {
+	margin-bottom: 0;
+}
+
+.dql-toc__item--h3 {
+	padding-left: 1rem;
+}
+
+.dql-toc__link {
+	color: var(--global-palette5);
+	text-decoration: none;
+	font-size: 0.9rem;
+	border-bottom: 0;
+	transition: color 0.15s ease;
+}
+
+.dql-toc__item--h3 .dql-toc__link {
+	font-size: 0.85rem;
+}
+
+.dql-toc__link:hover {
+	color: var(--global-palette1);
+}
+
+.dql-toc__link.is-current {
+	color: var(--global-palette1);
+	font-weight: 500;
+}
+
+/* ---------------------------------------------------------------------------
+ * Mục lục — màn hình rộng: đẩy ra lề trái, dính khi cuộn
+ *
+ * Ngưỡng 1320px là con số ĐO ĐƯỢC, không phải ước lượng. Ở 1240px khung bài
+ * của Kadence còn rộng nên lề trái chỉ dư 7px — mục lục chạm sát mép màn hình.
+ * Tại 1320px lề dư khoảng 47px, đủ thoáng. Dưới ngưỡng này mục lục giữ dạng
+ * thanh gập ở đầu bài.
+ *
+ * JavaScript KHÔNG lặp lại con số này — nó đọc thẳng position của phần tử để
+ * biết đang ở chế độ nào.
+ *
+ * ĐIỀU KIỆN body:not(.has-sidebar) LÀ BẮT BUỘC.
+ *
+ * Khi bài viết có cột bên, cột đó ăn hết phần lề phải và đẩy cột nội dung sang
+ * trái. Đo thực tế ở màn 1440px: mục lục rơi xuống left: -113px, tức hơn nửa
+ * cột nằm ngoài màn hình. Có cột bên thì mục lục giữ nguyên dạng thanh gập ở
+ * đầu bài.
+ *
+ * Bật/tắt cột bên ở Customizer → Bài viết → Bố cục. JavaScript tự đi theo vì nó
+ * đọc position thật của phần tử.
+ * ------------------------------------------------------------------------- */
+
+@media (min-width: 1320px) {
+	body:not(.has-sidebar) .single .entry-content-wrap,
+	.single:not(.has-sidebar) .entry-content-wrap {
+		position: relative;
+	}
+
+	/* Cột hẹp ở khổ vừa. Đo thực tế trên màn 1280px: cột 215px cách mép trái
+	   chỉ 27px, và ngay tại ngưỡng 1240px chỉ còn 14px — chạm sát mép. Cột
+	   180px cho lề khoảng 60px, đủ thoáng ở cả hai đầu khoảng. */
+	body:not(.has-sidebar) .dql-toc {
+		position: absolute;
+		top: 0;
+		left: -205px;
+		width: 180px;
+		height: 100%;
+		margin: 0;
+	}
+
+	/* Con nằm sticky trong cha absolute: cha cho chiều cao để trượt,
+	   con dính lại khi chạm mốc trên. */
+	body:not(.has-sidebar) .dql-toc__inner {
+		position: sticky;
+		top: 100px;
+		border: 0;
+		border-left: 2px solid var(--global-palette7);
+		border-radius: 0;
+		max-height: calc(100vh - 140px);
+		overflow-y: auto;
+	}
+
+	body:not(.has-sidebar) .dql-toc__toggle {
+		background: none;
+		padding: 0 0 0.75rem 1rem;
+		font-size: 0.75rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--global-palette6);
+		cursor: default;
+	}
+
+	/* Ở khổ này mục lục luôn mở, nên mũi tên không còn ý nghĩa. */
+	body:not(.has-sidebar) .dql-toc__chevron {
+		display: none;
+	}
+
+	body:not(.has-sidebar) .dql-toc__nav {
+		padding: 0 0 0 1rem;
+	}
+
+	body:not(.has-sidebar) .dql-toc__link.is-current {
+		position: relative;
+	}
+
+	/* Vạch đánh dấu chồng lên đúng vị trí đường viền trái của cột. */
+	body:not(.has-sidebar) .dql-toc__link.is-current::before {
+		content: "";
+		position: absolute;
+		left: -1rem;
+		top: 0;
+		bottom: 0;
+		width: 2px;
+		margin-left: -2px;
+		background: var(--global-palette1);
+	}
+}
+
+/* Màn hình rộng: cột rộng hơn, tiêu đề dài đỡ bị ngắt dòng nhiều. */
+@media (min-width: 1440px) {
+	body:not(.has-sidebar) .dql-toc {
+		left: -250px;
+		width: 215px;
+	}
+}
+
+@media (min-width: 1650px) {
+	body:not(.has-sidebar) .dql-toc {
+		left: -300px;
+		width: 255px;
+	}
+}

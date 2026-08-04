@@ -1,0 +1,394 @@
+/*
+ * Tìm kiếm: hộp gợi ý tức thời ở trang chủ, và trang kết quả.
+ */
+
+/* ---------------------------------------------------------------------------
+ * Hộp gợi ý dưới ô tìm kiếm
+ * ------------------------------------------------------------------------- */
+
+.dql-search {
+	position: relative;
+}
+
+.dql-goi-y {
+	position: absolute;
+	top: calc(100% + 0.5rem);
+	left: 0;
+	right: 0;
+	z-index: 30;
+	background: var(--global-palette9);
+	border: 1px solid var(--global-palette7);
+	border-radius: 14px;
+	box-shadow: 0 24px 50px -28px rgba(15, 46, 95, 0.55);
+	padding: 0.5rem;
+	max-height: min(28rem, 70vh);
+	overflow-y: auto;
+	text-align: left;
+}
+
+.dql-gy__nhan {
+	font-size: 0.7rem;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--global-palette6);
+	margin: 0.5rem 0.65rem 0.35rem;
+}
+
+.dql-gy__list {
+	margin: 0 0 0.25rem;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-gy__item a {
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+	padding: 0.5rem 0.65rem;
+	border-radius: 9px;
+	text-decoration: none;
+	border: 0;
+	transition: background-color 0.14s ease;
+}
+
+.dql-gy__item a:hover,
+.dql-gy__item.is-chon a {
+	background: var(--global-palette8);
+}
+
+.dql-gy__item img,
+.dql-gy__khonganh {
+	width: 44px;
+	height: 44px;
+	flex: none;
+	object-fit: cover;
+	border-radius: 7px;
+	background: var(--global-palette7);
+}
+
+.dql-gy__chu {
+	min-width: 0;
+}
+
+.dql-gy__tieude {
+	display: block;
+	font-size: 0.92rem;
+	line-height: 1.4;
+	color: var(--global-palette3);
+	/* Cắt còn hai dòng: tiêu đề bài đá quý thường rất dài, để nguyên thì một
+	   gợi ý chiếm hết chỗ của các gợi ý khác. */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.dql-gy__meta {
+	display: block;
+	font-size: 0.78rem;
+	color: var(--global-palette6);
+	margin-top: 0.15rem;
+}
+
+/* Mục từ điển: không có ảnh, hiện nghĩa ngắn. */
+.dql-gy__item--tu a {
+	display: block;
+}
+
+.dql-gy__tu {
+	display: block;
+	font-size: 0.95rem;
+	font-weight: 500;
+	color: var(--global-palette2);
+}
+
+.dql-gy__nghia {
+	display: block;
+	font-size: 0.82rem;
+	line-height: 1.5;
+	color: var(--global-palette5);
+	margin-top: 0.1rem;
+}
+
+.dql-gy__xemhet {
+	display: block;
+	text-align: center;
+	padding: 0.6rem;
+	margin-top: 0.25rem;
+	border-top: 1px solid var(--global-palette7);
+	font-size: 0.88rem;
+	color: var(--global-palette1);
+	text-decoration: none;
+}
+
+.dql-gy__xemhet:hover {
+	background: var(--global-palette8);
+}
+
+.dql-gy__trong {
+	margin: 0;
+	padding: 1rem 0.65rem;
+	font-size: 0.9rem;
+	color: var(--global-palette6);
+	text-align: center;
+}
+
+/* ---------------------------------------------------------------------------
+ * Trang kết quả
+ * ------------------------------------------------------------------------- */
+
+.dql-kq__dau {
+	margin-bottom: 2.5rem;
+	padding-bottom: 1.5rem;
+	border-bottom: 1px solid var(--global-palette7);
+}
+
+.dql-kq__tieude {
+	font-size: clamp(1.5rem, 3.5vw, 2rem);
+	line-height: 1.3;
+	margin: 0 0 0.4rem;
+}
+
+.dql-kq__tu {
+	color: var(--global-palette1);
+}
+
+.dql-kq__dem {
+	margin: 0 0 1.25rem;
+	font-size: 0.92rem;
+	color: var(--global-palette6);
+}
+
+.dql-kq__form {
+	display: flex;
+	gap: 0.5rem;
+	max-width: 30rem;
+}
+
+.dql-kq__form input {
+	flex: 1;
+	min-width: 0;
+	border: 1px solid var(--global-palette7);
+	border-radius: 999px;
+	padding: 0.6rem 1.1rem;
+	font-size: 0.95rem;
+	font-family: inherit;
+	color: var(--global-palette3);
+	background: var(--global-palette9);
+}
+
+.dql-kq__form button {
+	flex: none;
+	border: 0;
+	border-radius: 999px;
+	background: var(--global-palette1);
+	color: #fff;
+	font-family: inherit;
+	font-size: 0.92rem;
+	font-weight: 500;
+	padding: 0.6rem 1.4rem;
+	cursor: pointer;
+}
+
+.dql-kq__form button:hover {
+	background: var(--global-palette2);
+}
+
+.dql-kq__nhom {
+	margin-bottom: 3rem;
+}
+
+/* --- Nhóm từ điển: gọn, hai cột trên màn rộng --- */
+
+.dql-kq__tudien {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+	gap: 0.6rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-kq__tudien a {
+	display: block;
+	border: 1px solid var(--global-palette7);
+	border-radius: 10px;
+	padding: 0.8rem 1rem;
+	text-decoration: none;
+	transition: border-color 0.18s ease;
+}
+
+.dql-kq__tudien a:hover {
+	border-color: var(--global-palette1);
+}
+
+.dql-kq__tudien-tu {
+	display: block;
+	font-weight: 500;
+	color: var(--global-palette2);
+	margin-bottom: 0.2rem;
+}
+
+.dql-kq__tudien-nghia {
+	display: block;
+	font-size: 0.88rem;
+	line-height: 1.55;
+	color: var(--global-palette5);
+}
+
+/* --- Nhóm bài viết --- */
+
+.dql-kq__ds {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-kq__item {
+	margin: 0;
+	border-bottom: 1px solid var(--global-palette7);
+}
+
+.dql-kq__item:last-child {
+	border-bottom: 0;
+}
+
+.dql-kq__link {
+	display: grid;
+	grid-template-columns: 8rem 1fr;
+	gap: 1.1rem;
+	align-items: start;
+	padding: 1.1rem 0;
+	text-decoration: none;
+	border: 0;
+}
+
+.dql-kq__anh {
+	display: block;
+	aspect-ratio: 4 / 3;
+	overflow: hidden;
+	border-radius: 9px;
+	background: var(--global-palette7);
+}
+
+.dql-kq__anh img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.4s ease;
+}
+
+.dql-kq__link:hover .dql-kq__anh img {
+	transform: scale(1.05);
+}
+
+.dql-kq__cat {
+	display: block;
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--global-palette1);
+	margin-bottom: 0.25rem;
+}
+
+.dql-kq__ten {
+	display: block;
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.08rem;
+	font-weight: 600;
+	line-height: 1.4;
+	color: var(--global-palette3);
+	margin-bottom: 0.3rem;
+	transition: color 0.18s ease;
+}
+
+.dql-kq__link:hover .dql-kq__ten {
+	color: var(--global-palette1);
+}
+
+.dql-kq__trich {
+	display: block;
+	font-size: 0.92rem;
+	line-height: 1.65;
+	color: var(--global-palette5);
+	margin-bottom: 0.35rem;
+}
+
+.dql-kq__meta {
+	display: block;
+	font-size: 0.82rem;
+	color: var(--global-palette6);
+}
+
+/* Bài không có ảnh: chữ chiếm trọn chiều ngang, không chừa ô trống. */
+.dql-kq__link:not(:has(.dql-kq__anh)) {
+	grid-template-columns: 1fr;
+}
+
+@media (max-width: 560px) {
+	.dql-kq__link {
+		grid-template-columns: 5.5rem 1fr;
+		gap: 0.8rem;
+	}
+
+	.dql-kq__trich {
+		display: none;
+	}
+}
+
+/* --- Phân trang --- */
+
+.dql-kq__phantrang ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	margin: 2rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-kq__phantrang a,
+.dql-kq__phantrang span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.25rem;
+	height: 2.25rem;
+	padding: 0 0.6rem;
+	border: 1px solid var(--global-palette7);
+	border-radius: 8px;
+	font-size: 0.92rem;
+	text-decoration: none;
+	color: var(--global-palette4);
+}
+
+.dql-kq__phantrang a:hover {
+	border-color: var(--global-palette1);
+	color: var(--global-palette1);
+}
+
+.dql-kq__phantrang .current {
+	background: var(--global-palette1);
+	border-color: var(--global-palette1);
+	color: #fff;
+}
+
+/* --- Không có kết quả --- */
+
+.dql-kq__trong {
+	padding: 2rem 0;
+}
+
+.dql-kq__goi-y {
+	margin: 1.5rem 0 0.75rem;
+	color: var(--global-palette5);
+}
+
+.dql-kq__tu-goi-y {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}

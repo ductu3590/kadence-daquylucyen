@@ -1,0 +1,913 @@
+/*
+ * Cột bên — trang chủ, trang bài viết, trang chuyên mục.
+ *
+ * Ba nơi, một ngôn ngữ thị giác: mỗi mục là một THẺ nền trắng, viền mảnh, góc
+ * bo — cùng hệ thẻ dùng ở lưới bài và menu con. Nhờ vậy cột bên không trông như
+ * một khu vực khác được dán vào trang.
+ *
+ * Ba lớp bọc cần phủ:
+ *   .dql-sidebar    cột bên trang chủ, do theme dựng
+ *   .primary-sidebar cột bên của Kadence ở trang bài viết và chuyên mục
+ *
+ * Nội dung bên trong đến từ hai nguồn: các khối do inc/sidebar.php dựng
+ * (.dql-sb-card) và widget dạng khối của WordPress 6 (wp-block-*). Cả hai đều
+ * phải trông như nhau, nên phần lớn quy tắc dưới đây nhắm vào cả hai.
+ */
+
+.dql-sidebar,
+.primary-sidebar {
+	--dql-sb-vien: 1px solid var(--global-palette7);
+	--dql-sb-goc: 14px;
+	--dql-sb-dem: 1.25rem;
+
+	/* Khoảng hở giữa các thẻ. Dùng biến để chỉnh một chỗ. */
+	--dql-sb-hang: 1.25rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * 1. Dính khi cuộn
+ *
+ * Chỉ ô CUỐI cột dính lại, không phải cả cột. Cả cột dính chỉ chạy được khi cột
+ * thấp hơn màn hình — với năm sáu thẻ thì không bao giờ đúng, và kết quả là
+ * position: sticky im lặng không làm gì.
+ *
+ * Ba điều kiện phải cùng đúng thì sticky mới chạy, thiếu một là hỏng im lặng:
+ *
+ *   1. Không tổ tiên nào có overflow khác visible. Kadence đặt
+ *      #wrapper { overflow: hidden; overflow: clip } để chặn tràn ngang của
+ *      khối alignfull — đủ để giết sticky ở mọi nơi trong trang.
+ *   2. Cột phải CAO hơn phần tử dính, để nó có quãng đường mà trượt. Cột bên là
+ *      ô lưới nên tự kéo cao bằng cột nội dung; .sidebar-inner-wrap của Kadence
+ *      thì cần height: 100% mới theo.
+ *   3. Phần tử dính phải là con trực tiếp của khối cao đó.
+ *
+ * Mở lại overflow ở #wrapper là đánh đổi có ý thức, và là đúng thứ Kadence tự
+ * làm khi bật tùy chọn cột bên dính của nó. Nếu về sau có khối alignfull nào
+ * đẩy trang tràn ngang, thu hẹp bộ chọn dưới đây thay vì bỏ sticky.
+ * ------------------------------------------------------------------------- */
+
+/*
+ * .has-sidebar là class Kadence gắn lên body ở mọi trang có cột bên: bài viết,
+ * chuyên mục, danh sách bài, tìm kiếm. .home cho trang chủ, vì cột bên ở đó do
+ * theme tự dựng nên Kadence không gắn class.
+ */
+.has-sidebar #wrapper,
+.home #wrapper {
+	overflow: visible;
+}
+
+.primary-sidebar .sidebar-inner-wrap {
+	height: 100%;
+}
+
+/*
+ * Ô CUỐI cột dính lại, dù đó là ô nào.
+ *
+ * Nhắm bằng :last-child chứ không bằng một class gắn tay: chủ site có thể chưa
+ * đặt widget vào ô quảng cáo cuối, và khi đó phần tử cuối là một thẻ khác. Quy
+ * tắc theo vị trí thì luôn đúng, không phụ thuộc vào việc vùng widget nào đang
+ * có nội dung.
+ *
+ * top: 100px chừa chỗ cho header dính của Kadence — cùng con số với mục lục bài
+ * viết trong single.css.
+ */
+.dql-sidebar > *:last-child,
+.primary-sidebar .sidebar-inner-wrap > *:last-child,
+.dql-sb--dinh {
+	position: sticky;
+	top: 100px;
+}
+
+/* Dưới ngưỡng hai cột, cột bên nằm xuôi dưới nội dung nên dính là vô nghĩa. */
+@media (max-width: 900px) {
+	.dql-sidebar > *:last-child,
+	.primary-sidebar .sidebar-inner-wrap > *:last-child,
+	.dql-sb--dinh {
+		position: static;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Thẻ
+ * ------------------------------------------------------------------------- */
+
+.dql-sidebar > *,
+.primary-sidebar .sidebar-inner-wrap > * {
+	margin-bottom: var(--dql-sb-hang);
+}
+
+.dql-sidebar > *:last-child,
+.primary-sidebar .sidebar-inner-wrap > *:last-child {
+	margin-bottom: 0;
+}
+
+/*
+ * Nền và viền đi qua BIẾN, không đặt thẳng.
+ *
+ * Lý do là một cái bẫy về độ ưu tiên, đã mắc một lần: quy tắc gốc phải phủ cả
+ * `.primary-sidebar .widget` (hai class) để bắt được widget của Kadence. Thẻ
+ * biến thể như .dql-sb-card--menh chỉ có MỘT class nên luôn thua — thẻ tra mệnh
+ * mất nền xanh và biến thành một thẻ trắng có chữ trắng ở trang bài viết, trong
+ * khi ở trang chủ nó vẫn đúng.
+ *
+ * Biến không có chuyện đó: giá trị đặt trên chính phần tử luôn thắng, bất kể
+ * quy tắc DÙNG biến có bộ chọn dài tới đâu.
+ */
+.dql-sb-card,
+.primary-sidebar .widget {
+	background: var(--dql-sb-nen, var(--global-palette9));
+	border: var(--dql-sb-vien);
+	border-radius: var(--dql-sb-goc);
+	padding: var(--dql-sb-dem);
+	margin: 0 0 var(--dql-sb-hang);
+}
+
+.dql-sb-card:last-child,
+.primary-sidebar .widget:last-child {
+	margin-bottom: 0;
+}
+
+/*
+ * Widget chỉ chứa quảng cáo hoặc một tấm ảnh thì bỏ khung.
+ *
+ * Banner trong một thẻ có viền và đệm trông như bị đóng khung hai lần, và phần
+ * đệm ăn mất chiều rộng mà AdSense cần để chọn cỡ.
+ */
+.dql-sb-card:has(.adsbygoogle),
+.primary-sidebar .widget:has(.adsbygoogle),
+.dql-sb-card:has(> img:only-child),
+.primary-sidebar .widget:has(> img:only-child) {
+	background: none;
+	border: 0;
+	padding: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Tiêu đề thẻ
+ *
+ * Phủ cả ba trường hợp: khối của theme (.dql-sb-card__title), widget khối
+ * (.wp-block-heading), widget cũ (.widget-title), và thẻ tiêu đề trần mà chủ
+ * site chèn tay.
+ * ------------------------------------------------------------------------- */
+
+.dql-sb-card__title,
+.primary-sidebar .widget-title,
+.primary-sidebar .widget .wp-block-heading,
+.primary-sidebar .widget > h2,
+.primary-sidebar .widget > h3 {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 0.76rem;
+	font-weight: 600;
+	letter-spacing: 0.11em;
+	text-transform: uppercase;
+	color: var(--global-palette4);
+	margin: 0 0 0.95rem;
+}
+
+/* Vạch nối dài sau tiêu đề thay cho đường kẻ ngang chạy hết chiều rộng.
+   Nhẹ hơn một border, và mắt vẫn thấy đủ ranh giới. */
+.dql-sb-card__title::after,
+.primary-sidebar .widget-title::after,
+.primary-sidebar .widget .wp-block-heading::after,
+.primary-sidebar .widget > h2::after,
+.primary-sidebar .widget > h3::after {
+	content: "";
+	flex: 1;
+	height: 1px;
+	background: var(--global-palette7);
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Liên kết chung
+ * ------------------------------------------------------------------------- */
+
+.dql-sidebar a,
+.primary-sidebar a {
+	color: var(--global-palette4);
+	text-decoration: none;
+	border-bottom: 0;
+	transition: color var(--dql-transition);
+}
+
+.dql-sidebar a:hover,
+.primary-sidebar a:hover {
+	color: var(--global-palette1);
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Nút trong cột bên
+ * ------------------------------------------------------------------------- */
+
+.dql-sb-nut {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	text-align: center;
+	border: var(--dql-sb-vien);
+	border-radius: 999px;
+	padding: 0.55rem 1rem;
+	font-size: 0.88rem;
+	font-weight: 500;
+	transition: border-color var(--dql-transition), color var(--dql-transition), background-color var(--dql-transition);
+}
+
+.dql-sb-nut:hover {
+	border-color: var(--global-palette1);
+	color: var(--global-palette1);
+}
+
+.dql-sb-nut--dam {
+	background: var(--global-palette1);
+	border-color: var(--global-palette1);
+	color: #fff;
+}
+
+/* Bộ chọn nhắc lại .dql-sb-nut--dam để thắng quy tắc màu chữ của mục 4 ở trên,
+   vốn cũng là hai class. */
+.dql-sb-nut--dam:hover,
+.dql-sidebar a.dql-sb-nut--dam:hover,
+.primary-sidebar a.dql-sb-nut--dam:hover {
+	background: var(--global-palette2);
+	border-color: var(--global-palette2);
+	color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Khối "Khám phá theo chủ đề"
+ * ------------------------------------------------------------------------- */
+
+.dql-sb-cat {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-sb-cat__item + .dql-sb-cat__item {
+	border-top: var(--dql-sb-vien);
+}
+
+.dql-sb-cat__link {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.62rem 0;
+	font-size: 0.95rem;
+	line-height: 1.4;
+}
+
+.dql-sb-cat__item:first-child .dql-sb-cat__link {
+	padding-top: 0;
+}
+
+.dql-sb-cat__item:last-child .dql-sb-cat__link {
+	padding-bottom: 0;
+}
+
+.dql-sb-cat__ten {
+	font-weight: 500;
+	text-wrap: pretty;
+}
+
+/* Số bài: viên tròn nhạt, không cạnh tranh với tên chuyên mục. */
+.dql-sb-cat__so {
+	flex: none;
+	min-width: 1.85rem;
+	text-align: center;
+	background: var(--global-palette8);
+	border-radius: 999px;
+	padding: 0.12rem 0.5rem;
+	font-size: 0.75rem;
+	font-variant-numeric: tabular-nums;
+	color: var(--global-palette6);
+	transition: background-color var(--dql-transition), color var(--dql-transition);
+}
+
+.dql-sb-cat__link:hover .dql-sb-cat__so {
+	background: var(--global-palette1);
+	color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Khối "Đăng ký nhận bài"
+ *
+ * Thẻ duy nhất có nền màu. Đây là khối chuyển đổi — nó được phép nổi hơn phần
+ * còn lại, nhưng chỉ một khối thôi. Hai khối cùng nổi thì không khối nào nổi.
+ * ------------------------------------------------------------------------- */
+
+.dql-sb-card--mail {
+	--dql-sb-nen: var(--global-palette8);
+	--dql-sb-vien: 1px solid transparent;
+
+	text-align: center;
+}
+
+.dql-sb-mail__icon {
+	width: 30px;
+	height: 30px;
+	color: var(--global-palette1);
+	margin-bottom: 0.55rem;
+}
+
+.dql-sb-mail__title {
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.02rem;
+	font-weight: 600;
+	line-height: 1.35;
+	color: var(--global-palette3);
+	margin: 0 0 0.4rem;
+	text-wrap: balance;
+}
+
+.dql-sb-mail__desc {
+	font-size: 0.86rem;
+	line-height: 1.6;
+	color: var(--global-palette5);
+	margin: 0 0 1rem;
+}
+
+/*
+ * Form do WPForms sinh ra.
+ *
+ * Hai tầng, và thứ tự này quan trọng:
+ *
+ *   1. BIẾN CSS. WPForms hiện đại đọc màu, bo góc và cỡ chữ từ một bộ biến
+ *      --wpforms-*. Đặt biến ở khối cha là cách đúng để đổi giao diện form: nó
+ *      đi qua đúng đường mà plugin dự tính, nên bản cập nhật sau không phá.
+ *
+ *      Lưu ý: WPForms in một thẻ <style> gán một số biến thẳng vào #wpforms-N.
+ *      Bộ chọn ID đó không ghi đè được bằng class, nên những biến nằm trong thẻ
+ *      style đó (cỡ chữ, chiều cao ô, đệm khung) phải chỉnh trong phần Giao diện
+ *      của chính WPForms. Ở đây chỉ đặt các biến mà thẻ style không đụng tới.
+ *
+ *   2. Vài quy tắc thường, cho những thứ không có biến. Bộ chọn phải dài vì
+ *      CSS của WPForms nạp SAU CSS của theme và dùng tới `div.wpforms-container-full
+ *      input[type=email]` — bộ chọn ngắn hơn sẽ thua và không có gì xảy ra.
+ */
+.dql-sb-mail__form {
+	--wpforms-field-border-radius: 999px;
+	--wpforms-field-border-color: var(--global-palette7);
+	--wpforms-field-background-color: var(--global-palette9);
+	--wpforms-field-text-color: var(--global-palette3);
+	--wpforms-label-color: var(--global-palette5);
+	--wpforms-label-sublabel-color: var(--global-palette6);
+	--wpforms-button-border-radius: 999px;
+	--wpforms-button-background-color: var(--global-palette1);
+	--wpforms-button-background-color-alt: var(--global-palette2);
+	--wpforms-button-text-color: #fff;
+	--wpforms-button-text-color-alt: #fff;
+
+	text-align: left;
+}
+
+.dql-sb-mail__form div.wpforms-container,
+.dql-sb-mail__form div.wpforms-container .wpforms-form {
+	margin: 0;
+}
+
+.dql-sb-mail__form div.wpforms-container .wpforms-field {
+	padding: 0 0 0.55rem;
+}
+
+/*
+ * Nhãn vẫn hiện, chỉ thu nhỏ.
+ *
+ * Đã cân nhắc ẩn nhãn cho gọn và ĐÃ LOẠI: form mẫu của site không đặt
+ * placeholder, ẩn nhãn là còn lại một ô trống không nói gì — vừa khó dùng vừa
+ * hỏng với trình đọc màn hình.
+ */
+.dql-sb-mail__form div.wpforms-container .wpforms-form .wpforms-field-label {
+	font-size: 0.8rem;
+	font-weight: 500;
+	margin-bottom: 0.3rem;
+}
+
+.dql-sb-mail__form div.wpforms-container .wpforms-form input[type="email"],
+.dql-sb-mail__form div.wpforms-container .wpforms-form input[type="text"] {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+	font-family: inherit;
+}
+
+/* Nút chiếm trọn chiều rộng: trong một cột hẹp, nút vừa bằng chữ trông như bị
+   bỏ quên ở góc trái. */
+.dql-sb-mail__form div.wpforms-container .wpforms-form button[type="submit"],
+.dql-sb-mail__form div.wpforms-container .wpforms-form input[type="submit"] {
+	width: 100%;
+	font-family: inherit;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+/* Chưa dán mã form: viền đứt nhắc quản trị viên đây là chỗ dành sẵn. Khách
+   không thấy khối này. */
+.dql-sb-card--cho {
+	--dql-sb-vien: 1px dashed var(--global-palette6);
+}
+
+.dql-sb-mail__notice {
+	margin: 0;
+	font-size: 0.82rem;
+	line-height: 1.6;
+	color: var(--global-palette6);
+	text-align: left;
+}
+
+/* ---------------------------------------------------------------------------
+ * 8. Khối "Từ điển đá quý"
+ * ------------------------------------------------------------------------- */
+
+.dql-sb-tudien__desc {
+	font-size: 0.88rem;
+	line-height: 1.6;
+	color: var(--global-palette5);
+	margin: 0 0 0.85rem;
+}
+
+.dql-sb-tudien__ds {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin: 0 0 1rem;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-sb-tudien__chip {
+	display: inline-block;
+	border: var(--dql-sb-vien);
+	border-radius: 999px;
+	padding: 0.24rem 0.7rem;
+	font-size: 0.82rem;
+	line-height: 1.5;
+	transition: border-color var(--dql-transition), color var(--dql-transition);
+}
+
+.dql-sb-tudien__chip:hover {
+	border-color: var(--global-palette1);
+}
+
+/* ---------------------------------------------------------------------------
+ * 9. Khối "Cùng chuyên mục"
+ * ------------------------------------------------------------------------- */
+
+.dql-sb-bai {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-sb-bai__item + .dql-sb-bai__item {
+	border-top: var(--dql-sb-vien);
+}
+
+.dql-sb-bai__link {
+	display: grid;
+	grid-template-columns: 62px minmax(0, 1fr);
+	gap: 0.8rem;
+	align-items: center;
+	padding: 0.75rem 0;
+}
+
+.dql-sb-bai__item:first-child .dql-sb-bai__link {
+	padding-top: 0;
+}
+
+.dql-sb-bai__item:last-child .dql-sb-bai__link {
+	padding-bottom: 0;
+}
+
+.dql-sb-bai__anh {
+	display: block;
+	aspect-ratio: 1;
+	border-radius: 10px;
+	overflow: hidden;
+	background: var(--global-palette8);
+}
+
+.dql-sb-bai__anh img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.35s ease;
+}
+
+.dql-sb-bai__link:hover .dql-sb-bai__anh img {
+	transform: scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dql-sb-bai__anh img {
+		transition: none;
+	}
+
+	.dql-sb-bai__link:hover .dql-sb-bai__anh img {
+		transform: none;
+	}
+}
+
+.dql-sb-bai__chu {
+	display: block;
+	min-width: 0;
+}
+
+.dql-sb-bai__ten {
+	display: block;
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 0.92rem;
+	font-weight: 500;
+	line-height: 1.4;
+	color: var(--global-palette3);
+	text-wrap: pretty;
+}
+
+.dql-sb-bai__link:hover .dql-sb-bai__ten {
+	color: var(--global-palette1);
+}
+
+.dql-sb-bai__meta {
+	display: block;
+	font-size: 0.76rem;
+	color: var(--global-palette6);
+	margin-top: 0.25rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * 9b. Khối "Đọc nhiều nhất"
+ *
+ * Cùng khung với "Cùng chuyên mục" nhưng thay ảnh bằng SỐ THỨ TỰ.
+ *
+ * Vì sao bỏ ảnh: hai danh sách có ảnh vuông đứng gần nhau trong một cột hẹp
+ * trông như một danh sách bị lặp. Con số vừa phân biệt được hai khối, vừa nói
+ * đúng điều mà khối này muốn nói — đây là một bảng xếp hạng.
+ * ------------------------------------------------------------------------- */
+
+.dql-sb-bai--xep-hang {
+	counter-reset: none;
+}
+
+.dql-sb-bai--xep-hang .dql-sb-bai__link {
+	grid-template-columns: 1.6rem minmax(0, 1fr);
+	gap: 0.7rem;
+	align-items: start;
+}
+
+.dql-sb-bai__hang {
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.15rem;
+	font-weight: 600;
+	line-height: 1.25;
+	color: var(--global-palette7);
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+	transition: color var(--dql-transition);
+}
+
+/* Ba hạng đầu đậm hơn. Xếp hạng mà mọi hạng nhìn như nhau thì không còn là
+   xếp hạng. */
+.dql-sb-bai__item:nth-child(-n + 3) .dql-sb-bai__hang {
+	color: var(--global-palette1);
+}
+
+.dql-sb-bai__link:hover .dql-sb-bai__hang {
+	color: var(--global-palette1);
+}
+
+/* ---------------------------------------------------------------------------
+ * 10. Khối "Tra đá hợp mệnh"
+ *
+ * Nền xanh đậm, đảo tông so với mọi thẻ khác. Đây là công cụ có giá trị nhất của
+ * site, và trong một cột toàn thẻ trắng thì một thẻ tối là thứ mắt dừng lại.
+ * ------------------------------------------------------------------------- */
+
+.dql-sb-card--menh {
+	--dql-sb-nen: var(--global-palette2);
+	--dql-sb-vien: 1px solid transparent;
+
+	text-align: center;
+}
+
+/*
+ * Màu chữ đặt ở lớp BỌC BÊN TRONG, không đặt trên chính thẻ.
+ *
+ * Kadence đặt màu chữ cột bên bằng `.primary-sidebar.widget-area .widget` — ba
+ * class, và nằm trong khối <style> động nên còn thắng cả về thứ tự. Mọi khai
+ * báo color trên .dql-sb-card--menh đều bị nuốt, và chữ trắng-đáng-ra trở thành
+ * xám đậm trên nền xanh: đọc được, nhưng xấu và không ai để ý cho tới lúc nhìn
+ * kỹ. Bộ chọn kia không với tới phần tử con, nên đặt ở đây là xong.
+ */
+.dql-sb-menh {
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.dql-sb-menh__icon {
+	width: 32px;
+	height: 32px;
+	color: rgba(255, 255, 255, 0.9);
+	margin-bottom: 0.55rem;
+}
+
+.dql-sb-menh__title {
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.02rem;
+	font-weight: 600;
+	line-height: 1.35;
+	color: #fff;
+	margin: 0 0 0.4rem;
+	text-wrap: balance;
+}
+
+.dql-sb-menh__desc {
+	font-size: 0.86rem;
+	line-height: 1.6;
+	margin: 0 0 1rem;
+}
+
+/* Nút trắng trên nền xanh. Bộ chọn đủ dài để thắng quy tắc màu liên kết chung
+   của cột bên ở mục 4. */
+.dql-sidebar .dql-sb-card--menh .dql-sb-nut,
+.primary-sidebar .dql-sb-card--menh .dql-sb-nut {
+	background: #fff;
+	border-color: #fff;
+	color: var(--global-palette2);
+}
+
+.dql-sidebar .dql-sb-card--menh .dql-sb-nut:hover,
+.primary-sidebar .dql-sb-card--menh .dql-sb-nut:hover {
+	background: var(--global-palette1);
+	border-color: var(--global-palette1);
+	color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+ * 11. Ô quảng cáo trong cột bên
+ *
+ * .dql-ad::before trong main.css đã lo nhãn "Quảng cáo". Ở đây chỉ thu lại phần
+ * đệm dọc — con số của dải quảng cáo chạy ngang trang quá rộng cho một cột.
+ * ------------------------------------------------------------------------- */
+
+.dql-ad--cot {
+	padding-block: 0;
+}
+
+.dql-ad--cot::before {
+	margin-bottom: 0.45rem;
+}
+
+.dql-ad--cot .dql-ad__item + .dql-ad__item {
+	margin-top: 1rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * 12. Widget khối của WordPress
+ *
+ * Áp cho vùng "ô tự do" của hai cột bên và cho cột bên trang chuyên mục. Mặc
+ * định của WordPress là danh sách liên kết xanh sát nhau không phân cách — đúng
+ * thứ trông như trang chưa làm gì.
+ * ------------------------------------------------------------------------- */
+
+/* --- Ô tìm kiếm --- */
+
+.dql-sidebar .wp-block-search__label,
+.primary-sidebar .wp-block-search__label {
+	font-size: 0.76rem;
+	font-weight: 600;
+	letter-spacing: 0.11em;
+	text-transform: uppercase;
+	color: var(--global-palette4);
+	margin-bottom: 0.6rem;
+}
+
+.dql-sidebar .wp-block-search__inside-wrapper,
+.primary-sidebar .wp-block-search__inside-wrapper {
+	gap: 0.4rem;
+}
+
+.dql-sidebar .wp-block-search__input,
+.primary-sidebar .wp-block-search__input {
+	border: var(--dql-sb-vien);
+	border-radius: 999px;
+	padding: 0.5rem 0.95rem;
+	font-size: 0.9rem;
+	font-family: inherit;
+	color: var(--global-palette3);
+	background: var(--global-palette8);
+	min-width: 0;
+}
+
+.dql-sidebar .wp-block-search__input:focus,
+.primary-sidebar .wp-block-search__input:focus {
+	outline: 2px solid var(--global-palette1);
+	outline-offset: 1px;
+	border-color: transparent;
+}
+
+/*
+ * Bộ chọn dài có lý do, đừng rút gọn.
+ *
+ * Kadence đặt nền nút bằng `.wp-block-search .wp-block-search__button:not(.has-background)`
+ * — ba class, độ ưu tiên (0,3,0). Bộ chọn hai class của ta thua và nút giữ nguyên
+ * nền trắng của Kadence. Thêm .wp-block-search và :not() cho đủ bốn class.
+ */
+.dql-sidebar .wp-block-search .wp-block-search__button:not(.has-background),
+.primary-sidebar .wp-block-search .wp-block-search__button:not(.has-background) {
+	border: 0;
+	border-radius: 999px;
+	background: var(--global-palette1);
+	color: #fff;
+	font-family: inherit;
+	font-size: 0.85rem;
+	font-weight: 500;
+	padding: 0.5rem 1rem;
+	cursor: pointer;
+	transition: background-color var(--dql-transition);
+}
+
+.dql-sidebar .wp-block-search .wp-block-search__button:not(.has-background):hover,
+.primary-sidebar .wp-block-search .wp-block-search__button:not(.has-background):hover {
+	background: var(--global-palette2);
+	color: #fff;
+}
+
+/* --- Danh sách: bài mới, chuyên mục, lưu trữ, trang --- */
+
+.dql-sidebar .wp-block-latest-posts,
+.dql-sidebar .wp-block-categories,
+.dql-sidebar .wp-block-archives,
+.dql-sidebar .wp-block-page-list,
+.dql-sidebar .wp-block-latest-comments,
+.primary-sidebar .wp-block-latest-posts,
+.primary-sidebar .wp-block-categories,
+.primary-sidebar .wp-block-archives,
+.primary-sidebar .wp-block-page-list,
+.primary-sidebar .wp-block-latest-comments {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-sidebar .wp-block-latest-posts li,
+.dql-sidebar .wp-block-categories li,
+.dql-sidebar .wp-block-archives li,
+.dql-sidebar .wp-block-page-list li,
+.primary-sidebar .wp-block-latest-posts li,
+.primary-sidebar .wp-block-categories li,
+.primary-sidebar .wp-block-archives li,
+.primary-sidebar .wp-block-page-list li {
+	margin: 0;
+	padding: 0.6rem 0;
+	border-bottom: var(--dql-sb-vien);
+	font-size: 0.92rem;
+	line-height: 1.45;
+}
+
+.dql-sidebar .wp-block-latest-posts li:first-child,
+.dql-sidebar .wp-block-categories li:first-child,
+.dql-sidebar .wp-block-archives li:first-child,
+.primary-sidebar .wp-block-latest-posts li:first-child,
+.primary-sidebar .wp-block-categories li:first-child,
+.primary-sidebar .wp-block-archives li:first-child {
+	padding-top: 0;
+}
+
+.dql-sidebar .wp-block-latest-posts li:last-child,
+.dql-sidebar .wp-block-categories li:last-child,
+.dql-sidebar .wp-block-archives li:last-child,
+.primary-sidebar .wp-block-latest-posts li:last-child,
+.primary-sidebar .wp-block-categories li:last-child,
+.primary-sidebar .wp-block-archives li:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.dql-sidebar .wp-block-latest-posts__post-title,
+.primary-sidebar .wp-block-latest-posts__post-title {
+	display: block;
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 0.92rem;
+	font-weight: 500;
+	line-height: 1.45;
+	color: var(--global-palette3);
+	text-wrap: pretty;
+}
+
+.dql-sidebar .wp-block-latest-posts__post-title:hover,
+.primary-sidebar .wp-block-latest-posts__post-title:hover {
+	color: var(--global-palette1);
+}
+
+.dql-sidebar .wp-block-latest-posts__post-date,
+.primary-sidebar .wp-block-latest-posts__post-date {
+	display: block;
+	font-size: 0.76rem;
+	color: var(--global-palette6);
+	margin-top: 0.2rem;
+}
+
+.dql-sidebar .wp-block-latest-posts__featured-image img,
+.primary-sidebar .wp-block-latest-posts__featured-image img {
+	border-radius: 10px;
+}
+
+/* Danh sách con thụt vào, bỏ viền để không thành bậc thang. */
+.dql-sidebar .wp-block-categories .children,
+.primary-sidebar .wp-block-categories .children {
+	margin: 0.4rem 0 0 0.9rem;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-sidebar .wp-block-categories .children li,
+.primary-sidebar .wp-block-categories .children li {
+	border-bottom: 0;
+	padding: 0.25rem 0;
+	font-size: 0.88rem;
+}
+
+/* --- Bình luận gần đây --- */
+
+.dql-sidebar .wp-block-latest-comments__comment,
+.primary-sidebar .wp-block-latest-comments__comment {
+	margin: 0;
+	padding: 0.65rem 0;
+	border-bottom: var(--dql-sb-vien);
+	font-size: 0.88rem;
+	line-height: 1.55;
+	color: var(--global-palette5);
+}
+
+.dql-sidebar .wp-block-latest-comments__comment:last-child,
+.primary-sidebar .wp-block-latest-comments__comment:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.dql-sidebar .wp-block-latest-comments__comment-author,
+.primary-sidebar .wp-block-latest-comments__comment-author {
+	font-weight: 500;
+	color: var(--global-palette3);
+}
+
+.dql-sidebar .wp-block-latest-comments__comment-date,
+.primary-sidebar .wp-block-latest-comments__comment-date {
+	display: block;
+	font-size: 0.76rem;
+	color: var(--global-palette6);
+	margin-top: 0.15rem;
+}
+
+/* --- Thẻ tag --- */
+
+.dql-sidebar .wp-block-tag-cloud a,
+.primary-sidebar .wp-block-tag-cloud a {
+	display: inline-block;
+	/* Ghi đè cỡ chữ theo tần suất mà WordPress gán inline — cỡ chữ nhảy loạn
+	   trong một cột hẹp trông rất lộn xộn. */
+	font-size: 0.82rem !important;
+	border: var(--dql-sb-vien);
+	border-radius: 999px;
+	padding: 0.24rem 0.7rem;
+	margin: 0 0.3rem 0.4rem 0;
+	text-decoration: none;
+}
+
+.dql-sidebar .wp-block-tag-cloud a:hover,
+.primary-sidebar .wp-block-tag-cloud a:hover {
+	border-color: var(--global-palette1);
+}
+
+/* --- Đoạn văn và ảnh tự do --- */
+
+/*
+ * Chỉ nhắm đoạn văn TRÔI NỔI do widget sinh ra, không nhắm chữ trong các khối
+ * của theme.
+ *
+ * :not([class*="dql-sb-"]) là thứ giữ cho quy tắc này không tràn sang. Bỏ nó đi
+ * thì `.primary-sidebar .widget p` (ba class) sẽ đè lên `.dql-sb-mail__title`
+ * và `.dql-sb-menh__desc` (một class) — tiêu đề ô đăng ký thu nhỏ lại còn chữ
+ * trên thẻ nền xanh chuyển thành xám và gần như không đọc được. Ở trang chủ
+ * không thấy lỗi này vì ở đó không có lớp bọc .primary-sidebar.
+ */
+.dql-sb-card p:not([class*="dql-sb-"]),
+.primary-sidebar .widget p:not([class*="dql-sb-"]) {
+	font-size: 0.9rem;
+	line-height: 1.65;
+	color: var(--global-palette5);
+}
+
+.dql-sb-card p:last-child,
+.primary-sidebar .widget p:last-child {
+	margin-bottom: 0;
+}
+
+.dql-sb-card img,
+.primary-sidebar .widget img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 10px;
+}
