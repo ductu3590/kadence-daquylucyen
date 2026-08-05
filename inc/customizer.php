@@ -170,6 +170,36 @@ function dql_customize_register( $wp_customize ) {
 			'priority'    => 70,
 		)
 	);
+
+	// Logo chân trang.
+	//
+	// inc/footer.php vẫn luôn đọc theme mod này, nhưng trước đây không có ô nào
+	// đặt nó — chỉ gán được bằng code. Hậu quả: chân trang nền xanh đậm hiện tên
+	// site dạng chữ thay vì logo, và chủ site không có cách nào sửa.
+	//
+	// Đặt cạnh logo header trong "Cài đặt site" chứ không tạo mục riêng, vì đây
+	// là chuyện nhận diện thương hiệu — người đi tìm nó sẽ tìm ở chỗ có logo.
+	$wp_customize->add_setting(
+		'dql_footer_logo',
+		array(
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+		)
+	);
+	$wp_customize->add_control(
+		new WP_Customize_Media_Control(
+			$wp_customize,
+			'dql_footer_logo',
+			array(
+				'label'       => __( 'Logo chân trang', 'kadence-daquylucyen' ),
+				'description' => __( 'Bản chữ trắng. Chân trang nền xanh đậm nên logo chữ navy đặt lên đó sẽ gần như biến mất. Bỏ trống thì chân trang hiện tên site dạng chữ.', 'kadence-daquylucyen' ),
+				'section'     => 'title_tagline',
+				'mime_type'   => 'image',
+				'priority'    => 9,
+			)
+		)
+	);
 }
 add_action( 'customize_register', 'dql_customize_register' );
 
