@@ -495,11 +495,18 @@ phần **Giao diện** của chính WPForms.
 - [x] Tìm kiếm tức thời + trang kết quả phân nhóm
 - [x] Cột bên, các vùng quảng cáo, khối đăng ký email
 - [x] Cột bên riêng cho trang chủ và cho trang bài viết
-- [ ] Rà soát toàn bộ trước khi đưa lên chạy thật
+- [x] Rà soát toàn bộ trước khi đưa lên chạy thật
+- [x] Logo chữ và favicon
+- [x] Đã chạy thật trên daquylucyen.net.vn, đồng bộ code qua GitHub + WP Pusher
 
 **Màu viên đá trong logo cố ý lệch khỏi bảng màu site** — là quyết định, không
 phải sai sót. Xem `docs/thiet-ke.md`.
 
-Hai file dữ liệu **cần bạn duyệt lại** trước khi site chạy thật:
-`dql-core/includes/data/menh-goi-y.php` và `.../thuat-ngu-mau.php`.
-- [ ] Logo chữ và favicon
+**Nội dung từ điển nằm trong database, không nằm trong file.** Sửa ở menu
+**Từ điển** trong trang quản trị. Trước đây plugin có `includes/data/thuat-ngu-mau.php`
+chứa bản sao 20 thuật ngữ, nhưng không dòng code nào đọc nó — sửa file đó không
+đổi được gì trên site, nên đã xoá ở `dql-core` 1.1.1. Cần gieo lại từ đầu cho một
+site khác thì dùng bản xuất WXR, không dùng file PHP.
+
+Còn `dql-core/includes/data/menh-goi-y.php` thì ngược lại: đó **là** nguồn dữ
+liệu thật của công cụ tra mệnh, sửa file là đổi ngay.
