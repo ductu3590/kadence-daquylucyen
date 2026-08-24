@@ -60,6 +60,7 @@ inc/sidebar.php             Cột bên trang chủ và cột bên bài viết
 inc/archive.php             Các khối của trang chuyên mục, và phần cắm vào Kadence
 front-page.php              Trang chủ, gọi bốn khối bên dưới
 category.php                Trang chuyên mục, tự dựng toàn bộ
+home.php                    Trang danh sách bài, dùng chung khối với category.php
 search.php                  Trang tìm kiếm, tự dựng toàn bộ
 template-parts/home/        hero · pillars · menh-tool · latest
 assets/css/main.css         CSS chung
@@ -175,29 +176,75 @@ JavaScript không lặp lại con số này — nó đọc `position` của ph�
 
 ## Trang chuyên mục và danh sách bài
 
-**Không dựng lại template.** Lưới bài, phân trang, xử lý khi không có bài đều do
-Kadence lo. `inc/archive.php` chỉ cắm thêm hai thứ:
+`category.php` và `home.php` **tự dựng toàn bộ trang**, không đi qua khung nội
+dung của Kadence — cùng cách làm với `search.php`. Mọi khối nằm ở `inc/archive.php`
+và dùng chung cho cả hai trang; trang danh sách bài chỉ khác ở chỗ không có
+chuyên mục nào nên truyền `$term = null`.
 
-- **Dải nút điều hướng chuyên mục** đặt ngay trên lưới bài. Nội dung đổi theo chỗ
-  người đọc đang đứng: ở chuyên mục cha hiện các con; ở chuyên mục con hiện các
-  anh em kèm nút quay lên cha; ở trang danh sách bài hiện ba chuyên mục cha.
-- **Thời gian đọc** trên mỗi thẻ bài.
+Thứ tự khối, từ trên xuống:
 
-Hai mặc định đã đổi so với Kadence, cả hai đều là bớt nhiễu:
+1. **Đầu trang** — đường dẫn (kèm schema `BreadcrumbList`), tên, mô tả, ba con
+   số, hộp "Bắt đầu từ đâu", dải chip chuyên mục.
+2. **Danh sách hàng ngang** — ảnh nhỏ bên trái, mô tả hai dòng.
+3. **Dải tra đá hợp mệnh** — chèn sau bài thứ tư, chỉ ở trang 1.
+4. **Phân trang** — kèm dòng "Trang 1/3 — đang xem bài 1–10 trong 25 bài".
+5. **Đọc nhiều nhất** — dải cuối trang, thay cho khối cũ ở cột bên.
+
+**Không có cột bên.** Đó là chủ ý, không phải thiếu sót: 300px đó đổi lấy chiều
+rộng cho nội dung. `inc/enqueue.php` vì thế cũng bỏ nạp `sidebar.css` ở hai trang
+này.
+
+### Ba bài nền tảng
+
+Hộp "Chưa biết bắt đầu từ đâu?" ở đầu trang chuyên mục. Chọn ở **Bài viết →
+Chuyên mục → Sửa**, ô "Ba bài nền tảng".
+
+Chưa chọn thì hộp tự lấy ba bài đọc nhiều nhất trong chuyên mục. Chưa đủ số liệu
+lượt xem thì hộp **không hiện** và đầu trang tự thu về một cột — không bao giờ để
+lại một ô trống bên phải.
+
+Trang danh sách bài không có hộp này: nó là ba bài nền tảng của *một* chuyên mục,
+mà ở đó không có chuyên mục nào.
+
+### Câu dẫn ở đầu trang danh sách bài
+
+Lấy từ **nội dung** của trang "Bài viết" (trang được chọn ở Cài đặt → Đọc). Nội
+dung đó bình thường bị WordPress vứt bỏ, nên đem ra làm câu dẫn là chỗ dùng đúng
+nhất — sửa ngay trong trình soạn thảo, không cần thêm ô cấu hình.
+
+Với trang chuyên mục, câu dẫn lấy từ ô **Mô tả** của chuyên mục. Để trống thì
+khối này không hiện.
+
+### Ngày hiển thị
+
+Chỉ hiện **"Cập nhật T8/2026"**, không hiện ngày đăng. Nội dung chuyển về từ bản
+cũ mang ngày đăng 2019–2020 trong khi bài đã soát lại — in ngày đăng gốc làm cả
+chuyên mục trông bỏ hoang sáu năm.
+
+### Nhãn chuyên mục trên mỗi dòng
+
+Có ở trang danh sách bài, **không** có ở trang chuyên mục: ở đó nhãn trùng đúng
+tiêu đề trang, in lại trên từng dòng là nhiễu.
+
+### Bài ghim
+
+Bài ghim ("Dán bài này lên trang chủ") **chỉ dùng để chọn bài cho khối nổi bật ở
+trang chủ**. Chúng không được nhấc lên đầu `/bai-viet/` nữa — mặc định đó của
+WordPress khiến ba bài ghim bị in hai lần, 82 dòng cho 79 bài.
+
+### Trang thẻ và lưu trữ theo ngày
+
+Vẫn dùng khung Kadence. Phần cuối `inc/archive.php` giữ những gì cắm vào đó:
+thời gian đọc trên thẻ bài, và hai mặc định đã đổi vì cùng một lý do — bớt nhiễu:
 
 | Đổi gì | Vì sao |
 |---|---|
 | Bỏ nút "Đọc tiếp" | Cả thẻ bài đã là liên kết. Thêm nút chỉ là đích bấm thứ hai tới cùng một chỗ. |
 | Bỏ tên tác giả trên thẻ | Site một người viết. "By admin" lặp 81 lần không thêm thông tin gì. |
 
-Hai cái bẫy đã mắc phải và đã ghi chú trong code, đọc trước khi sửa:
-
-1. **Bỏ `readmore` khỏi `post_archive_elements` là không đủ.**
-   `entry_actions.php` đọc từ tùy chọn riêng `post_archive_element_readmore`, và
-   tự bật lên nếu tùy chọn đó vắng mặt.
-2. **Hook `kadence_archive_after_entry_header` không chạy.** Nó nằm trong
-   `archive_header.php`, mà file đó chỉ chạy khi tiêu đề hiển thị trong nội dung.
-   Mặc định Kadence đặt tiêu đề ở khối hero. Dùng `kadence_before_main_content`.
+Một cái bẫy đã mắc phải, đọc trước khi sửa: **bỏ `readmore` khỏi
+`post_archive_elements` là không đủ.** `entry_actions.php` đọc từ tùy chọn riêng
+`post_archive_element_readmore`, và tự bật lên nếu tùy chọn đó vắng mặt.
 
 ## Mẫu khối (block pattern)
 

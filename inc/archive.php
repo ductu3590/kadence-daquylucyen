@@ -8,9 +8,13 @@
  * cột bên. Uốn lưới của Kadence thành danh sách bằng CSS thì mọi lần Kadence đổi
  * markup là một lần trang này gãy.
  *
- * Các trang lưu trữ CÒN LẠI — trang "Bài viết", trang thẻ, trang lưu trữ theo
- * ngày — vẫn dùng khung của Kadence. Phần cuối file giữ nguyên những gì cắm vào
- * đó: dải chip, thời gian đọc trên thẻ bài, và vài mặc định bố cục.
+ * Trang DANH SÁCH BÀI (`/bai-viet/`, tức is_home) dùng chung bộ khối đó qua
+ * home.php — cùng đầu trang, cùng danh sách, chỉ khác ở chỗ nó không có chuyên
+ * mục nào nên các hàm bên dưới đều nhận $term = null.
+ *
+ * Trang thẻ và trang lưu trữ theo ngày vẫn dùng khung của Kadence. Phần cuối
+ * file giữ nguyên những gì cắm vào đó: thời gian đọc trên thẻ bài và vài mặc
+ * định bố cục.
  *
  * @package kadence-daquylucyen
  */
@@ -111,8 +115,8 @@ function dql_archive_nav_terms() {
 /**
  * In dải nút điều hướng chuyên mục.
  *
- * Dùng ở hai nơi: trong đầu trang chuyên mục do category.php dựng, và cắm vào
- * khung Kadence ở trang danh sách bài (xem dql_archive_nav bên dưới).
+ * Gọi từ dql_archive_head(). Ở trang chuyên mục dải này là các chuyên mục anh
+ * em hoặc con; ở trang danh sách bài là ba chuyên mục cha, làm điểm vào.
  */
 function dql_archive_chips() {
 	$nav = dql_archive_nav_terms();
@@ -155,25 +159,6 @@ function dql_archive_chips() {
 	<?php
 }
 
-/**
- * Cắm dải chip vào khung Kadence — chỉ còn dùng cho trang danh sách bài.
- *
- * Trang chuyên mục đã tự gọi dql_archive_chips() trong đầu trang của nó, nên
- * điều kiện ở đây phải loại is_category() ra, không thì chip in hai lần.
- *
- * Vì sao là kadence_before_main_content chứ không phải kadence_archive_after_entry_header:
- * hook kia nằm trong template-parts/content/archive_header.php, mà file đó chỉ
- * chạy khi tiêu đề trang lưu trữ hiển thị TRONG nội dung. Mặc định của Kadence
- * là hiển thị tiêu đề ở khối hero phía trên, nên hook đó không bao giờ nổ.
- */
-function dql_archive_nav() {
-	if ( ! is_home() ) {
-		return;
-	}
-
-	dql_archive_chips();
-}
-add_action( 'kadence_before_main_content', 'dql_archive_nav' );
 
 /* ===========================================================================
  * 2. Số liệu của một chuyên mục
@@ -189,37 +174,41 @@ add_action( 'kadence_before_main_content', 'dql_archive_nav' );
  *
  * Bộ nhớ tạm bị xóa khi có bài trong chuyên mục được lưu — xem dql_archive_xoa_cache().
  *
- * @param WP_Term $term Chuyên mục.
+ * @param WP_Term|null $term Chuyên mục. Bỏ trống thì tính trên toàn bộ bài viết
+ *                           của site — dùng cho trang danh sách bài.
  * @return array{cap_nhat: int, phut: int} Dấu thời gian UTC và số phút trung bình.
  */
-function dql_archive_stats( $term ) {
+function dql_archive_stats( $term = null ) {
 	$trong = array(
 		'cap_nhat' => 0,
 		'phut'     => 0,
 	);
 
-	if ( ! $term || is_wp_error( $term ) ) {
+	if ( $term && is_wp_error( $term ) ) {
 		return $trong;
 	}
 
-	$khoa  = 'dql_ar_stats_' . $term->term_id;
+	$khoa  = $term ? 'dql_ar_stats_' . $term->term_id : 'dql_ar_stats_blog';
 	$cache = get_transient( $khoa );
 
 	if ( is_array( $cache ) ) {
 		return $cache;
 	}
 
-	$q = new WP_Query(
-		array(
-			'cat'                 => $term->term_id, // Gồm cả chuyên mục con.
-			'post_status'         => 'publish',
-			'posts_per_page'      => 50,
-			'orderby'             => 'modified',
-			'order'               => 'DESC',
-			'ignore_sticky_posts' => true,
-			'no_found_rows'       => true,
-		)
+	$args = array(
+		'post_status'         => 'publish',
+		'posts_per_page'      => 50,
+		'orderby'             => 'modified',
+		'order'               => 'DESC',
+		'ignore_sticky_posts' => true,
+		'no_found_rows'       => true,
 	);
+
+	if ( $term ) {
+		$args['cat'] = $term->term_id; // Gồm cả chuyên mục con.
+	}
+
+	$q = new WP_Query( $args );
 
 	if ( ! $q->posts ) {
 		set_transient( $khoa, $trong, HOUR_IN_SECONDS );
@@ -262,6 +251,9 @@ function dql_archive_xoa_cache( $post_id ) {
 	if ( 'post' !== get_post_type( $post_id ) ) {
 		return;
 	}
+
+	// Số liệu của trang danh sách bài tính trên toàn site nên bài nào cũng đụng tới.
+	delete_transient( 'dql_ar_stats_blog' );
 
 	foreach ( wp_get_post_categories( $post_id ) as $term_id ) {
 		foreach ( array_merge( array( $term_id ), get_ancestors( $term_id, 'category' ) ) as $id ) {
@@ -485,15 +477,29 @@ add_action( 'edited_category', 'dql_archive_save_nen_tang' );
  * ========================================================================= */
 
 /**
+ * Tên của trang danh sách bài.
+ *
+ * Lấy từ trang đã chọn ở Cài đặt → Đọc → "Trang bài viết". Chưa chọn trang nào
+ * thì dùng tên mặc định, để đầu trang không bao giờ trống tiêu đề.
+ *
+ * @return string
+ */
+function dql_archive_ten_trang_bai() {
+	$id = (int) get_option( 'page_for_posts' );
+
+	return $id ? get_the_title( $id ) : __( 'Bài viết', 'kadence-daquylucyen' );
+}
+
+/**
  * Đường dẫn phân cấp, kèm dữ liệu có cấu trúc cho công cụ tìm kiếm.
  *
  * Site không cài plugin SEO nào, nên nếu ở đây không in schema thì không nơi nào
  * in. BreadcrumbList là thứ Google dùng để vẽ đường dẫn thay cho URL trần trong
  * kết quả tìm kiếm — rẻ và thấy được ngay.
  *
- * @param WP_Term $term Chuyên mục hiện tại.
+ * @param WP_Term|null $term Chuyên mục hiện tại. Bỏ trống là trang danh sách bài.
  */
-function dql_archive_breadcrumb( $term ) {
+function dql_archive_breadcrumb( $term = null ) {
 	$muc = array(
 		array(
 			'ten' => __( 'Trang chủ', 'kadence-daquylucyen' ),
@@ -501,21 +507,35 @@ function dql_archive_breadcrumb( $term ) {
 		),
 	);
 
-	foreach ( array_reverse( get_ancestors( $term->term_id, 'category' ) ) as $cha_id ) {
-		$cha = get_term( $cha_id, 'category' );
+	if ( ! $term ) {
+		// Trang danh sách bài chỉ có hai cấp: trang chủ rồi tới nó.
+		//
+		// get_permalink() trả về false khi chưa chọn trang nào ở Cài đặt → Đọc.
+		// Cấp cuối in ra thẻ <span> nên không dùng tới URL, nhưng schema thì có —
+		// và một 'item' bằng false là dữ liệu hỏng gửi thẳng cho Google.
+		$url_bai = get_permalink( (int) get_option( 'page_for_posts' ) );
 
-		if ( $cha && ! is_wp_error( $cha ) ) {
-			$muc[] = array(
-				'ten' => $cha->name,
-				'url' => get_category_link( $cha->term_id ),
-			);
+		$muc[] = array(
+			'ten' => dql_archive_ten_trang_bai(),
+			'url' => $url_bai ? $url_bai : home_url( '/' ),
+		);
+	} else {
+		foreach ( array_reverse( get_ancestors( $term->term_id, 'category' ) ) as $cha_id ) {
+			$cha = get_term( $cha_id, 'category' );
+
+			if ( $cha && ! is_wp_error( $cha ) ) {
+				$muc[] = array(
+					'ten' => $cha->name,
+					'url' => get_category_link( $cha->term_id ),
+				);
+			}
 		}
-	}
 
-	$muc[] = array(
-		'ten' => $term->name,
-		'url' => get_category_link( $term->term_id ),
-	);
+		$muc[] = array(
+			'ten' => $term->name,
+			'url' => get_category_link( $term->term_id ),
+		);
+	}
 
 	$cuoi = count( $muc ) - 1;
 	?>
@@ -640,20 +660,54 @@ function dql_archive_hop_bat_dau( $term ) {
 }
 
 /**
- * Đầu trang chuyên mục.
+ * Đầu trang chuyên mục và trang danh sách bài.
  *
- * @param WP_Term $term Chuyên mục hiện tại.
+ * @param WP_Term|null $term Chuyên mục hiện tại. Bỏ trống là trang danh sách bài.
  */
-function dql_archive_head( $term ) {
+function dql_archive_head( $term = null ) {
 	$stats = dql_archive_stats( $term );
 	$so    = (int) $GLOBALS['wp_query']->found_posts;
-	$mo_ta = term_description( $term->term_id );
 
-	// Dựng hộp trước, in đầu trang sau: phải biết hộp có nội dung hay không mới
-	// chọn được lớp bố cục cho khối chữ bên trái.
-	ob_start();
-	$co_hop = dql_archive_hop_bat_dau( $term );
-	$hop    = ob_get_clean();
+	if ( $term ) {
+		$tieu_de = $term->name;
+		$mo_ta   = term_description( $term->term_id );
+	} else {
+		$tieu_de = dql_archive_ten_trang_bai();
+
+		/*
+		 * Mô tả lấy từ NỘI DUNG của trang "Bài viết".
+		 *
+		 * WordPress bình thường vứt bỏ nội dung đó — trang được chọn làm trang
+		 * danh sách bài thì chỉ còn cái tên được dùng. Đem nó ra làm câu dẫn ở
+		 * đầu trang là chỗ dùng đúng nhất: chủ site sửa được ngay trong trình
+		 * soạn thảo quen thuộc, không cần thêm một ô cấu hình mới.
+		 *
+		 * Không chạy qua bộ lọc 'the_content': ở đây chỉ cần một đoạn dẫn ngắn,
+		 * để nguyên bộ lọc thì một shortcode hay một khối ảnh lọt vào sẽ phá vỡ
+		 * đầu trang.
+		 */
+		$trang_bai = (int) get_option( 'page_for_posts' );
+		$mo_ta     = $trang_bai ? wpautop( get_post_field( 'post_content', $trang_bai ) ) : '';
+	}
+
+	/*
+	 * Hộp "Bắt đầu từ đâu" chỉ có ở trang chuyên mục.
+	 *
+	 * Hộp đó là ba bài nền tảng của MỘT chuyên mục; ở trang danh sách bài không
+	 * có chuyên mục nào để chọn. Dải chip ngay bên dưới — ba chuyên mục cha — đã
+	 * làm đúng việc dẫn lối vào rồi.
+	 *
+	 * Dựng hộp trước, in đầu trang sau: phải biết hộp có nội dung hay không mới
+	 * chọn được lớp bố cục cho khối chữ bên trái.
+	 */
+	$co_hop = false;
+	$hop    = '';
+
+	if ( $term ) {
+		ob_start();
+		$co_hop = dql_archive_hop_bat_dau( $term );
+		$hop    = ob_get_clean();
+	}
 	?>
 	<header class="dql-chead">
 		<div class="dql-container">
@@ -661,7 +715,7 @@ function dql_archive_head( $term ) {
 				<div class="dql-chead__chu">
 					<?php dql_archive_breadcrumb( $term ); ?>
 
-					<h1 class="dql-chead__title"><?php echo esc_html( $term->name ); ?></h1>
+					<h1 class="dql-chead__title"><?php echo esc_html( $tieu_de ); ?></h1>
 
 					<?php if ( $mo_ta ) : ?>
 						<div class="dql-chead__mo-ta"><?php echo wp_kses_post( $mo_ta ); ?></div>
@@ -719,8 +773,14 @@ function dql_archive_head( $term ) {
  * Hai liên kết — ảnh và tiêu đề — chứ không bọc cả dòng trong một thẻ <a>.
  * Bọc cả dòng thì trình đọc màn hình phải đọc hết cả đoạn trích mới tới được
  * liên kết tiếp theo. Mũi tên bên phải chỉ là hình trang trí.
+ *
+ * @param bool $hien_cat In tên chuyên mục ở dòng thông tin hay không.
+ *                       Trang chuyên mục thì KHÔNG: tên đó trùng đúng tiêu đề
+ *                       trang, in lại trên từng dòng là nhiễu chứ không phải
+ *                       thông tin. Trang danh sách bài thì CÓ: bài ở đó đến từ
+ *                       mọi chuyên mục nên tên chuyên mục mới có việc để làm.
  */
-function dql_archive_row() {
+function dql_archive_row( $hien_cat = false ) {
 	?>
 	<article <?php post_class( 'dql-row' ); ?>>
 		<a class="dql-row__anh<?php echo has_post_thumbnail() ? '' : ' dql-row__anh--trong'; ?>" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
@@ -756,6 +816,21 @@ function dql_archive_row() {
 			</p>
 
 			<div class="dql-row__meta">
+				<?php
+				if ( $hien_cat ) :
+					$cats = get_the_category();
+
+					if ( $cats ) :
+						?>
+						<a class="dql-row__cat" href="<?php echo esc_url( get_category_link( $cats[0]->term_id ) ); ?>">
+							<?php echo esc_html( $cats[0]->name ); ?>
+						</a>
+						<span class="dql-row__cham" aria-hidden="true"></span>
+						<?php
+					endif;
+				endif;
+				?>
+
 				<?php dql_the_reading_time(); ?>
 				<span class="dql-row__cham" aria-hidden="true"></span>
 				<?php dql_the_updated(); ?>
@@ -916,9 +991,10 @@ function dql_archive_top_trong_muc( $term ) {
  * Loại trừ các bài đã nằm trong hộp "Bắt đầu từ đâu": hai khối cách nhau một màn
  * hình mà in lại cùng một bài thì trang trông như đang lặp.
  *
- * @param WP_Term $term Chuyên mục hiện tại.
+ * @param WP_Term|null $term Chuyên mục hiện tại. Bỏ trống là trang danh sách bài,
+ *                           khi đó luôn dùng bảng xếp hạng toàn site.
  */
-function dql_archive_top_strip( $term ) {
+function dql_archive_top_strip( $term = null ) {
 	if ( ! dql_sidebar_on( 'dql_sb_archive_top' ) ) {
 		return;
 	}
@@ -1021,7 +1097,41 @@ function dql_archive_top_strip( $term ) {
 }
 
 /* ===========================================================================
- * 6. Những gì còn cắm vào khung Kadence
+ * 6. Truy vấn của trang danh sách bài
+ * ========================================================================= */
+
+/**
+ * Bỏ ưu tiên bài ghim ở trang danh sách bài.
+ *
+ * WordPress mặc định nhấc bài ghim lên đầu trang 1 của chỉ mục blog. Trên site
+ * này việc đó sai theo hai đường:
+ *
+ * 1. Bài ghim ở đây KHÔNG mang nghĩa "ghim vào danh sách bài". Chủ site tích
+ *    "Dán bài này lên trang chủ" để chọn bài cho khối nổi bật ở TRANG CHỦ — xem
+ *    dql_featured_post_ids() trong inc/template-tags.php. Việc chúng nhảy lên
+ *    đầu /bai-viet/ là tác dụng phụ không ai yêu cầu.
+ *
+ * 2. Chúng bị in HAI LẦN. Đo được ngày 04/08/2026: 3 bài ghim hiện ở đầu trang 1
+ *    rồi hiện lại đúng vị trí theo ngày đăng ở trang sau — 82 dòng in ra cho 79
+ *    bài. Lỗi này có từ trước khi dựng lại giao diện; nó chỉ lộ ra khi dòng
+ *    "đang xem bài 1–13 trong 79 bài" cho thấy trang 1 dài hơn các trang khác.
+ *
+ * Bỏ ghim ở đây cũng làm dòng đếm vị trí đúng tuyệt đối: mọi trang 10 bài, không
+ * còn trang nào phình ra 13.
+ *
+ * @param WP_Query $query Truy vấn.
+ */
+function dql_archive_bo_uu_tien_ghim( $query ) {
+	if ( is_admin() || ! $query->is_main_query() || ! $query->is_home() ) {
+		return;
+	}
+
+	$query->set( 'ignore_sticky_posts', true );
+}
+add_action( 'pre_get_posts', 'dql_archive_bo_uu_tien_ghim' );
+
+/* ===========================================================================
+ * 7. Những gì còn cắm vào khung Kadence
  *
  * Chỉ còn tác dụng ở trang "Bài viết", trang thẻ và trang lưu trữ theo ngày.
  * Trang chuyên mục không đi qua đường này nữa.

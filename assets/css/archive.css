@@ -1,9 +1,10 @@
 /*
  * Trang chuyên mục, trang danh sách bài, trang tìm kiếm.
  *
- * Mục 1–8 phục vụ trang CHUYÊN MỤC, do category.php tự dựng.
- * Mục 9 là phần còn lại cắm vào khung Kadence — trang "Bài viết", trang thẻ,
- * trang lưu trữ theo ngày.
+ * Mục 1–9 phục vụ trang CHUYÊN MỤC và trang DANH SÁCH BÀI — category.php và
+ * home.php tự dựng, dùng chung một bộ khối.
+ * Mục 10 là phần còn lại cắm vào khung Kadence — trang thẻ và trang lưu trữ
+ * theo ngày.
  *
  * Dùng biến --global-palette* của Kadence, không viết mã màu trực tiếp.
  */
@@ -443,6 +444,24 @@
 	color: var(--global-palette6);
 }
 
+/*
+ * Nhãn chuyên mục — chỉ có ở trang danh sách bài.
+ *
+ * Cùng cỡ chữ với phần thông tin còn lại nhưng đậm hơn và mang màu nhấn, để nó
+ * đọc ra là một liên kết chứ không lẫn vào "8 phút đọc" ngay bên cạnh.
+ */
+.dql-row__cat {
+	color: var(--global-palette1);
+	font-weight: 500;
+	text-decoration: none;
+	transition: color 0.16s ease;
+}
+
+.dql-row__cat:hover {
+	color: var(--global-palette2);
+	text-decoration: underline;
+}
+
 .dql-row__cham {
 	width: 3px;
 	height: 3px;
@@ -796,8 +815,8 @@
 /* ---------------------------------------------------------------------------
  * 10. Phần còn cắm vào khung Kadence
  *
- * Trang "Bài viết", trang thẻ, trang lưu trữ theo ngày. Trang chuyên mục không
- * đi qua đường này nữa.
+ * Chỉ còn trang thẻ và trang lưu trữ theo ngày. Trang chuyên mục và trang danh
+ * sách bài không đi qua đường này nữa.
  * ------------------------------------------------------------------------- */
 
 .dql-loop-reading-time {

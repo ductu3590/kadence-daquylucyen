@@ -61,14 +61,14 @@ function dql_enqueue_styles() {
 	 * Trang chủ phải kiểm riêng: cột bên ở đó do theme dựng nên Kadence không
 	 * biết tới nó.
 	 *
-	 * Trang chuyên mục phải loại trừ riêng: category.php tự dựng toàn bộ trang và
-	 * không in cột bên nào, nhưng Kadence vẫn trả về true vì tùy chọn bố cục của
-	 * nó cho trang lưu trữ vẫn là "có cột bên". Không loại ra thì mỗi lượt xem
-	 * chuyên mục tải thừa 913 dòng CSS không dùng tới.
+	 * Trang chuyên mục và trang danh sách bài phải loại trừ riêng: category.php và
+	 * home.php tự dựng toàn bộ trang và không in cột bên nào, nhưng Kadence vẫn
+	 * trả về true vì tùy chọn bố cục của nó cho trang lưu trữ vẫn là "có cột bên".
+	 * Không loại ra thì mỗi lượt xem hai trang đó tải thừa 913 dòng CSS không dùng.
 	 */
 	$dql_co_cot = function_exists( '\Kadence\kadence' ) && \Kadence\kadence()->has_sidebar();
 
-	if ( is_front_page() || ( $dql_co_cot && ! is_category() ) ) {
+	if ( is_front_page() || ( $dql_co_cot && ! is_category() && ! is_home() ) ) {
 		wp_enqueue_style(
 			'dql-sidebar',
 			DQL_URI . '/assets/css/sidebar.css',

@@ -160,9 +160,45 @@ nhãn chuyên mục đúng bằng tiêu đề trang.
 và thẻ bài. Ít code riêng hơn, nhưng không giải quyết được việc người mới vào một
 chuyên mục 25 bài không biết bài nào là gốc.
 
-Các trang lưu trữ còn lại — trang "Bài viết", trang thẻ, trang lưu trữ theo ngày —
-**vẫn dùng khung Kadence**. Chưa chuyển vì chúng gần như không có lưu lượng; nếu
-sau này chuyển thì dùng lại đúng các hàm trong `inc/archive.php`.
+### Trang danh sách bài dùng chung bộ khối này (04/08/2026)
+
+Ban đầu chỉ chuyển trang chuyên mục, để trang `/bai-viet/` lại cho khung Kadence.
+Sai: hai trang cùng là danh sách bài mà một bên danh sách hàng ngang không cột
+bên, một bên lưới thẻ có cột bên — đi từ trang này sang trang kia tưởng lạc sang
+site khác. `home.php` giờ gọi đúng các hàm của `inc/archive.php`, chỉ truyền
+`$term = null`.
+
+Ba chỗ khác nhau, đều suy ra từ việc không có chuyên mục nào:
+
+| | Trang chuyên mục | Trang danh sách bài |
+|---|---|---|
+| Hộp "Bắt đầu từ đâu" | Có — ba bài nền tảng của chuyên mục | Không. Dải chip ba chuyên mục cha đã làm việc dẫn lối |
+| Nhãn chuyên mục trên mỗi dòng | Không — trùng đúng tiêu đề trang | **Có** — bài đến từ mọi chuyên mục nên nhãn mới có việc để làm |
+| Số liệu đầu trang | Trong chuyên mục, tính cả bài của con | Toàn bộ bài viết của site |
+
+Mô tả ở đầu trang lấy từ **nội dung** của trang "Bài viết" — thứ WordPress bình
+thường vứt bỏ khi một trang được chọn làm trang danh sách bài. Chủ site sửa câu
+dẫn ngay trong trình soạn thảo quen thuộc, không phải thêm một ô cấu hình mới.
+Không chạy qua bộ lọc `the_content`: chỉ cần một đoạn dẫn ngắn, để nguyên bộ lọc
+thì một shortcode hay một khối ảnh lọt vào sẽ phá vỡ đầu trang.
+
+### Bài ghim không còn nhảy lên đầu /bai-viet/
+
+Lỗi có sẵn từ trước, chỉ lộ ra khi dòng đếm vị trí cho thấy trang 1 dài 13 bài
+còn các trang khác 10. Đo ngày 04/08/2026: **82 dòng in ra cho 79 bài** — ba bài
+ghim hiện ở đầu trang 1 rồi hiện lại đúng vị trí theo ngày đăng ở trang sau.
+
+Nguyên nhân là mặc định của WordPress: nó nhấc bài ghim lên đầu chỉ mục blog.
+Trên site này việc đó sai ngay từ ý nghĩa — chủ site tích "Dán bài này lên trang
+chủ" để chọn bài cho khối nổi bật ở **trang chủ**, không phải để ghim vào danh
+sách bài. `dql_archive_bo_uu_tien_ghim()` đặt `ignore_sticky_posts` cho truy vấn
+chính của `is_home`.
+
+Khối nổi bật ở trang chủ không bị ảnh hưởng: nó chạy truy vấn riêng qua
+`dql_featured_post_ids()`, đã kiểm lại sau khi sửa.
+
+Trang thẻ và trang lưu trữ theo ngày **vẫn dùng khung Kadence** — gần như không
+có lưu lượng, và mỗi trang thẻ hiện chỉ có một bài.
 
 ## Ảnh đại diện bài viết: vì sao không kéo full màn hình
 
