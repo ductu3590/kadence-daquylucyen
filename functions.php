@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * phiên bản thì mẫu đó sẽ không xuất hiện trong trình soạn thảo, và không có
  * thông báo lỗi nào cả.
  */
-define( 'DQL_VERSION', '1.3.0' );
+define( 'DQL_VERSION', '1.3.1' );
 define( 'DQL_DIR', get_stylesheet_directory() );
 define( 'DQL_URI', get_stylesheet_directory_uri() );
 

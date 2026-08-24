@@ -59,7 +59,16 @@ ksort( $dql_nhom );
 $dql_bang_chu = range( 'A', 'Z' );
 ?>
 
-<main id="dql-tudien" class="dql-tudien">
+<?php
+/*
+ * Thẻ <div>, không phải <main>.
+ *
+ * header.php của Kadence đã mở sẵn <main id="inner-wrap">, và HTML chỉ cho phép
+ * một <main> hiển thị trên một trang. Lồng thêm một cái nữa làm trình đọc màn
+ * hình báo hai vùng nội dung chính và người dùng phải chọn giữa hai thứ giống hệt.
+ */
+?>
+<div id="dql-tudien" class="dql-tudien">
 	<section class="dql-section">
 		<div class="dql-container dql-container--narrow">
 
@@ -112,7 +121,7 @@ $dql_bang_chu = range( 'A', 'Z' );
 
 		</div>
 	</section>
-</main>
+</div>
 
 <?php
 get_footer();

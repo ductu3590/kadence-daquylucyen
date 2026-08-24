@@ -21,7 +21,16 @@ if ( function_exists( '\Kadence\kadence' ) ) {
 }
 ?>
 
-<main id="dql-home" class="dql-home">
+<?php
+/*
+ * Thẻ <div>, không phải <main>.
+ *
+ * header.php của Kadence đã mở sẵn <main id="inner-wrap">, và HTML chỉ cho phép
+ * một <main> hiển thị trên một trang. Lồng thêm một cái nữa làm trình đọc màn
+ * hình báo hai vùng nội dung chính và người dùng phải chọn giữa hai thứ giống hệt.
+ */
+?>
+<div id="dql-home" class="dql-home">
 	<?php
 	/*
 	 * Thứ tự các dải và màu nền xen kẽ nhau có chủ đích:
@@ -47,7 +56,7 @@ if ( function_exists( '\Kadence\kadence' ) ) {
 	get_template_part( 'template-parts/home/latest' );
 	get_template_part( 'template-parts/home/newsletter' );
 	?>
-</main>
+</div>
 
 <?php
 get_footer();
