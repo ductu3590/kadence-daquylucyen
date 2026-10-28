@@ -18,8 +18,8 @@
 	z-index: 30;
 	background: var(--global-palette9);
 	border: 1px solid var(--global-palette7);
-	border-radius: 14px;
-	box-shadow: 0 24px 50px -28px rgba(15, 46, 95, 0.55);
+	border-radius: var(--dql-radius-lg);
+	box-shadow: 0 24px 50px -28px rgba(28, 25, 23, 0.22);
 	padding: 0.5rem;
 	max-height: min(28rem, 70vh);
 	overflow-y: auto;
@@ -213,7 +213,7 @@
 .dql-kq__tudien a {
 	display: block;
 	border: 1px solid var(--global-palette7);
-	border-radius: 10px;
+	border-radius: var(--dql-radius);
 	padding: 0.8rem 1rem;
 	text-decoration: none;
 	transition: border-color 0.18s ease;

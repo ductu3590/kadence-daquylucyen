@@ -200,7 +200,10 @@ function dql_footer_markup() {
 								?>
 							</a>
 						<?php else : ?>
-							<p class="dql-footer__ten"><?php bloginfo( 'name' ); ?></p>
+							<a class="dql-footer__ten" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+								<span class="dql-gem dql-gem--vua dql-gem--ruby" aria-hidden="true"><?php dql_the_icon( 'da-quy' ); ?></span>
+								<span><?php bloginfo( 'name' ); ?></span>
+							</a>
 						<?php endif; ?>
 
 						<?php if ( get_bloginfo( 'description' ) ) : ?>
@@ -227,6 +230,7 @@ function dql_footer_markup() {
 								?>
 								<li>
 									<a href="<?php echo esc_url( get_category_link( $dql_cat->term_id ) ); ?>">
+										<?php dql_the_category_badge( $dql_cat, 'nho' ); ?>
 										<?php echo esc_html( $dql_cat->name ); ?>
 									</a>
 								</li>
@@ -274,7 +278,7 @@ function dql_footer_markup() {
 		</div>
 
 		<div class="dql-footer__day">
-			<div class="dql-container">
+			<div class="dql-container dql-footer__day-in">
 				<p class="dql-footer__banquyen">
 					<?php
 					printf(
@@ -285,6 +289,18 @@ function dql_footer_markup() {
 					);
 					?>
 				</p>
+
+				<?php
+				/*
+				 * Lên đầu trang: liên kết neo thuần, không JS. Kadence có nút
+				 * "scroll to top" riêng nhưng nó nổi lửng giữa trang; đặt ở
+				 * footer gọn hơn và không che nội dung.
+				 */
+				?>
+				<a class="dql-footer__len" href="#wrapper">
+					<?php esc_html_e( 'Lên đầu trang', 'kadence-daquylucyen' ); ?>
+					<?php dql_the_icon( 'len' ); ?>
+				</a>
 			</div>
 		</div>
 

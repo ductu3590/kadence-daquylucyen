@@ -24,45 +24,8 @@
 	margin-top: 1.5rem;
 }
 
-.dql-chip {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.4rem;
-	background: var(--global-palette9);
-	border: 1px solid #e2e8f2;
-	border-radius: 999px;
-	padding: 0.45rem 0.95rem;
-	font-size: 0.9rem;
-	line-height: 1.4;
-	color: var(--global-palette4);
-	text-decoration: none;
-	transition: border-color 0.18s ease, color 0.18s ease;
-}
-
-.dql-chip:hover {
-	border-color: var(--global-palette1);
-	color: var(--global-palette1);
-}
-
-/* Chuyên mục đang xem: nền đặc để phân biệt rõ với các nút còn lại.
-   Không chỉ đổi màu chữ — người nhìn kém phân biệt màu sẽ không thấy khác biệt. */
-.dql-chip.is-current {
-	background: var(--global-palette1);
-	border-color: var(--global-palette1);
-	color: var(--global-palette9);
-	font-weight: 500;
-}
-
-.dql-chip__count {
-	font-size: 0.78rem;
-	color: var(--global-palette6);
-	font-variant-numeric: tabular-nums;
-}
-
-.dql-chip.is-current .dql-chip__count {
-	color: var(--global-palette9);
-	opacity: 0.75;
-}
+/* .dql-chip và .dql-chip.is-current nằm ở main.css — dùng chung với dải
+   "Khám phá" dưới header. Ở đây chỉ còn phần riêng của trang lưu trữ. */
 
 /* Nút quay lên chuyên mục cha: kiểu dáng nhẹ hơn để không tranh chỗ với
    các nút chuyên mục ngang hàng. */
@@ -100,26 +63,27 @@
 .dql-chead {
 	position: relative;
 	overflow: hidden;
-	background: var(--global-palette8);
-	border-bottom: 1px solid var(--global-palette7);
+	background: var(--global-palette9);
+	border-bottom: var(--dql-border);
 	padding-top: 1.75rem;
 }
 
 /*
- * Vệt sapphire rất nhạt ở góc phải.
+ * Một khối đá lớn mờ 7% ở góc phải, tô màu đá của chuyên mục đang xem.
  *
- * Đủ để đầu trang không phẳng lì, không đủ để thành "nền xanh" — đúng ràng buộc
- * của phương án nhận diện: sapphire chỉ làm điểm nhấn trên nền trắng.
+ * Đủ để đầu trang không phẳng lì và mang màu của chuyên mục, không đủ để
+ * thành "nền màu". Màu lấy từ --dql-gem đặt trên .dql-chead (inc/archive.php).
  */
 .dql-chead::after {
 	content: "";
 	position: absolute;
-	right: -120px;
-	top: -160px;
-	width: 460px;
-	height: 460px;
-	border-radius: 50%;
-	background: radial-gradient(circle, rgba(37, 99, 172, 0.1), transparent 70%);
+	right: -80px;
+	top: -60px;
+	width: 360px;
+	height: 360px;
+	clip-path: var(--dql-da-hinh);
+	background: var(--dql-gem, var(--global-palette1));
+	opacity: 0.07;
 	pointer-events: none;
 }
 
@@ -173,17 +137,32 @@
 	color: var(--global-palette4);
 }
 
-/* --- Tên và mô tả --- */
+/* --- Huy hiệu, tên và mô tả --- */
+
+.dql-chead__ten {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--dql-k5);
+	margin-top: var(--dql-k5);
+}
+
+.dql-chead__gem {
+	margin-top: 4px;
+}
 
 .dql-chead__title {
-	margin: 0.7rem 0 0;
+	margin: 0;
+	font-size: clamp(2rem, 3.2vw, 2.75rem);
+	line-height: 1.12;
 	letter-spacing: -0.015em;
 }
 
 .dql-chead__mo-ta {
 	max-width: 64ch;
-	margin-top: 0.7rem;
-	color: var(--global-palette5);
+	margin-top: var(--dql-k4);
+	font-size: 1.0625rem;
+	line-height: 1.55;
+	color: var(--global-palette4);
 }
 
 .dql-chead__mo-ta p {
@@ -224,8 +203,8 @@
    giữa vùng nội dung nên trông như không thuộc về đâu cả. */
 .dql-chead .dql-archive-nav {
 	margin-top: 0;
-	padding: 1.25rem 0 1.4rem;
-	border-top: 1px solid var(--global-palette7);
+	padding: var(--dql-k4) 0 var(--dql-k5);
+	border-top: var(--dql-border);
 }
 
 /* ---------------------------------------------------------------------------
@@ -233,11 +212,10 @@
  * ------------------------------------------------------------------------- */
 
 .dql-batdau {
-	background: var(--global-palette9);
-	border: 1px solid var(--global-palette7);
-	border-radius: 14px;
-	padding: 1.25rem 1.35rem;
-	box-shadow: 0 1px 2px rgba(22, 32, 58, 0.04), 0 8px 24px -12px rgba(22, 32, 58, 0.18);
+	background: var(--global-palette8);
+	border: var(--dql-border);
+	border-radius: var(--dql-radius-lg);
+	padding: var(--dql-k5);
 }
 
 .dql-batdau__title {
@@ -290,20 +268,17 @@
 	padding-top: 0;
 }
 
+/* Số thứ tự: serif lớn màu ruby — giọng tạp chí, không phải badge. */
 .dql-batdau__ds a::before {
 	content: counter(dql-nt);
 	flex: none;
-	width: 22px;
-	height: 22px;
-	margin-top: 0.15rem;
-	border-radius: 7px;
-	background: var(--global-palette7);
+	width: 20px;
+	margin-top: -0.1rem;
+	font-family: var(--global-heading-font-family, inherit);
 	color: var(--global-palette1);
-	font-size: 0.72rem;
-	font-weight: 700;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	font-size: 1.125rem;
+	font-weight: 600;
+	line-height: 1.4;
 	font-variant-numeric: tabular-nums;
 }
 
@@ -347,20 +322,35 @@
  * ------------------------------------------------------------------------- */
 
 .dql-archive__than {
-	padding: 2.25rem 0 3.25rem;
+	padding: var(--dql-k7) 0 var(--dql-k6);
+}
+
+.dql-archive__kicker {
+	margin-bottom: var(--dql-k4);
+}
+
+/* Lưới ba thẻ ở đầu trang 1 — xem dql_archive_loop(). */
+.dql-archive__than .dql-cards {
+	margin-bottom: var(--dql-k7);
 }
 
 .dql-rows {
-	border-top: 1px solid var(--global-palette7);
+	border-top: 2px solid var(--global-palette3);
+}
+
+/* Danh sách đứng sau lưới thẻ: vạch đậm trên đầu để đánh dấu phần "còn lại". */
+.dql-rows + .dql-rows {
+	border-top-color: var(--global-palette7);
+	border-top-width: 1px;
 }
 
 .dql-row {
 	display: grid;
-	grid-template-columns: 140px minmax(0, 1fr) auto;
-	gap: 1.4rem;
+	grid-template-columns: 168px minmax(0, 1fr) 44px;
+	gap: var(--dql-k5);
 	align-items: center;
-	padding: 1.25rem 0;
-	border-bottom: 1px solid var(--global-palette7);
+	padding: var(--dql-k5) 0;
+	border-bottom: var(--dql-border);
 	transition: background-color 0.16s ease;
 }
 
@@ -379,10 +369,18 @@
 
 .dql-row__anh {
 	display: block;
-	border-radius: 10px;
+	border-radius: var(--dql-radius);
 	overflow: hidden;
 	aspect-ratio: 3 / 2;
 	background: var(--global-palette7);
+}
+
+.dql-row__anh img {
+	transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.dql-row:hover .dql-row__anh img {
+	transform: scale(1.04);
 }
 
 .dql-row__anh img {
@@ -407,9 +405,9 @@
 
 .dql-row__ten {
 	margin: 0;
-	font-size: 1.12rem;
-	line-height: 1.42;
-	letter-spacing: -0.005em;
+	font-size: 1.25rem;
+	line-height: 1.3;
+	letter-spacing: -0.01em;
 	text-wrap: pretty;
 }
 
@@ -424,9 +422,9 @@
 }
 
 .dql-row__trich {
-	margin: 0.35rem 0 0;
-	font-size: 0.88rem;
-	line-height: 1.65;
+	margin: 0.4rem 0 0;
+	font-size: 0.9375rem;
+	line-height: 1.55;
 	color: var(--global-palette5);
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
@@ -451,15 +449,7 @@
  * đọc ra là một liên kết chứ không lẫn vào "8 phút đọc" ngay bên cạnh.
  */
 .dql-row__cat {
-	color: var(--global-palette1);
-	font-weight: 500;
-	text-decoration: none;
-	transition: color 0.16s ease;
-}
-
-.dql-row__cat:hover {
-	color: var(--global-palette2);
-	text-decoration: underline;
+	font-size: 0.72rem;
 }
 
 .dql-row__cham {
@@ -472,10 +462,10 @@
 
 .dql-row__mui {
 	flex: none;
-	width: 38px;
-	height: 38px;
+	width: 44px;
+	height: 44px;
 	border-radius: 50%;
-	border: 1px solid var(--global-palette7);
+	border: var(--dql-border);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -483,9 +473,10 @@
 	transition: border-color 0.16s ease, color 0.16s ease, background-color 0.16s ease;
 }
 
-.dql-row__mui svg {
-	width: 16px;
-	height: 16px;
+.dql-row__mui .dql-icon {
+	width: 18px;
+	height: 18px;
+	vertical-align: 0;
 }
 
 .dql-row:hover .dql-row__mui {
@@ -499,21 +490,36 @@
  * ------------------------------------------------------------------------- */
 
 .dql-ar-cta {
+	position: relative;
 	display: flex;
 	align-items: center;
-	gap: 1.25rem;
-	background: var(--global-palette2);
-	color: var(--global-palette9);
-	border-radius: 14px;
-	padding: 1.35rem 1.6rem;
-	margin: 1.6rem 0;
+	gap: var(--dql-k5);
+	background: var(--dql-nen-dam);
+	color: var(--dql-chu-tren-dam);
+	border-radius: var(--dql-radius-lg);
+	padding: var(--dql-k5) var(--dql-k6);
+	margin: var(--dql-k5) 0;
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.dql-hat-da .dql-ar-cta::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-image: var(--dql-hat-anh);
+	background-size: 240px 240px;
+	opacity: 0.14;
+	mix-blend-mode: screen;
+	pointer-events: none;
 }
 
 .dql-ar-cta__icon {
-	width: 34px;
-	height: 34px;
-	flex: none;
-	opacity: 0.9;
+	--dql-gem: #F0647F;
+	--dql-gem-net: #15120F;
+	width: 48px;
+	height: 48px;
 }
 
 .dql-ar-cta__chu {
@@ -523,35 +529,39 @@
 .dql-ar-cta__title {
 	margin: 0;
 	font-family: var(--global-heading-font-family, inherit);
-	font-size: 1.1rem;
+	font-size: 1.25rem;
 	font-weight: 600;
-	line-height: 1.4;
+	line-height: 1.3;
+	color: var(--dql-chu-tren-dam);
 }
 
 .dql-ar-cta__desc {
-	margin: 0.15rem 0 0;
-	font-size: 0.88rem;
-	line-height: 1.55;
-	opacity: 0.82;
+	margin: 0.25rem 0 0;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--dql-chu-tren-dam-mo);
 }
 
 .dql-ar-cta__nut {
 	margin-left: auto;
 	flex: none;
-	background: var(--global-palette9);
-	color: var(--global-palette2);
-	font-size: 0.9rem;
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	background: var(--dql-chu-tren-dam);
+	color: var(--dql-nen-dam);
+	font-size: 0.9375rem;
 	font-weight: 600;
 	text-decoration: none;
-	padding: 0.6rem 1.25rem;
+	padding: 0 1.25rem;
 	border-radius: 999px;
 	white-space: nowrap;
-	transition: opacity 0.16s ease;
+	transition: background-color 0.16s ease;
 }
 
 .dql-ar-cta__nut:hover {
-	opacity: 0.88;
-	color: var(--global-palette2);
+	background: #fff;
+	color: var(--dql-nen-dam);
 }
 
 /* ---------------------------------------------------------------------------
@@ -579,12 +589,12 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 2.4rem;
-	height: 2.4rem;
-	padding: 0 0.7rem;
-	border: 1px solid var(--global-palette7);
-	border-radius: 10px;
-	font-size: 0.92rem;
+	min-width: 44px;
+	height: 44px;
+	padding: 0 0.8rem;
+	border: var(--dql-border);
+	border-radius: var(--dql-radius);
+	font-size: 0.9375rem;
 	text-decoration: none;
 	color: var(--global-palette4);
 	font-variant-numeric: tabular-nums;
@@ -597,8 +607,8 @@
 }
 
 .dql-ar-phantrang .current {
-	background: var(--global-palette1);
-	border-color: var(--global-palette1);
+	background: var(--global-palette3);
+	border-color: var(--global-palette3);
 	color: var(--global-palette9);
 	font-weight: 600;
 }
@@ -620,9 +630,9 @@
  * ------------------------------------------------------------------------- */
 
 .dql-ar-top {
-	background: var(--global-palette8);
-	border-top: 1px solid var(--global-palette7);
-	padding: 2.75rem 0 3rem;
+	background: var(--global-palette9);
+	border-top: var(--dql-border);
+	padding: var(--dql-k7) 0 var(--dql-k8);
 }
 
 .dql-ar-top__dau {
@@ -631,7 +641,7 @@
 
 .dql-ar-top__title {
 	margin: 0;
-	font-size: 1.35rem;
+	font-size: clamp(1.375rem, 2.4vw, 1.75rem);
 }
 
 .dql-ar-top__ds {
@@ -645,34 +655,35 @@
 
 .dql-ar-tin {
 	display: flex;
-	gap: 0.75rem;
+	gap: var(--dql-k4);
 	height: 100%;
-	background: var(--global-palette9);
-	border: 1px solid var(--global-palette7);
-	border-radius: 12px;
-	padding: 0.8rem;
+	background: var(--global-palette8);
+	border: var(--dql-border);
+	border-radius: var(--dql-radius-lg);
+	padding: var(--dql-k4);
 	text-decoration: none;
 	transition: border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .dql-ar-tin:hover {
-	border-color: #d5e0ee;
-	box-shadow: 0 1px 2px rgba(22, 32, 58, 0.04), 0 8px 24px -12px rgba(22, 32, 58, 0.18);
+	border-color: var(--global-palette6);
+	box-shadow: var(--dql-bong);
 }
 
+/* Số xếp hạng: serif lớn màu ruby cho ba vị trí đầu, xám cho phần còn lại. */
 .dql-ar-tin__hang {
 	flex: none;
-	width: 26px;
-	height: 26px;
-	border-radius: 8px;
-	background: var(--global-palette7);
+	width: 28px;
+	font-family: var(--global-heading-font-family, inherit);
 	color: var(--global-palette1);
-	font-size: 0.8rem;
-	font-weight: 700;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	font-size: 2rem;
+	font-weight: 600;
+	line-height: 1;
 	font-variant-numeric: tabular-nums;
+}
+
+.dql-ar-top__ds li:nth-child(n + 4) .dql-ar-tin__hang {
+	color: var(--global-palette6);
 }
 
 .dql-ar-tin__chu {
@@ -681,10 +692,10 @@
 
 .dql-ar-tin__ten {
 	display: block;
-	font-family: var(--global-heading-font-family, inherit);
-	font-size: 0.92rem;
+	font-family: var(--global-body-font-family, inherit);
+	font-size: 0.9375rem;
 	font-weight: 600;
-	line-height: 1.45;
+	line-height: 1.4;
 	color: var(--global-palette3);
 	text-wrap: pretty;
 	transition: color 0.16s ease;
@@ -781,9 +792,27 @@
 	}
 
 	.dql-row {
-		grid-template-columns: 96px minmax(0, 1fr);
-		gap: 0.9rem;
-		padding: 1rem 0;
+		grid-template-columns: 104px minmax(0, 1fr);
+		gap: var(--dql-k4);
+		padding: var(--dql-k4) 0;
+	}
+
+	.dql-row__anh {
+		aspect-ratio: 1;
+	}
+
+	.dql-chead__ten {
+		gap: var(--dql-k4);
+	}
+
+	.dql-chead__gem {
+		width: 56px;
+		height: 56px;
+	}
+
+	.dql-chead__gem .dql-icon {
+		width: 28px;
+		height: 28px;
 	}
 
 	/* Mũi tên và đoạn trích là thứ đầu tiên bỏ đi ở màn hẹp: đoạn trích chiếm

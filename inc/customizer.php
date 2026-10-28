@@ -6,10 +6,21 @@
  * Kadence. Lý do: các tùy chọn ở đây đơn giản (chữ và chọn chuyên mục), dùng
  * API chuẩn thì không phụ thuộc vào thay đổi nội bộ của Kadence khi nó cập nhật.
  *
+ * Tùy chọn giao diện chung (chế độ tối, dải chuyên mục, hạt đá) nằm ở
+ * inc/theme-mode.php; tùy chọn cột bên ở inc/sidebar.php.
+ *
  * @package kadence-daquylucyen
  */
 
 defined( 'ABSPATH' ) || exit;
+
+/**
+ * Số trụ nội dung tối đa trên trang chủ.
+ *
+ * Bản 1.x cố định ba trụ. Từ 2.0 site mở rộng sang văn hóa, du lịch, ẩm thực
+ * Lục Yên nên cho tới sáu — lưới ba cột, hai hàng. Chọn ít hơn thì lưới tự co.
+ */
+const DQL_SO_TRU = 6;
 
 /**
  * Danh sách tùy chọn trang chủ.
@@ -21,38 +32,53 @@ defined( 'ABSPATH' ) || exit;
  */
 function dql_home_settings() {
 	return array(
-		'dql_hero_title'   => array(
-			'default' => __( 'Hiểu đúng về đá quý trước khi mua', 'kadence-daquylucyen' ),
+		'dql_hero_kicker'      => array(
+			'default' => __( 'Đất ngọc Lục Yên', 'kadence-daquylucyen' ),
+			'label'   => __( 'Dòng dẫn nhỏ trên câu định vị', 'kadence-daquylucyen' ),
+			'type'    => 'text',
+		),
+		'dql_hero_title'       => array(
+			'default' => __( 'Hiểu đúng về đá quý — và về vùng đất sinh ra chúng', 'kadence-daquylucyen' ),
 			'label'   => __( 'Câu định vị', 'kadence-daquylucyen' ),
 			'type'    => 'text',
 		),
-		'dql_hero_sub'     => array(
-			'default' => __( 'Kiến thức, phong thủy và kiểm định đá quý Lục Yên. Viết cho người mua, không viết cho người bán.', 'kadence-daquylucyen' ),
+		'dql_hero_sub'         => array(
+			'default' => __( 'Kiến thức đá quý, phong thủy, kiểm định; cùng văn hóa, con người và ẩm thực Lục Yên. Viết cho người đọc, không viết cho người bán.', 'kadence-daquylucyen' ),
 			'label'   => __( 'Câu mô tả dưới', 'kadence-daquylucyen' ),
 			'type'    => 'textarea',
 		),
-		'dql_menh_title'   => array(
+		'dql_pillars_title'    => array(
+			'default' => __( 'Lục Yên qua từng góc nhìn', 'kadence-daquylucyen' ),
+			'label'   => __( 'Tiêu đề khối trụ nội dung', 'kadence-daquylucyen' ),
+			'type'    => 'text',
+		),
+		'dql_menh_title'       => array(
 			'default' => __( 'Bạn sinh năm nào?', 'kadence-daquylucyen' ),
 			'label'   => __( 'Tiêu đề ô tra mệnh', 'kadence-daquylucyen' ),
 			'type'    => 'text',
 		),
-		'dql_menh_desc'    => array(
-			'default' => __( 'Nhập năm sinh để biết bạn thuộc mệnh gì và những loại đá nào hợp với mệnh đó.', 'kadence-daquylucyen' ),
+		'dql_menh_desc'        => array(
+			'default' => __( 'Nhập năm sinh để biết mệnh của bạn và những loại đá Lục Yên đi cùng mệnh đó.', 'kadence-daquylucyen' ),
 			'label'   => __( 'Mô tả ô tra mệnh', 'kadence-daquylucyen' ),
 			'type'    => 'textarea',
 		),
-		'dql_latest_title' => array(
+		'dql_spotlight_title'  => array(
+			'default' => __( 'Chuyên mục tiêu điểm', 'kadence-daquylucyen' ),
+			'label'   => __( 'Dòng dẫn nhỏ của khối chuyên mục tiêu điểm', 'kadence-daquylucyen' ),
+			'type'    => 'text',
+		),
+		'dql_latest_title'     => array(
 			'default' => __( 'Bài mới nhất', 'kadence-daquylucyen' ),
 			'label'   => __( 'Tiêu đề khối bài mới', 'kadence-daquylucyen' ),
 			'type'    => 'text',
 		),
 		'dql_newsletter_title' => array(
-			'default' => __( 'Nhận bài mới qua email', 'kadence-daquylucyen' ),
+			'default' => __( 'Thư từ Lục Yên', 'kadence-daquylucyen' ),
 			'label'   => __( 'Tiêu đề khối đăng ký email', 'kadence-daquylucyen' ),
 			'type'    => 'text',
 		),
 		'dql_newsletter_desc'  => array(
-			'default' => __( 'Mỗi khi có bài kiến thức mới về đá quý, bạn sẽ nhận được một email. Không quảng cáo, không spam.', 'kadence-daquylucyen' ),
+			'default' => __( 'Mỗi tháng một email: bài mới, phiên chợ đá, mùa vụ Lục Yên. Không quảng cáo, không spam.', 'kadence-daquylucyen' ),
 			'label'   => __( 'Mô tả khối đăng ký email', 'kadence-daquylucyen' ),
 			'type'    => 'textarea',
 		),
@@ -116,14 +142,8 @@ function dql_customize_register( $wp_customize ) {
 		$priority += 10;
 	}
 
-	// Ba trụ nội dung. Mỗi trụ là một chuyên mục.
-	$pillar_labels = array(
-		1 => __( 'Trụ 1 — chuyên mục', 'kadence-daquylucyen' ),
-		2 => __( 'Trụ 2 — chuyên mục', 'kadence-daquylucyen' ),
-		3 => __( 'Trụ 3 — chuyên mục', 'kadence-daquylucyen' ),
-	);
-
-	foreach ( $pillar_labels as $index => $label ) {
+	// Trụ nội dung. Mỗi trụ là một chuyên mục; tối đa DQL_SO_TRU.
+	for ( $index = 1; $index <= DQL_SO_TRU; $index++ ) {
 		$wp_customize->add_setting(
 			'dql_pillar_' . $index,
 			array(
@@ -135,17 +155,40 @@ function dql_customize_register( $wp_customize ) {
 		$wp_customize->add_control(
 			'dql_pillar_' . $index,
 			array(
-				'label'       => $label,
+				/* translators: %d: số thứ tự trụ nội dung. */
+				'label'       => sprintf( __( 'Trụ %d — chuyên mục', 'kadence-daquylucyen' ), $index ),
 				'section'     => 'dql_home',
 				'type'        => 'select',
 				'choices'     => dql_category_choices(),
-				'priority'    => 60 + $index,
+				'priority'    => 200 + $index,
 				'description' => 1 === $index
-					? __( 'Bỏ trống cả ba thì trang chủ tự lấy ba chuyên mục có nhiều bài nhất.', 'kadence-daquylucyen' )
+					? __( 'Bỏ trống cả sáu thì trang chủ tự lấy ba chuyên mục có nhiều bài nhất. Chọn 3 hoặc 6 trụ thì lưới đều nhất.', 'kadence-daquylucyen' )
 					: '',
 			)
 		);
 	}
+
+	// Chuyên mục tiêu điểm — khối bốn bài của một chuyên mục, đặt sau ô tra mệnh.
+	// Dùng để đưa một mảng mới của site (ví dụ Văn hóa Lục Yên) ra trang chủ.
+	$wp_customize->add_setting(
+		'dql_spotlight_cat',
+		array(
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+		)
+	);
+	$wp_customize->add_control(
+		'dql_spotlight_cat',
+		array(
+			'label'       => __( 'Chuyên mục tiêu điểm', 'kadence-daquylucyen' ),
+			'description' => __( 'Bốn bài mới nhất của chuyên mục này hiện thành một dải riêng trên trang chủ. Chưa chọn thì dải không hiện.', 'kadence-daquylucyen' ),
+			'section'     => 'dql_home',
+			'type'        => 'select',
+			'choices'     => dql_category_choices(),
+			'priority'    => 210,
+		)
+	);
 
 	// Số bài trong khối "Bài mới nhất".
 	$wp_customize->add_setting(
@@ -165,17 +208,13 @@ function dql_customize_register( $wp_customize ) {
 			'input_attrs' => array(
 				'min'  => 3,
 				'max'  => 12,
-				'step' => 3,
+				'step' => 1,
 			),
-			'priority'    => 70,
+			'priority'    => 220,
 		)
 	);
 
 	// Logo chân trang.
-	//
-	// inc/footer.php vẫn luôn đọc theme mod này, nhưng trước đây không có ô nào
-	// đặt nó — chỉ gán được bằng code. Hậu quả: chân trang nền xanh đậm hiện tên
-	// site dạng chữ thay vì logo, và chủ site không có cách nào sửa.
 	//
 	// Đặt cạnh logo header trong "Cài đặt site" chứ không tạo mục riêng, vì đây
 	// là chuyện nhận diện thương hiệu — người đi tìm nó sẽ tìm ở chỗ có logo.
@@ -193,7 +232,7 @@ function dql_customize_register( $wp_customize ) {
 			'dql_footer_logo',
 			array(
 				'label'       => __( 'Logo chân trang', 'kadence-daquylucyen' ),
-				'description' => __( 'Bản chữ trắng. Chân trang nền xanh đậm nên logo chữ navy đặt lên đó sẽ gần như biến mất. Bỏ trống thì chân trang hiện tên site dạng chữ.', 'kadence-daquylucyen' ),
+				'description' => __( 'Bản chữ trắng. Chân trang nền than đá nên logo chữ tối đặt lên đó sẽ gần như biến mất. Bỏ trống thì chân trang hiện dấu hiệu đá ruby kèm tên site dạng chữ.', 'kadence-daquylucyen' ),
 				'section'     => 'title_tagline',
 				'mime_type'   => 'image',
 				'priority'    => 9,
@@ -219,7 +258,9 @@ function dql_category_choices() {
 	);
 
 	foreach ( $categories as $category ) {
-		$choices[ $category->term_id ] = $category->name;
+		$tien_to = $category->parent ? '— ' : '';
+
+		$choices[ $category->term_id ] = $tien_to . $category->name;
 	}
 
 	return $choices;

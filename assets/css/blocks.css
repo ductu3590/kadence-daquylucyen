@@ -14,7 +14,7 @@
  * ------------------------------------------------------------------------- */
 
 .dql-callout {
-	border-radius: 10px;
+	border-radius: var(--dql-radius);
 	padding: 1.25rem 1.5rem;
 	margin-block: 2rem;
 }
@@ -92,7 +92,7 @@
 
 .dql-spec {
 	border: 1px solid var(--global-palette7);
-	border-radius: 10px;
+	border-radius: var(--dql-radius);
 	padding: 1.25rem 1.5rem;
 	margin-block: 2rem;
 }
@@ -152,7 +152,7 @@
 }
 
 .dql-compare__col {
-	border-radius: 10px;
+	border-radius: var(--dql-radius);
 	padding: 1.25rem 1.4rem;
 }
 

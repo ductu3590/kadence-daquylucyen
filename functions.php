@@ -18,15 +18,18 @@ defined( 'ABSPATH' ) || exit;
  * phiên bản thì mẫu đó sẽ không xuất hiện trong trình soạn thảo, và không có
  * thông báo lỗi nào cả.
  */
-define( 'DQL_VERSION', '1.3.1' );
+define( 'DQL_VERSION', '2.0.0' );
 define( 'DQL_DIR', get_stylesheet_directory() );
 define( 'DQL_URI', get_stylesheet_directory_uri() );
 
 require_once DQL_DIR . '/inc/setup.php';
 require_once DQL_DIR . '/inc/brand.php';
+require_once DQL_DIR . '/inc/icons.php';
+require_once DQL_DIR . '/inc/theme-mode.php';
 require_once DQL_DIR . '/inc/enqueue.php';
 require_once DQL_DIR . '/inc/template-tags.php';
 require_once DQL_DIR . '/inc/customizer.php';
+require_once DQL_DIR . '/inc/header.php';
 require_once DQL_DIR . '/inc/toc.php';
 require_once DQL_DIR . '/inc/archive.php';
 require_once DQL_DIR . '/inc/patterns.php';

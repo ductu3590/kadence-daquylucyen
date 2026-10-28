@@ -2,28 +2,35 @@
 /**
  * Trang chủ — câu định vị và ô tìm kiếm.
  *
- * Khối này trả lời câu hỏi "đây là chỗ gì" trong khoảng hai giây đầu.
- * Không dùng ảnh nền: ảnh nền lớn làm chậm chỉ số hiển thị nội dung chính,
- * mà ở đây thứ cần thấy trước là chữ.
+ * Khối này trả lời câu hỏi "đây là chỗ gì". Từ bản 2.0 nó đứng SAU khối bài
+ * nổi bật và xếp hai cột: câu định vị bên trái, ô tìm kiếm bên phải — kiểu
+ * dải "about" của tạp chí. Không dùng ảnh nền: thứ cần thấy là chữ.
  *
  * @package kadence-daquylucyen
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$dql_title = dql_home_option( 'dql_hero_title' );
-$dql_sub   = dql_home_option( 'dql_hero_sub' );
+$dql_kicker = dql_home_option( 'dql_hero_kicker' );
+$dql_title  = dql_home_option( 'dql_hero_title' );
+$dql_sub    = dql_home_option( 'dql_hero_sub' );
 ?>
 
 <section class="dql-section dql-hero">
-	<div class="dql-container dql-container--narrow">
-		<?php if ( $dql_title ) : ?>
-			<h1 class="dql-hero__title"><?php echo esc_html( $dql_title ); ?></h1>
-		<?php endif; ?>
+	<div class="dql-container dql-hero__in">
+		<div class="dql-hero__chu" data-reveal>
+			<?php if ( $dql_kicker ) : ?>
+				<p class="dql-kicker"><?php echo esc_html( $dql_kicker ); ?></p>
+			<?php endif; ?>
 
-		<?php if ( $dql_sub ) : ?>
-			<p class="dql-hero__sub"><?php echo esc_html( $dql_sub ); ?></p>
-		<?php endif; ?>
+			<?php if ( $dql_title ) : ?>
+				<h1 class="dql-hero__title"><?php echo esc_html( $dql_title ); ?></h1>
+			<?php endif; ?>
+
+			<?php if ( $dql_sub ) : ?>
+				<p class="dql-hero__sub"><?php echo esc_html( $dql_sub ); ?></p>
+			<?php endif; ?>
+		</div>
 
 		<?php
 		/*
@@ -32,22 +39,20 @@ $dql_sub   = dql_home_option( 'dql_hero_sub' );
 		 * quả như thường.
 		 */
 		?>
-		<form role="search" method="get" class="dql-search" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+		<form role="search" method="get" class="dql-search" action="<?php echo esc_url( home_url( '/' ) ); ?>" data-reveal>
 			<label class="screen-reader-text" for="dql-search-field">
 				<?php esc_html_e( 'Tìm kiếm trên website', 'kadence-daquylucyen' ); ?>
 			</label>
-			<svg class="dql-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false">
-				<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
-			</svg>
+			<?php dql_the_icon( 'tim', array( 'class' => 'dql-search__icon' ) ); ?>
 			<input
 				type="search"
 				id="dql-search-field"
 				class="dql-search__field"
-				placeholder="<?php esc_attr_e( 'Tìm loại đá, mệnh, thuật ngữ…', 'kadence-daquylucyen' ); ?>"
+				placeholder="<?php esc_attr_e( 'Tìm loại đá, mệnh, địa danh, thuật ngữ…', 'kadence-daquylucyen' ); ?>"
 				value="<?php echo esc_attr( get_search_query() ); ?>"
 				name="s"
 			/>
-			<button type="submit" class="dql-search__submit">
+			<button type="submit" class="dql-search__submit dql-nut">
 				<?php esc_html_e( 'Tìm', 'kadence-daquylucyen' ); ?>
 			</button>
 

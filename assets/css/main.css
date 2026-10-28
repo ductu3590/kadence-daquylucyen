@@ -1,36 +1,95 @@
 /*
- * Đá Quý Lục Yên — CSS ngoài trang.
+ * Đá Quý Lục Yên — CSS chung. Ngôn ngữ thiết kế "Đá Thô" (bản 2.0).
  *
  * Quy ước:
- *   - Luôn dùng biến --global-palette* của Kadence, không viết mã màu trực tiếp.
- *     Nhờ vậy đổi màu trong Customizer là cả trang đổi theo.
- *   - Không dùng !important. File này đã được nạp sau Kadence nên không cần.
- *   - Đặt tên class bắt đầu bằng .dql- để không đụng tên với Kadence.
+ *   - Luôn dùng biến --global-palette* của Kadence cho màu thương hiệu, không
+ *     viết mã màu trực tiếp. Nhờ vậy đổi màu trong Customizer là cả trang đổi
+ *     theo, và chế độ tối (dark.css) chỉ cần đặt lại biến.
+ *   - Màu đá của chuyên mục (--dql-da-*) là ngoại lệ có chủ đích: chúng không
+ *     thuộc bảng màu Kadence, và có hai bộ giá trị sáng/tối.
+ *   - Không dùng !important. File này nạp sau Kadence nên không cần.
+ *   - Class bắt đầu bằng .dql- để không đụng tên với Kadence.
+ *
+ * Khung sườn theo Apple Human Interface Guidelines:
+ *   - Lưới 8pt: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96.
+ *   - Đích bấm tối thiểu 44×44.
+ *   - Thang chữ: Large Title 40 · Title 1 32 · Title 2 24 · Title 3 20 ·
+ *     Headline 17/600 · Body 17 · Callout 16 · Subhead 15 · Footnote 13 · Caption 12.
+ *   - Vật liệu mờ cho header dính; chuyển động 200ms, tắt khi người dùng yêu cầu.
  */
 
 /* ---------------------------------------------------------------------------
- * 1. Biến riêng của site
+ * 1. Token thiết kế
  * ------------------------------------------------------------------------- */
 
 :root {
-	--dql-radius: 10px;
+	/* Khoảng cách (lưới 8pt). */
+	--dql-k1: 4px;
+	--dql-k2: 8px;
+	--dql-k3: 12px;
+	--dql-k4: 16px;
+	--dql-k5: 24px;
+	--dql-k6: 32px;
+	--dql-k7: 48px;
+	--dql-k8: 64px;
+	--dql-k9: 96px;
+
+	/* Bo góc liên tục. Chip và nút dùng pill. */
 	--dql-radius-sm: 6px;
-	--dql-border: 1px solid var(--global-palette7);
-	--dql-transition: 0.18s ease;
+	--dql-radius: 12px;
+	--dql-radius-lg: 20px;
+
+	/* Viền hairline. */
+	--dql-vien: var(--global-palette7);
+	--dql-vien-mo: rgba(28, 25, 23, 0.08);
+	--dql-border: 1px solid var(--dql-vien);
+
+	/* Bóng: hai lớp mềm, không đổ bóng kiểu "nổi lên". */
+	--dql-bong: 0 1px 2px rgba(28, 25, 23, 0.04), 0 12px 32px -16px rgba(28, 25, 23, 0.18);
+
+	/* Chuyển động. */
+	--dql-transition: 0.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+
+	/* Nền đậm dùng cho dải tra mệnh, footer, lớp phủ ảnh — than đá. */
+	--dql-nen-dam: #15120F;
+	--dql-chu-tren-dam: #F3EEE7;
+	--dql-chu-tren-dam-mo: #D6CEC4;
+
+	/* Màu đá của chuyên mục — bản sáng. Bản tối ở dark.css. Phải khớp với
+	   dql_mau_da_admin() trong inc/icons.php. Mọi màu ≥ 4.5:1 trên #F6F3EE. */
+	--dql-da-ruby: #A3122E;
+	--dql-da-garnet: #8B2635;
+	--dql-da-spinel: #1F4E8C;
+	--dql-da-sapphire: #2B4C9B;
+	--dql-da-tourmaline: #2F6B4F;
+	--dql-da-jade: #2E7D6B;
+	--dql-da-amber: #B8741A;
+	--dql-da-topaz: #C27A22;
+	--dql-da-amethyst: #6B3F8E;
+	--dql-da-marble: #6B7280;
+	--dql-da-smoky: #7A5C3E;
+	--dql-da-coal: #44403B;
+
+	/* Nét icon trên huy hiệu đá. Nền tối đổi sang màu tối. */
+	--dql-gem-net: #FFFFFF;
+
+	/* Hình sáu cạnh LỆCH — cạnh gãy của viên đá chưa mài. Chỉ dùng cho huy
+	   hiệu và dấu hiệu nhận diện; khung thẻ vẫn bo tròn liên tục. */
+	--dql-da-hinh: polygon(48% 2%, 90% 22%, 96% 70%, 54% 98%, 10% 78%, 4% 26%);
+
+	/* Kết cấu hạt đá: nhiễu SVG, không ảnh, không request. */
+	--dql-hat-anh: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ---------------------------------------------------------------------------
- * 1b. Khung dựng dùng chung
- *
- * Dùng ở trang chủ và trang từ điển — những template tự dựng bố cục thay vì
- * đi qua khung nội dung của Kadence.
+ * 2. Khung dựng dùng chung
  * ------------------------------------------------------------------------- */
 
 .dql-container {
 	width: 100%;
-	max-width: 1200px;
+	max-width: 1280px;
 	margin: 0 auto;
-	padding-inline: 1.25rem;
+	padding-inline: var(--dql-k5);
 }
 
 .dql-container--narrow {
@@ -38,48 +97,604 @@
 }
 
 .dql-section {
-	padding-block: clamp(2.5rem, 6vw, 4.5rem);
+	padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (max-width: 767px) {
+	.dql-container {
+		padding-inline: var(--dql-k4);
+	}
 }
 
 /* ---------------------------------------------------------------------------
- * 1c. Thanh điều hướng
+ * 3. Kết cấu hạt đá
  *
- * Đo được: 8 mục ở cấp một cần 1064px trong khi chỉ có 786px — menu tràn xuống
- * hai dòng và mục cuối bị dropdown che. Đã bớt hai mục sang menu chân trang và
- * rút gọn nhãn; phần dưới đây thu thêm cỡ chữ và khoảng đệm cho chắc.
+ * .dql-hat: phủ một lớp nhiễu 6% lên phần tử (cần position relative và
+ * overflow hidden ở phần tử đó). Chỉ chạy khi body có .dql-hat-da — tức
+ * tùy chọn "Kết cấu hạt đá" đang bật.
  * ------------------------------------------------------------------------- */
 
+.dql-hat-da .dql-hat {
+	position: relative;
+	isolation: isolate;
+}
+
+.dql-hat-da .dql-hat::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background-image: var(--dql-hat-anh);
+	background-size: 240px 240px;
+	opacity: 0.06;
+	mix-blend-mode: multiply;
+	pointer-events: none;
+}
+
+/* Nền trang cũng có hạt rất nhẹ — đá hoa trắng không bao giờ phẳng lì. */
+.dql-hat-da body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	background-image: var(--dql-hat-anh);
+	background-size: 240px 240px;
+	opacity: 0.04;
+	pointer-events: none;
+}
+
+/* Trên dải tối, hạt trộn sáng để nổi hạt thay vì tối thêm. */
+.dql-hat-da .dql-hat--dam::before {
+	mix-blend-mode: screen;
+	opacity: 0.12;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Huy hiệu đá (gem badge) và icon
+ * ------------------------------------------------------------------------- */
+
+.dql-icon {
+	display: inline-block;
+	width: 1.25em;
+	height: 1.25em;
+	vertical-align: -0.3em;
+	flex: none;
+}
+
+.dql-gem {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	clip-path: var(--dql-da-hinh);
+	background: var(--dql-gem, var(--global-palette1));
+	color: var(--dql-gem-net);
+	position: relative;
+}
+
+.dql-gem .dql-icon {
+	width: 50%;
+	height: 50%;
+	vertical-align: 0;
+}
+
+.dql-gem--nho {
+	width: 24px;
+	height: 24px;
+}
+
+.dql-gem--nho .dql-icon {
+	width: 13px;
+	height: 13px;
+}
+
+.dql-gem--vua {
+	width: 40px;
+	height: 40px;
+}
+
+.dql-gem--lon {
+	width: 64px;
+	height: 64px;
+}
+
+.dql-gem--rat-lon {
+	width: 96px;
+	height: 96px;
+}
+
+.dql-gem--ruby {
+	--dql-gem: var(--dql-da-ruby);
+}
+
+/* Huy hiệu lớn có vệt hạt nhẹ, như đá thật. */
+.dql-hat-da .dql-gem--lon::after,
+.dql-hat-da .dql-gem--rat-lon::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: var(--dql-hat-anh);
+	background-size: 160px 160px;
+	opacity: 0.22;
+	mix-blend-mode: overlay;
+	pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Nhãn chuyên mục (huy hiệu nhỏ + tên)
+ * ------------------------------------------------------------------------- */
+
+.dql-cat-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	font-size: 0.75rem;
+	line-height: 1.2;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--dql-gem, var(--global-palette1));
+	text-decoration: none;
+	border: 0;
+	transition: color var(--dql-transition);
+}
+
+a.dql-cat-label:hover {
+	color: var(--global-palette3);
+}
+
+.dql-cat-label .dql-gem--nho {
+	width: 18px;
+	height: 18px;
+}
+
+.dql-cat-label .dql-gem--nho .dql-icon {
+	width: 10px;
+	height: 10px;
+}
+
+.dql-cat-label__phu {
+	color: var(--global-palette6);
+	font-weight: 500;
+}
+
+.dql-cat-label__phu::before {
+	content: "·";
+	margin-right: 0.4rem;
+}
+
+/* Nhãn đặt trên ảnh: chữ trắng, huy hiệu giữ màu đá. */
+.dql-cat-label--tren-anh {
+	color: #fff;
+}
+
+.dql-cat-label--tren-anh .dql-cat-label__phu {
+	color: rgba(255, 255, 255, 0.72);
+}
+
+/* Nhãn nổi ở góc ảnh thẻ: nền vật liệu mờ. */
+.dql-cat-label--noi {
+	position: absolute;
+	left: var(--dql-k3);
+	bottom: var(--dql-k3);
+	z-index: 2;
+	height: 28px;
+	padding: 0 10px 0 6px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.86);
+	backdrop-filter: blur(8px) saturate(160%);
+	-webkit-backdrop-filter: blur(8px) saturate(160%);
+	color: var(--global-palette3);
+	font-size: 0.72rem;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+/* Dấu chấm ngăn trong dòng meta. */
+.dql-cham {
+	display: inline-block;
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	background: currentColor;
+	opacity: 0.55;
+	vertical-align: middle;
+	margin-inline: 0.35rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Chip, nút, dòng dẫn
+ * ------------------------------------------------------------------------- */
+
+.dql-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 40px;
+	padding: 0 1rem;
+	background: var(--global-palette9);
+	border: var(--dql-border);
+	border-radius: 999px;
+	font-size: 0.875rem;
+	font-weight: 500;
+	line-height: 1.3;
+	color: var(--global-palette3);
+	text-decoration: none;
+	white-space: nowrap;
+	transition: border-color var(--dql-transition), color var(--dql-transition), background-color var(--dql-transition);
+}
+
+.dql-chip:hover {
+	border-color: var(--global-palette3);
+	color: var(--global-palette3);
+}
+
+.dql-chip--gem {
+	padding-left: 0.5rem;
+}
+
+/* Chip đang xem: nền đặc. Không chỉ đổi màu chữ — người nhìn kém phân biệt màu
+   sẽ không thấy khác biệt. */
+.dql-chip.is-current {
+	background: var(--global-palette3);
+	border-color: var(--global-palette3);
+	color: var(--global-palette9);
+}
+
+.dql-chip__count {
+	font-size: 0.75rem;
+	color: var(--global-palette6);
+	font-variant-numeric: tabular-nums;
+}
+
+.dql-chip.is-current .dql-chip__count {
+	color: inherit;
+	opacity: 0.65;
+}
+
+.dql-nut {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	min-height: 44px;
+	padding: 0 1.25rem;
+	border: 0;
+	border-radius: 999px;
+	background: var(--global-palette1);
+	color: #fff;
+	font-family: inherit;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	line-height: 1;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color var(--dql-transition), color var(--dql-transition), border-color var(--dql-transition);
+}
+
+.dql-nut:hover {
+	background: var(--global-palette2);
+	color: #fff;
+}
+
+.dql-nut--vien {
+	background: transparent;
+	border: 1px solid var(--global-palette3);
+	color: var(--global-palette3);
+}
+
+.dql-nut--vien:hover {
+	background: var(--global-palette3);
+	color: var(--global-palette9);
+}
+
+/* Dòng dẫn nhỏ trên mỗi khối, kèm vạch khía — vết đục trên đá. */
+.dql-kicker {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin: 0 0 var(--dql-k2);
+	font-size: 0.75rem;
+	line-height: 1.3;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--global-palette1);
+}
+
+.dql-kicker::after {
+	content: "";
+	width: 40px;
+	height: 2px;
+	background: repeating-linear-gradient(90deg, currentColor 0 6px, transparent 6px 9px);
+	opacity: 0.9;
+}
+
+.dql-kicker--gem {
+	color: var(--dql-gem, var(--global-palette1));
+}
+
+/* Đầu khối: tiêu đề bên trái, liên kết "xem tất cả" bên phải. */
+.dql-khoi-dau {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: var(--dql-k5);
+	margin-bottom: var(--dql-k5);
+}
+
+.dql-khoi-dau__title {
+	margin: 0;
+	font-size: clamp(1.5rem, 2.6vw, 2rem);
+	line-height: 1.2;
+}
+
+.dql-khoi-dau__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	min-height: 44px;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--global-palette1);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.dql-khoi-dau__link:hover {
+	color: var(--global-palette2);
+}
+
+.dql-khoi-dau__gem-wrap {
+	display: flex;
+	align-items: center;
+	gap: var(--dql-k4);
+}
+
+.dql-khoi-dau__gem-wrap .dql-kicker {
+	margin-bottom: 2px;
+}
+
+.dql-cho-admin {
+	margin: 0;
+	padding: var(--dql-k4) var(--dql-k5);
+	border: 1px dashed var(--global-palette6);
+	border-radius: var(--dql-radius);
+	font-size: 0.875rem;
+	line-height: 1.6;
+	color: var(--global-palette5);
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Thẻ bài (dùng chung: trang chủ, chuyên mục, bài viết)
+ * ------------------------------------------------------------------------- */
+
+.dql-cards {
+	display: grid;
+	gap: var(--dql-k5);
+}
+
+.dql-cards--3 {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.dql-cards--4 {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.dql-card {
+	margin: 0;
+	background: var(--global-palette9);
+	border: var(--dql-border);
+	border-radius: var(--dql-radius-lg);
+	overflow: hidden;
+	transition: border-color var(--dql-transition), box-shadow var(--dql-transition), transform var(--dql-transition);
+}
+
+.dql-card:hover {
+	border-color: var(--global-palette6);
+	box-shadow: var(--dql-bong);
+	transform: translateY(-2px);
+}
+
+.dql-card__link {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	text-decoration: none;
+	border: 0;
+}
+
+.dql-card__media {
+	position: relative;
+	display: block;
+	aspect-ratio: 3 / 2;
+	overflow: hidden;
+	background: var(--global-palette7);
+}
+
+.dql-card__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.dql-card:hover .dql-card__media img {
+	transform: scale(1.04);
+}
+
+.dql-card__media--trong {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--global-palette6);
+}
+
+.dql-card__media--trong .dql-icon {
+	width: 40px;
+	height: 40px;
+	opacity: 0.5;
+}
+
+.dql-card__body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: var(--dql-k4) var(--dql-k5) var(--dql-k5);
+}
+
+.dql-card__title {
+	display: block;
+	margin: 0;
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.25rem;
+	line-height: 1.3;
+	font-weight: 600;
+	color: var(--global-palette3);
+	text-wrap: pretty;
+	transition: color var(--dql-transition);
+}
+
+.dql-card:hover .dql-card__title {
+	color: var(--global-palette1);
+}
+
+.dql-card__trich {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	font-size: 0.9375rem;
+	line-height: 1.55;
+	color: var(--global-palette5);
+}
+
+.dql-card__meta {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	font-size: 0.8125rem;
+	color: var(--global-palette6);
+}
+
+.dql-card__meta .dql-reading-time,
+.dql-card__meta .dql-updated {
+	font-size: inherit;
+	color: inherit;
+}
+
+@media (max-width: 1024px) {
+	.dql-cards--4 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.dql-cards--3,
+	.dql-cards--4 {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * 8. Header của Kadence: vật liệu mờ, dính, thương hiệu
+ * ------------------------------------------------------------------------- */
+
+/*
+ * Nền header là vật liệu mờ kiểu thanh điều hướng Apple: 78% màu nền + blur.
+ * Phủ cả ba hàng của header builder. Kadence in nền từ Customizer bằng cùng
+ * bộ chọn này nhưng không có #masthead ở đầu, nên quy tắc dưới thắng.
+ */
+#masthead .site-header-row-container-inner {
+	background: color-mix(in srgb, var(--global-palette8) 78%, transparent);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	backdrop-filter: blur(20px) saturate(180%);
+	border-bottom: 1px solid var(--dql-vien-mo);
+}
+
+/* Khi đã cuộn, viền rõ hơn một chút để tách header khỏi nội dung. */
+.dql-da-cuon #masthead .site-header-row-container-inner {
+	border-bottom-color: var(--dql-vien);
+}
+
+#masthead .site-header-row-container-inner .site-container {
+	min-height: 68px;
+}
+
+/* --- Thương hiệu: tên site dạng chữ có dấu hiệu đá đứng trước ---------------
+ *
+ * Chỉ hiện khi site KHÔNG dùng logo ảnh (Kadence in .site-title). Logo ảnh
+ * của bản 1.x màu navy lệch tông với bảng màu mới — xem inc/brand.php.
+ */
+#masthead .site-branding .site-title {
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.3125rem;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 1;
+}
+
+#masthead .site-branding .site-title a {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6rem;
+	color: var(--global-palette3);
+	text-decoration: none;
+}
+
+#masthead .site-branding .site-title a::before {
+	content: "";
+	width: 34px;
+	height: 34px;
+	flex: none;
+	clip-path: var(--dql-da-hinh);
+	background: linear-gradient(135deg, color-mix(in srgb, var(--global-palette1) 80%, #fff) 0%, var(--global-palette1) 45%, var(--global-palette2) 100%);
+}
+
+#masthead .site-branding .site-description {
+	display: none;
+}
+
+/* --- Menu chính ---------------------------------------------------------- */
+
 .header-navigation .header-menu-container > ul > li > a {
-	font-size: 0.95rem;
+	font-size: 0.9375rem;
+	font-weight: 500;
+	padding-inline: 0.875rem;
+	color: var(--global-palette3);
 }
 
 .header-navigation .header-menu-container > ul > li {
-	margin-inline: 0.15rem;
+	margin-inline: 0.05rem;
 }
 
-/* --- Menu con ---------------------------------------------------------------
- *
- * Mặc định của Kadence là hộp nền xanh đậm, góc vuông, sát mép chữ — nặng nề và
- * lạc tông với phần còn lại của site vốn sáng và nhiều khoảng thở. Đổi sang hộp
- * trắng có viền mảnh và bóng đổ nhẹ, giống hệ thẻ dùng khắp nơi.
- */
+/* Mục đang xem: vạch ruby dưới chữ, không đổi nền. */
+.header-navigation .header-menu-container > ul > li.current-menu-item > a,
+.header-navigation .header-menu-container > ul > li.current-menu-ancestor > a,
+.header-navigation .header-menu-container > ul > li.current_page_item > a {
+	color: var(--global-palette1);
+	box-shadow: inset 0 -2px 0 var(--global-palette1);
+}
 
+/* Menu con: thẻ trắng viền mảnh, góc bo, bóng mềm — cùng hệ thẻ của site. */
 .header-navigation .header-menu-container ul ul.sub-menu {
 	background: var(--global-palette9);
-	border: 1px solid var(--global-palette7);
-	border-radius: 12px;
-	box-shadow: 0 18px 40px -24px rgba(15, 46, 95, 0.5);
+	border: var(--dql-border);
+	border-radius: var(--dql-radius);
+	box-shadow: var(--dql-bong);
 	padding: 0.4rem;
 	min-width: 15rem;
 }
 
 .header-navigation .header-menu-container ul ul.sub-menu li a {
 	border: 0;
-	border-radius: 8px;
-	padding: 0.55rem 0.8rem;
-	font-size: 0.92rem;
+	border-radius: var(--dql-radius-sm);
+	padding: 0.6rem 0.8rem;
+	font-size: 0.9rem;
 	color: var(--global-palette4);
-	transition: background-color 0.15s ease, color 0.15s ease;
+	transition: background-color var(--dql-transition), color var(--dql-transition);
 }
 
 .header-navigation .header-menu-container ul ul.sub-menu li a:hover,
@@ -88,30 +703,174 @@
 	color: var(--global-palette1);
 }
 
-/* Mục đang xem trong menu con. */
 .header-navigation .header-menu-container ul ul.sub-menu li.current-menu-item > a {
 	color: var(--global-palette1);
 	font-weight: 500;
 }
 
-/* ---------------------------------------------------------------------------
- * 1d. Footer
+/* --- Nút tròn trên header: tìm kiếm (Kadence) và đổi chế độ (theme) --------
  *
- * Hai tầng: tầng nội dung nền xanh đậm, tầng bản quyền đậm hơn một bậc. Đây là
- * cấu trúc footer tiêu chuẩn của báo và tạp chí — tầng dưới tách bạch phần pháp
- * lý khỏi phần điều hướng.
+ * Cùng một hình: tròn 44px, viền mảnh, icon 20px. Đích bấm 44 theo HIG.
+ */
+#masthead .search-toggle-open,
+.dql-doi-nen {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 1px solid var(--dql-vien);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--global-palette9) 60%, transparent);
+	color: var(--global-palette3);
+	cursor: pointer;
+	transition: border-color var(--dql-transition), background-color var(--dql-transition);
+}
+
+#masthead .search-toggle-open:hover,
+.dql-doi-nen:hover {
+	border-color: var(--global-palette3);
+	background: var(--global-palette9);
+}
+
+#masthead .search-toggle-open .search-toggle-icon,
+#masthead .search-toggle-open .kadence-svg-iconset {
+	font-size: 20px;
+}
+
+#masthead .search-toggle-open .search-toggle-label {
+	display: none;
+}
+
+.dql-doi-nen .dql-icon {
+	width: 20px;
+	height: 20px;
+	vertical-align: 0;
+}
+
+.dql-doi-nen__sang {
+	display: none;
+}
+
+.dql-doi-nen-wrap {
+	display: inline-flex;
+	align-items: center;
+	margin-left: 0.5rem;
+}
+
+/* Khi header không có chỗ nào để gắn nút, nó nổi ở góc dưới phải. */
+.dql-doi-nen-wrap--noi {
+	position: fixed;
+	right: var(--dql-k4);
+	bottom: var(--dql-k4);
+	z-index: 50;
+}
+
+.dql-doi-nen-wrap--noi .dql-doi-nen {
+	background: var(--global-palette9);
+	box-shadow: var(--dql-bong);
+}
+
+/* Phần tử HTML của header builder không cần đệm riêng. */
+#masthead .header-html {
+	display: inline-flex;
+	align-items: center;
+}
+
+#masthead .header-html .header-html-inner {
+	line-height: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * 9. Dải chuyên mục "Khám phá" dưới header
  * ------------------------------------------------------------------------- */
 
+.dql-strip {
+	background: var(--global-palette8);
+	border-bottom: var(--dql-border);
+}
+
+.dql-strip__in {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 60px;
+	padding-block: 0.5rem;
+	overflow-x: auto;
+	scrollbar-width: none;
+	-webkit-overflow-scrolling: touch;
+}
+
+.dql-strip__in::-webkit-scrollbar {
+	display: none;
+}
+
+.dql-strip__nhan {
+	flex: none;
+	margin-right: 0.25rem;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--global-palette3);
+}
+
+.dql-strip .dql-chip {
+	flex: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * 10. Dải tiến độ đọc (bài viết)
+ * ------------------------------------------------------------------------- */
+
+.dql-progress {
+	position: sticky;
+	top: 0;
+	z-index: 60;
+	height: 2px;
+	background: transparent;
+}
+
+.dql-progress__bar {
+	display: block;
+	height: 100%;
+	width: 100%;
+	background: var(--global-palette1);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.1s linear;
+}
+
+/* ---------------------------------------------------------------------------
+ * 11. Footer — đá tối, hai tầng
+ * ------------------------------------------------------------------------- */
+
+.dql-footer {
+	position: relative;
+	background: var(--dql-nen-dam);
+	color: var(--dql-chu-tren-dam-mo);
+	isolation: isolate;
+}
+
+.dql-hat-da .dql-footer::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-image: var(--dql-hat-anh);
+	background-size: 240px 240px;
+	opacity: 0.12;
+	mix-blend-mode: screen;
+	pointer-events: none;
+}
+
 .dql-footer__main {
-	background: var(--global-palette2);
-	color: rgba(255, 255, 255, 0.78);
-	padding-block: clamp(2.5rem, 5vw, 4rem);
+	padding-block: clamp(2.5rem, 5vw, 3.5rem) clamp(2rem, 4vw, 3rem);
 }
 
 .dql-footer__grid {
 	display: grid;
 	grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
-	gap: 2rem clamp(1.5rem, 3vw, 3rem);
+	gap: var(--dql-k6) clamp(1.5rem, 3vw, 3rem);
 }
 
 .dql-footer__logo {
@@ -127,27 +886,35 @@
 }
 
 .dql-footer__ten {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin: 0 0 0.75rem;
 	font-family: var(--global-heading-font-family, inherit);
-	font-size: 1.25rem;
+	font-size: 1.3125rem;
 	font-weight: 600;
-	color: #fff;
-	margin: 0 0 0.6rem;
+	color: var(--dql-chu-tren-dam);
+	text-decoration: none;
+}
+
+.dql-footer__ten .dql-gem {
+	--dql-gem-net: #fff;
 }
 
 .dql-footer__mota {
-	font-size: 0.92rem;
-	line-height: 1.7;
-	color: rgba(255, 255, 255, 0.7);
+	font-size: 0.9375rem;
+	line-height: 1.6;
+	color: #A69D92;
 	margin: 0 0 1rem;
 	max-width: 26em;
 }
 
 .dql-footer__tieude {
-	font-size: 0.78rem;
+	font-size: 0.75rem;
 	font-weight: 600;
-	letter-spacing: 0.1em;
+	letter-spacing: 0.08em;
 	text-transform: uppercase;
-	color: rgba(255, 255, 255, 0.55);
+	color: #8B8176;
 	margin: 0 0 0.9rem;
 }
 
@@ -158,47 +925,85 @@
 }
 
 .dql-footer__list li {
-	margin-bottom: 0.55rem;
+	margin-bottom: 0.5rem;
 }
 
 .dql-footer__list a {
-	color: rgba(255, 255, 255, 0.82);
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 28px;
+	color: var(--dql-chu-tren-dam-mo);
 	text-decoration: none;
-	font-size: 0.95rem;
-	border-bottom: 1px solid transparent;
-	transition: color 0.18s ease, border-color 0.18s ease;
+	font-size: 0.9375rem;
+	transition: color var(--dql-transition);
 }
 
 .dql-footer__list a:hover {
 	color: #fff;
-	border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+
+.dql-footer__list .dql-gem--nho {
+	width: 18px;
+	height: 18px;
+	--dql-gem-net: #15120F;
+}
+
+.dql-footer__list .dql-gem--nho .dql-icon {
+	width: 10px;
+	height: 10px;
 }
 
 .dql-footer__nut {
-	display: inline-block;
-	border: 1px solid rgba(255, 255, 255, 0.35);
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	border: 1px solid #352E27;
 	border-radius: 999px;
-	padding: 0.5rem 1.2rem;
-	font-size: 0.9rem;
-	color: #fff;
+	padding: 0 1.25rem;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--dql-chu-tren-dam);
 	text-decoration: none;
-	transition: background-color 0.18s ease, border-color 0.18s ease;
+	transition: background-color var(--dql-transition), border-color var(--dql-transition);
 }
 
 .dql-footer__nut:hover {
-	background: rgba(255, 255, 255, 0.12);
-	border-color: rgba(255, 255, 255, 0.6);
+	background: rgba(255, 255, 255, 0.08);
+	border-color: #8B8176;
+	color: #fff;
 }
 
 .dql-footer__day {
-	background: var(--global-palette3);
-	padding-block: 1rem;
+	border-top: 1px solid #2C2621;
+}
+
+.dql-footer__day-in {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--dql-k4);
+	min-height: 56px;
 }
 
 .dql-footer__banquyen {
 	margin: 0;
-	font-size: 0.85rem;
-	color: rgba(255, 255, 255, 0.55);
+	font-size: 0.8125rem;
+	color: #8B8176;
+}
+
+.dql-footer__len {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 44px;
+	font-size: 0.8125rem;
+	color: var(--dql-chu-tren-dam-mo);
+	text-decoration: none;
+}
+
+.dql-footer__len:hover {
+	color: #fff;
 }
 
 @media (max-width: 900px) {
@@ -211,14 +1016,19 @@
 	.dql-footer__grid {
 		grid-template-columns: 1fr;
 	}
+
+	.dql-footer__day-in {
+		flex-direction: column;
+		align-items: flex-start;
+		padding-block: var(--dql-k3);
+	}
 }
 
 /* ---------------------------------------------------------------------------
- * 1e. Vùng quảng cáo
+ * 12. Vùng quảng cáo
  *
- * Chỉ in ra khi vùng widget có nội dung, nên không bao giờ để lại khoảng trống.
- * Nhãn "Quảng cáo" là bắt buộc về mặt minh bạch: người đọc có quyền biết đâu là
- * nội dung, đâu là quảng cáo.
+ * Chỉ in ra khi vùng widget có nội dung. Nhãn "Quảng cáo" là bắt buộc về mặt
+ * minh bạch: người đọc có quyền biết đâu là nội dung, đâu là quảng cáo.
  * ------------------------------------------------------------------------- */
 
 .dql-ad {
@@ -228,7 +1038,7 @@
 .dql-ad::before {
 	content: "Quảng cáo";
 	display: block;
-	font-size: 0.68rem;
+	font-size: 0.6875rem;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
 	color: var(--global-palette6);
@@ -241,13 +1051,8 @@
  *
  * Quảng cáo responsive của Google AdSense là thẻ <ins class="adsbygoogle"> rỗng.
  * Script của Google đo chiều rộng phần tử CHA để chọn cỡ quảng cáo. Trong một
- * flex container, thẻ ins rỗng trở thành flex item và co về chiều rộng 0 —
- * AdSense đọc được 0px nên không trả quảng cáo nào về.
- *
- * Lỗi này hoàn toàn im lặng: không thông báo, không lỗi console, chỉ là chỗ đó
- * trống mãi mãi. Đã mắc một lần ở bản đầu.
- *
- * Căn giữa bằng text-align và margin auto, không bằng flex.
+ * flex container, thẻ ins rỗng co về chiều rộng 0 — AdSense đọc được 0px nên
+ * không trả quảng cáo nào về. Lỗi hoàn toàn im lặng. Đã mắc một lần.
  */
 .dql-ad__item {
 	display: block;
@@ -261,8 +1066,6 @@
 	height: auto;
 }
 
-/* Quảng cáo cỡ cố định rộng hơn khung: cho cuộn ngang trong khung riêng thay vì
-   đẩy cả trang rộng ra. */
 .dql-ad__item > * {
 	max-width: 100%;
 }
@@ -274,11 +1077,9 @@
 
 .dql-ad--bai {
 	margin-top: 2rem;
-	border-top: 1px solid var(--global-palette7);
+	border-top: var(--dql-border);
 }
 
-/* Quảng cáo chèn giữa bài đã nằm sẵn trong khung nội dung, nên bỏ lớp container
-   thừa — nếu không nó sẽ có thêm một lớp lề nữa và lệch khỏi cột chữ. */
 .dql-ad--trong-bai .dql-container {
 	max-width: none;
 	padding-inline: 0;
@@ -287,33 +1088,28 @@
 .dql-ad--trong-bai {
 	margin-block: 2rem;
 	padding-block: 1.25rem;
-	border-block: 1px solid var(--global-palette7);
+	border-block: var(--dql-border);
 }
 
 /* ---------------------------------------------------------------------------
- * 2. Tinh chỉnh chữ tiếng Việt
- *
- * Tiếng Việt có dấu chồng hai tầng (ế, ữ, ỗ). Với các font phương Tây,
- * dấu tầng trên dễ bị cắt hoặc chạm dòng phía trên. Ba chỉnh sửa dưới đây
- * xử lý chuyện đó.
+ * 13. Chữ tiếng Việt và nhịp đọc trong bài
  * ------------------------------------------------------------------------- */
 
 body {
-	/* Không giãn chữ. Font Việt đã được thiết kế với khoảng cách vừa đủ cho dấu. */
 	letter-spacing: 0;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	/* Tiêu đề cỡ lớn cần khoảng thở trên để dấu không chạm phần tử phía trước. */
 	letter-spacing: -0.01em;
 	overflow-wrap: break-word;
+	text-wrap: pretty;
+	/* Fraunces là font biến thiên có trục SOFT; đặt 60 cho nét bào mềm hơn.
+	   Nếu Kadence tải bản tĩnh thì khai báo này bị bỏ qua, không gây hại. */
+	font-variation-settings: "SOFT" 60;
 }
 
-/* Tiêu đề đứng sau đoạn văn cần khoảng cách rõ hơn khoảng cách trước đoạn kế tiếp.
-   Đây là quy tắc "gần nhau thì thuộc về nhau" — tiêu đề phải dính với nội dung
-   bên dưới nó, không lơ lửng giữa hai khối. */
 .entry-content h2 {
 	margin-top: 2.5em;
 	margin-bottom: 0.6em;
@@ -328,30 +1124,18 @@ h1, h2, h3, h4, h5, h6 {
 	margin-top: 0;
 }
 
-/* ---------------------------------------------------------------------------
- * 3. Liên kết trong bài
- *
- * Gạch chân bằng border thay vì text-decoration để điều khiển được khoảng cách
- * với chữ — gạch chân mặc định cắt ngang phần đuôi của chữ g, y, và cắt cả
- * dấu nặng ở dưới chữ.
- * ------------------------------------------------------------------------- */
-
-.entry-content a:not(.button):not(.wp-block-button__link) {
+/* Liên kết trong bài: gạch chân bằng border để không cắt dấu nặng. */
+.entry-content a:not(.button):not(.wp-block-button__link):not(.dql-nut):not(.dql-chip):not(.dql-cat-label) {
 	color: var(--global-palette1);
 	text-decoration: none;
-	border-bottom: 1px solid var(--global-palette6);
-	border-bottom-color: color-mix(in srgb, var(--global-palette1) 35%, transparent);
+	border-bottom: 1px solid color-mix(in srgb, var(--global-palette1) 35%, transparent);
 	transition: border-color var(--dql-transition), color var(--dql-transition);
 }
 
-.entry-content a:not(.button):not(.wp-block-button__link):hover {
+.entry-content a:not(.button):not(.wp-block-button__link):not(.dql-nut):not(.dql-chip):not(.dql-cat-label):hover {
 	color: var(--global-palette2);
 	border-bottom-color: var(--global-palette2);
 }
-
-/* ---------------------------------------------------------------------------
- * 4. Nhịp đọc trong bài
- * ------------------------------------------------------------------------- */
 
 .entry-content p {
 	margin-bottom: 1.4em;
@@ -371,23 +1155,33 @@ h1, h2, h3, h4, h5, h6 {
 	color: var(--global-palette6);
 }
 
-/* Trích dẫn: dùng vạch màu bên trái, không bo góc.
-   Bo góc chỉ hợp khi có viền cả bốn phía. */
+/* Trích dẫn: serif cỡ lớn, vạch ruby bên trái — giọng của một tạp chí. */
 .entry-content blockquote {
 	border-left: 3px solid var(--global-palette1);
 	border-radius: 0;
-	background: var(--global-palette8);
+	background: none;
 	margin: 2em 0;
-	padding: 1.25em 1.5em;
-	font-size: 1.02em;
+	padding: 0.25em 0 0.25em 1.5em;
+	font-family: var(--global-heading-font-family, inherit);
+	font-size: 1.375rem;
+	line-height: 1.45;
 	color: var(--global-palette3);
+	font-variation-settings: "SOFT" 80;
 }
 
 .entry-content blockquote p:last-child {
 	margin-bottom: 0;
 }
 
-/* Ảnh và chú thích ảnh — dùng nhiều trong bài về đá quý. */
+.entry-content blockquote cite {
+	display: block;
+	margin-top: 0.6em;
+	font-family: var(--global-body-font-family, inherit);
+	font-size: 0.875rem;
+	font-style: normal;
+	color: var(--global-palette6);
+}
+
 .entry-content figure {
 	margin: 2em 0;
 }
@@ -395,7 +1189,7 @@ h1, h2, h3, h4, h5, h6 {
 .entry-content figcaption,
 .wp-element-caption {
 	color: var(--global-palette6);
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: 1.6;
 	text-align: center;
 	margin-top: 0.75em;
@@ -405,11 +1199,10 @@ h1, h2, h3, h4, h5, h6 {
 	border-radius: var(--dql-radius);
 }
 
-/* Bảng — dùng cho bảng thông số đá và bảng so sánh. */
 .entry-content table {
 	border-collapse: collapse;
 	width: 100%;
-	font-size: 0.95rem;
+	font-size: 0.9375rem;
 	margin: 2em 0;
 }
 
@@ -427,26 +1220,22 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: 600;
 }
 
-/* Bảng nhiều cột trên điện thoại: cho cuộn ngang trong khung riêng,
-   không để cả trang bị đẩy rộng ra. */
 .entry-content .wp-block-table {
 	overflow-x: auto;
 }
 
 /* ---------------------------------------------------------------------------
- * 5. Thành phần riêng của site
+ * 14. Thành phần nhỏ dùng chung
  * ------------------------------------------------------------------------- */
 
-.dql-reading-time {
+.dql-reading-time,
+.dql-updated {
 	color: var(--global-palette6);
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 }
 
 /* ---------------------------------------------------------------------------
- * 6. Khả năng tiếp cận
- *
- * Viền focus phải luôn nhìn thấy được. Nhiều theme xóa outline cho "sạch",
- * khiến người dùng bàn phím không biết mình đang ở đâu trên trang.
+ * 15. Khả năng tiếp cận
  * ------------------------------------------------------------------------- */
 
 a:focus-visible,
@@ -465,9 +1254,9 @@ select:focus-visible,
 	color: var(--global-palette3);
 }
 
-/* Tôn trọng thiết lập giảm chuyển động của người dùng.
-   Đây là ngoại lệ duy nhất được dùng !important trong file này: khối lệnh phải
-   thắng mọi animation do plugin hoặc theme cha khai báo, kể cả inline style. */
+/* Tôn trọng thiết lập giảm chuyển động của người dùng. Đây là ngoại lệ duy
+   nhất được dùng !important: phải thắng mọi animation do plugin hoặc theme
+   cha khai báo, kể cả inline style. */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,

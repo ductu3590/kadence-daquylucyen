@@ -124,6 +124,10 @@ add_action( 'widgets_init', 'dql_register_sidebar_areas' );
  */
 function dql_sidebar_modules() {
 	return array(
+		'dql_sb_home_doc_nhieu'  => array(
+			'default' => true,
+			'label'   => __( 'Trang chủ — Đọc nhiều nhất', 'kadence-daquylucyen' ),
+		),
 		'dql_sb_home_chuyen_muc' => array(
 			'default' => true,
 			'label'   => __( 'Trang chủ — Khám phá theo chủ đề', 'kadence-daquylucyen' ),
@@ -385,6 +389,7 @@ function dql_sb_module_chuyen_muc( $toi_da = 8 ) {
 		<?php foreach ( $co_bai as $item ) : ?>
 			<li class="dql-sb-cat__item">
 				<a class="dql-sb-cat__link" href="<?php echo esc_url( get_category_link( $item[0]->term_id ) ); ?>">
+					<?php dql_the_category_badge( $item[0], 'nho' ); ?>
 					<span class="dql-sb-cat__ten"><?php echo esc_html( $item[0]->name ); ?></span>
 					<span class="dql-sb-cat__so"><?php echo esc_html( number_format_i18n( $item[1] ) ); ?></span>
 				</a>
@@ -692,6 +697,7 @@ function dql_sb_module_menh() {
  */
 function dql_sidebar_home_active() {
 	return dql_sidebar_on( 'dql_sb_home_chuyen_muc' )
+		|| ( dql_sidebar_on( 'dql_sb_home_doc_nhieu' ) && class_exists( 'DQL_Luot_Xem' ) )
 		|| dql_sidebar_on( 'dql_sb_home_newsletter' )
 		|| ( dql_sidebar_on( 'dql_sb_home_tu_dien' ) && post_type_exists( 'dql_thuat_ngu' ) )
 		|| is_active_sidebar( 'dql-sb-home-ad' )
@@ -709,6 +715,13 @@ function dql_sidebar_home_active() {
  */
 function dql_sidebar_home() {
 	dql_sb_ad( 'dql-sb-home-ad' );
+
+	// Đọc nhiều nhất lên đầu: với người lần đầu vào site, "người khác đọc gì"
+	// là lối vào đáng tin hơn danh sách chuyên mục. Khối tự ẩn khi chưa đủ
+	// số liệu (xem dql_sb_module_doc_nhieu).
+	if ( dql_sidebar_on( 'dql_sb_home_doc_nhieu' ) ) {
+		dql_sb_module_doc_nhieu( 4 );
+	}
 
 	if ( dql_sidebar_on( 'dql_sb_home_chuyen_muc' ) ) {
 		dql_sb_module_chuyen_muc();

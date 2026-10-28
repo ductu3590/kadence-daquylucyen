@@ -1,0 +1,164 @@
+/*
+ * Chế độ tối — nền than đá.
+ *
+ * Cách hoạt động: đặt lại các biến --global-palette* của Kadence trong phạm vi
+ * html[data-dql-theme="dark"]. Mọi thành phần của theme đều dùng biến, nên
+ * tự đổi theo. Phần dưới là những chỗ Kadence in MÃ MÀU CỐ ĐỊNH từ Customizer
+ * (nền header, nền trang, nền thẻ) — phải ghi đè riêng.
+ *
+ * Bộ chọn html[data-dql-theme="dark"] thắng :root của Kadence vì có thêm một
+ * bộ chọn thuộc tính.
+ *
+ * Màu đá (--dql-da-*) nâng sáng hai bậc để giữ tương phản ≥ 4.5:1 trên nền tối
+ * — xem bảng gốc ở main.css, mục "Màu đá".
+ */
+
+html[data-dql-theme="dark"] {
+	color-scheme: dark;
+
+	--global-palette1: #F0647F; /* Ruby sáng — liên kết, nút. 7.1:1 trên nền. */
+	--global-palette2: #F58BA0; /* Di chuột. */
+	--global-palette3: #F3EEE7; /* Tiêu đề. */
+	--global-palette4: #D6CEC4; /* Nội dung. */
+	--global-palette5: #B5ACA1; /* Chú thích. */
+	--global-palette6: #9A9085; /* Meta. 5.1:1 trên #15120F. */
+	--global-palette7: #352E27; /* Viền, nền hộp. */
+	--global-palette8: #15120F; /* Nền trang — than đá. */
+	--global-palette9: #1E1A16; /* Mặt thẻ. */
+
+	--dql-vien: #352E27;
+	--dql-vien-mo: rgba(243, 238, 231, 0.1);
+	--dql-nen-dam: #0E0C0A;
+	--dql-chu-tren-dam: #F3EEE7;
+	--dql-chu-tren-dam-mo: #D6CEC4;
+	--dql-bong: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+
+	--dql-da-ruby: #F0647F;
+	--dql-da-garnet: #E07A8A;
+	--dql-da-spinel: #6EA8E8;
+	--dql-da-sapphire: #7FA3F0;
+	--dql-da-tourmaline: #6FCB9F;
+	--dql-da-jade: #67C7B0;
+	--dql-da-amber: #F0B45A;
+	--dql-da-topaz: #E8A05A;
+	--dql-da-amethyst: #B48AE0;
+	--dql-da-marble: #A5ACB8;
+	--dql-da-smoky: #B89470;
+	--dql-da-coal: #A69D92;
+
+	/* Icon trên huy hiệu đá: nét tối trên màu đá đã nâng sáng. */
+	--dql-gem-net: #15120F;
+}
+
+/* --- Nền trang và các khung của Kadence ----------------------------------- */
+
+html[data-dql-theme="dark"] body,
+html[data-dql-theme="dark"] .site,
+html[data-dql-theme="dark"] #wrapper,
+html[data-dql-theme="dark"] .content-area,
+html[data-dql-theme="dark"] .content-bg,
+html[data-dql-theme="dark"] .entry-content-wrap,
+html[data-dql-theme="dark"] .content-wrap,
+html[data-dql-theme="dark"] .single-content,
+html[data-dql-theme="dark"] .primary-sidebar,
+html[data-dql-theme="dark"] .entry-hero,
+html[data-dql-theme="dark"] .mobile-navigation,
+html[data-dql-theme="dark"] #mobile-drawer .drawer-inner {
+	background-color: var(--global-palette8);
+	color: var(--global-palette4);
+}
+
+html[data-dql-theme="dark"] .loop-entry.content-bg,
+html[data-dql-theme="dark"] .entry.content-bg,
+html[data-dql-theme="dark"] .comment-respond,
+html[data-dql-theme="dark"] .wp-block-search__input,
+html[data-dql-theme="dark"] input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
+html[data-dql-theme="dark"] textarea,
+html[data-dql-theme="dark"] select {
+	background-color: var(--global-palette9);
+	color: var(--global-palette3);
+	border-color: var(--global-palette7);
+}
+
+html[data-dql-theme="dark"] input::placeholder,
+html[data-dql-theme="dark"] textarea::placeholder {
+	color: var(--global-palette6);
+}
+
+/* --- Header của Kadence --------------------------------------------------- */
+
+html[data-dql-theme="dark"] #masthead .site-header-row-container-inner,
+html[data-dql-theme="dark"] #masthead .site-main-header-wrap .site-header-row-container-inner,
+html[data-dql-theme="dark"] #masthead .site-top-header-wrap .site-header-row-container-inner,
+html[data-dql-theme="dark"] #masthead .site-bottom-header-wrap .site-header-row-container-inner {
+	background: color-mix(in srgb, var(--global-palette8) 78%, transparent);
+	border-bottom-color: var(--dql-vien-mo);
+}
+
+html[data-dql-theme="dark"] #masthead .site-title a,
+html[data-dql-theme="dark"] #masthead .header-navigation .header-menu-container > ul > li > a,
+html[data-dql-theme="dark"] #masthead .search-toggle-open,
+html[data-dql-theme="dark"] #masthead .menu-toggle-open,
+html[data-dql-theme="dark"] #masthead .header-html {
+	color: var(--global-palette3);
+}
+
+html[data-dql-theme="dark"] .header-navigation .header-menu-container ul ul.sub-menu {
+	background: var(--global-palette9);
+	border-color: var(--global-palette7);
+	box-shadow: var(--dql-bong);
+}
+
+/* Logo PNG chữ tối trên nền tối: đảo sáng nhẹ để còn đọc được. Thay bằng bản
+   logo trắng trong Customizer là cách đúng; đây chỉ là lưới an toàn. */
+html[data-dql-theme="dark"] .site-branding img.custom-logo {
+	filter: brightness(0) invert(0.92);
+}
+
+/* --- Thẻ, hộp, bảng trong bài -------------------------------------------- */
+
+html[data-dql-theme="dark"] .entry-content blockquote,
+html[data-dql-theme="dark"] .entry-content th,
+html[data-dql-theme="dark"] .dql-callout--summary,
+html[data-dql-theme="dark"] .dql-spec,
+html[data-dql-theme="dark"] .dql-toc__toggle {
+	background: var(--global-palette9);
+}
+
+html[data-dql-theme="dark"] .entry-content img {
+	/* Ảnh chụp trên nền trắng chói trên nền tối; hạ 8% là đủ dịu mà không xám. */
+	filter: brightness(0.92);
+}
+
+html[data-dql-theme="dark"] .dql-feat__phu {
+	background: linear-gradient(
+		to top,
+		rgba(14, 12, 10, 0.96) 0%,
+		rgba(14, 12, 10, 0.72) 32%,
+		rgba(14, 12, 10, 0.15) 65%,
+		rgba(14, 12, 10, 0) 100%
+	);
+}
+
+/* Hạt đá trên nền tối: trộn sáng (screen) thay vì nhân (multiply). */
+html[data-dql-theme="dark"] .dql-hat-da .dql-hat::before,
+html[data-dql-theme="dark"] .dql-hat-da.dql-hat::before {
+	mix-blend-mode: screen;
+	opacity: 0.1;
+}
+
+/* --- Nút đổi chế độ -------------------------------------------------------- */
+
+html[data-dql-theme="dark"] .dql-doi-nen__toi {
+	display: none;
+}
+
+html[data-dql-theme="dark"] .dql-doi-nen__sang {
+	display: block;
+}
+
+/* --- Vùng quảng cáo, nhãn ----------------------------------------------- */
+
+html[data-dql-theme="dark"] .dql-ad::before {
+	color: var(--global-palette6);
+}

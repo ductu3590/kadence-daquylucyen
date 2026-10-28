@@ -103,8 +103,9 @@ function dql_the_updated( $post = null ) {
  */
 function dql_home_pillars() {
 	$pillars = array();
+	$toi_da  = defined( 'DQL_SO_TRU' ) ? DQL_SO_TRU : 3;
 
-	for ( $i = 1; $i <= 3; $i++ ) {
+	for ( $i = 1; $i <= $toi_da; $i++ ) {
 		$term_id = absint( get_theme_mod( 'dql_pillar_' . $i, 0 ) );
 
 		if ( ! $term_id ) {
@@ -303,25 +304,18 @@ function dql_category_image( $term ) {
 /**
  * In ra biểu tượng cho một trụ nội dung.
  *
- * Vẽ trực tiếp bằng SVG thay vì dùng font biểu tượng: chỉ ba hình, nhúng thẳng
- * thì không tốn thêm một request nào và không có khoảng nhấp nháy lúc font chưa về.
+ * Giữ lại cho tương thích ngược. Từ bản 2.0 icon đi theo CHUYÊN MỤC (inc/icons.php),
+ * không theo vị trí trụ: dql_the_category_badge( $term ) là hàm nên dùng.
  *
  * @param int $index Vị trí trụ, tính từ 0.
  */
 function dql_pillar_icon( $index ) {
-	$icons = array(
-		// Viên đá cắt giác — kiến thức, phân loại đá.
-		'<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M9 3 6.5 9 12 21M15 3l2.5 6L12 21"/>',
-		// Vòng âm dương — phong thủy, hợp mệnh.
-		'<circle cx="12" cy="12" r="9"/><path d="M12 3a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9"/><circle cx="12" cy="7.5" r="1"/><circle cx="12" cy="16.5" r="1"/>',
-		// Con dấu kiểm định — giấy chứng nhận.
-		'<circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-2.5 5 2.5-1.5-7"/><path d="m9.5 9 1.8 1.8L14.5 7.5"/>',
-	);
+	$pillars = dql_home_pillars();
 
-	$path = isset( $icons[ $index ] ) ? $icons[ $index ] : $icons[0];
+	if ( isset( $pillars[ $index ] ) ) {
+		dql_the_icon( dql_category_icon_slug( $pillars[ $index ] ), array( 'class' => 'dql-pillar__icon', 'stroke' => 1.5 ) );
+		return;
+	}
 
-	printf(
-		'<svg class="dql-pillar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">%s</svg>',
-		$path // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Chuỗi SVG cố định trong mã nguồn, không có dữ liệu người dùng.
-	);
+	dql_the_icon( 'da-quy', array( 'class' => 'dql-pillar__icon', 'stroke' => 1.5 ) );
 }

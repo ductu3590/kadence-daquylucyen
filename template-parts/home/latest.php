@@ -71,6 +71,7 @@ $dql_blog     = get_option( 'page_for_posts' );
 						?>
 						<a class="dql-latest__all" href="<?php echo esc_url( get_permalink( $dql_blog ) ); ?>">
 							<?php esc_html_e( 'Xem tất cả', 'kadence-daquylucyen' ); ?>
+							<?php dql_the_icon( 'tiep' ); ?>
 						</a>
 					<?php endif; ?>
 				</div>
@@ -79,26 +80,30 @@ $dql_blog     = get_option( 'page_for_posts' );
 					<?php
 					while ( $dql_query->have_posts() ) :
 						$dql_query->the_post();
-						$dql_cats = get_the_category();
+						$dql_cat = dql_post_main_category();
 						?>
 						<li class="dql-tin" data-reveal>
 							<a class="dql-tin__link" href="<?php the_permalink(); ?>">
-								<span class="dql-tin__anh">
+								<span class="dql-tin__anh dql-hat">
 									<?php the_post_thumbnail( 'dql-card', array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
 								</span>
 
 								<span class="dql-tin__chu">
-									<?php if ( $dql_cats ) : ?>
-										<span class="dql-tin__cat"><?php echo esc_html( $dql_cats[0]->name ); ?></span>
+									<?php if ( $dql_cat ) : ?>
+										<?php echo dql_category_label( $dql_cat, false, 'dql-tin__cat' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Đã thoát trong dql_category_label(). ?>
 									<?php endif; ?>
 
 									<span class="dql-tin__ten"><?php the_title(); ?></span>
 
 									<span class="dql-tin__trich">
-										<?php echo esc_html( wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ), 20, '…' ) ); ?>
+										<?php echo esc_html( wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ), 22, '…' ) ); ?>
 									</span>
 
-									<span class="dql-tin__meta"><?php dql_the_reading_time(); ?></span>
+									<span class="dql-tin__meta">
+										<?php dql_the_updated(); ?>
+										<span class="dql-cham" aria-hidden="true"></span>
+										<?php dql_the_reading_time(); ?>
+									</span>
 								</span>
 							</a>
 						</li>

@@ -25,12 +25,6 @@ if ( function_exists( '\Kadence\kadence' ) ) {
 	\Kadence\kadence()->print_styles( 'kadence-content' );
 }
 
-$dql_trang = max( 1, (int) get_query_var( 'paged' ) );
-
-// Vị trí chèn dải tra mệnh. Chỉ ở trang 1: người đã lật sang trang 2 là người
-// đang tìm một bài cụ thể, chắn ngang danh sách của họ là quấy rầy.
-$dql_chen = ( 1 === $dql_trang ) ? 4 : 0;
-$dql_dem  = 0;
 ?>
 
 <?php
@@ -51,29 +45,7 @@ $dql_dem  = 0;
 
 			<?php if ( have_posts() ) : ?>
 
-				<div class="dql-rows">
-					<?php
-					while ( have_posts() ) :
-						the_post();
-						$dql_dem++;
-
-						dql_archive_row( true );
-
-						/*
-						 * Đóng danh sách lại, chèn dải, rồi mở danh sách mới.
-						 *
-						 * Không đặt dải vào bên trong .dql-rows: các dòng dùng
-						 * đường kẻ dưới để ngăn nhau, một khối lạ nằm giữa sẽ
-						 * thừa ra một đường kẻ ngay trên nó.
-						 */
-						if ( $dql_chen && $dql_dem === $dql_chen && $dql_dem < (int) $GLOBALS['wp_query']->post_count ) {
-							echo '</div>';
-							dql_archive_cta_menh();
-							echo '<div class="dql-rows">';
-						}
-					endwhile;
-					?>
-				</div>
+				<?php dql_archive_loop( true ); ?>
 
 				<?php dql_archive_pagination(); ?>
 

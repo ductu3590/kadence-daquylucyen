@@ -147,11 +147,12 @@ function dql_archive_chips() {
 			}
 			?>
 			<a
-				class="dql-chip<?php echo $term->term_id === $current_id ? ' is-current' : ''; ?>"
+				class="dql-chip dql-chip--gem<?php echo $term->term_id === $current_id ? ' is-current' : ''; ?>"
 				href="<?php echo esc_url( get_category_link( $term->term_id ) ); ?>"
 				<?php echo $term->term_id === $current_id ? ' aria-current="page"' : ''; ?>
 			>
-				<?php echo esc_html( $term->name ); ?>
+				<?php dql_the_category_badge( $term, 'nho' ); ?>
+				<span><?php echo esc_html( $term->name ); ?></span>
 				<span class="dql-chip__count"><?php echo esc_html( number_format_i18n( $count ) ); ?></span>
 			</a>
 		<?php endforeach; ?>
@@ -709,13 +710,27 @@ function dql_archive_head( $term = null ) {
 		$hop    = ob_get_clean();
 	}
 	?>
-	<header class="dql-chead">
+	<header class="dql-chead dql-hat"<?php echo $term ? ' style="--dql-gem: var(--dql-da-' . esc_attr( dql_category_color_key( $term ) ) . ')"' : ''; ?>>
 		<div class="dql-container">
 			<div class="dql-chead__split<?php echo $co_hop ? '' : ' dql-chead__split--don'; ?>">
 				<div class="dql-chead__chu">
 					<?php dql_archive_breadcrumb( $term ); ?>
 
-					<h1 class="dql-chead__title"><?php echo esc_html( $tieu_de ); ?></h1>
+					<div class="dql-chead__ten">
+						<?php
+						// Huy hiệu đá lớn của chuyên mục. Trang danh sách bài không
+						// có chuyên mục nào nên dùng viên đá chung của site.
+						if ( $term ) {
+							dql_the_category_badge( $term, 'rat-lon', 'dql-chead__gem' );
+						} else {
+							echo '<span class="dql-gem dql-gem--rat-lon dql-gem--ruby dql-chead__gem">' . dql_icon( 'da-quy', array( 'stroke' => 1.25 ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						}
+						?>
+						<div>
+							<p class="dql-kicker dql-kicker--gem"><?php echo $term ? esc_html__( 'Chuyên mục', 'kadence-daquylucyen' ) : esc_html__( 'Toàn bộ', 'kadence-daquylucyen' ); ?></p>
+							<h1 class="dql-chead__title"><?php echo esc_html( $tieu_de ); ?></h1>
+						</div>
+					</div>
 
 					<?php if ( $mo_ta ) : ?>
 						<div class="dql-chead__mo-ta"><?php echo wp_kses_post( $mo_ta ); ?></div>
@@ -818,13 +833,11 @@ function dql_archive_row( $hien_cat = false ) {
 			<div class="dql-row__meta">
 				<?php
 				if ( $hien_cat ) :
-					$cats = get_the_category();
+					$cat = dql_post_main_category();
 
-					if ( $cats ) :
+					if ( $cat ) :
+						echo dql_category_label( $cat, true, 'dql-row__cat' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Đã thoát trong dql_category_label().
 						?>
-						<a class="dql-row__cat" href="<?php echo esc_url( get_category_link( $cats[0]->term_id ) ); ?>">
-							<?php echo esc_html( $cats[0]->name ); ?>
-						</a>
 						<span class="dql-row__cham" aria-hidden="true"></span>
 						<?php
 					endif;
@@ -838,12 +851,120 @@ function dql_archive_row( $hien_cat = false ) {
 		</div>
 
 		<span class="dql-row__mui" aria-hidden="true">
-			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-				<path d="m9 18 6-6-6-6"/>
-			</svg>
+			<?php dql_the_icon( 'phai' ); ?>
 		</span>
 	</article>
 	<?php
+}
+
+/**
+ * Một thẻ bài trong lưới — dùng cho ba bài mới nhất ở đầu trang chuyên mục.
+ *
+ * Vì sao ba bài đầu là thẻ còn phần sau là hàng ngang (từ bản 2.0): bài mới
+ * nhất đáng được ảnh lớn như một trang tạp chí, nhưng với 20 bài còn lại thì
+ * danh sách hàng ngang quét tiêu đề nhanh hơn — người vào blog kiến thức tìm
+ * đúng bài, không lướt ảnh. Hai hình thức, hai việc.
+ *
+ * @param bool $hien_cat In nhãn chuyên mục hay không — cùng quy tắc với dql_archive_row().
+ */
+function dql_archive_card( $hien_cat = false ) {
+	$cat = $hien_cat ? dql_post_main_category() : null;
+	?>
+	<article <?php post_class( 'dql-card' ); ?>>
+		<a class="dql-card__link" href="<?php the_permalink(); ?>">
+			<span class="dql-card__media dql-hat<?php echo has_post_thumbnail() ? '' : ' dql-card__media--trong'; ?>">
+				<?php if ( has_post_thumbnail() ) : ?>
+					<?php the_post_thumbnail( 'dql-card', array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
+				<?php else : ?>
+					<?php dql_the_icon( 'da-quy', array( 'stroke' => 1.2 ) ); ?>
+				<?php endif; ?>
+
+				<?php if ( $cat ) : ?>
+					<?php echo dql_category_label( $cat, false, 'dql-cat-label--noi' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Đã thoát trong dql_category_label(). ?>
+				<?php endif; ?>
+			</span>
+
+			<span class="dql-card__body">
+				<h2 class="dql-card__title"><?php the_title(); ?></h2>
+
+				<span class="dql-card__trich">
+					<?php echo esc_html( wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ), 22, '…' ) ); ?>
+				</span>
+
+				<span class="dql-card__meta">
+					<?php dql_the_updated(); ?>
+					<span class="dql-cham" aria-hidden="true"></span>
+					<?php dql_the_reading_time(); ?>
+				</span>
+			</span>
+		</a>
+	</article>
+	<?php
+}
+
+/**
+ * Vòng lặp bài của trang chuyên mục và trang danh sách bài.
+ *
+ * Trang 1: ba bài đầu thành lưới thẻ, phần còn lại thành hàng ngang; dải tra
+ * mệnh chèn sau ba hàng đầu. Trang 2 trở đi: toàn hàng ngang, không chèn gì —
+ * người đã lật sang trang 2 đang tìm một bài cụ thể, chắn ngang là quấy rầy.
+ *
+ * Chỉ dùng thẻ khi trang có từ 5 bài trở lên: ba thẻ rồi tới một hàng lẻ loi
+ * trông như danh sách bị gãy.
+ *
+ * @param bool $hien_cat In nhãn chuyên mục trên từng bài hay không.
+ */
+function dql_archive_loop( $hien_cat = false ) {
+	global $wp_query;
+
+	$trang   = max( 1, (int) get_query_var( 'paged' ) );
+	$so_bai  = (int) $wp_query->post_count;
+	$so_the  = ( 1 === $trang && $so_bai >= 5 ) ? 3 : 0;
+	$chen    = ( 1 === $trang ) ? $so_the + 3 : 0;
+	$dem     = 0;
+	$mo_rows = false;
+
+	while ( have_posts() ) :
+		the_post();
+		$dem++;
+
+		if ( 1 === $dem && $so_the ) {
+			echo '<p class="dql-kicker dql-archive__kicker">' . esc_html__( 'Mới nhất', 'kadence-daquylucyen' ) . '</p>';
+			echo '<div class="dql-cards dql-cards--3">';
+		}
+
+		if ( $dem <= $so_the ) {
+			dql_archive_card( $hien_cat );
+
+			if ( $dem === $so_the ) {
+				echo '</div>';
+			}
+
+			continue;
+		}
+
+		if ( ! $mo_rows ) {
+			echo '<div class="dql-rows">';
+			$mo_rows = true;
+		}
+
+		dql_archive_row( $hien_cat );
+
+		/*
+		 * Đóng danh sách lại, chèn dải, rồi mở danh sách mới. Không đặt dải vào
+		 * bên trong .dql-rows: các dòng dùng đường kẻ dưới để ngăn nhau, một
+		 * khối lạ nằm giữa sẽ thừa ra một đường kẻ ngay trên nó.
+		 */
+		if ( $chen && $dem === $chen && $dem < $so_bai ) {
+			echo '</div>';
+			dql_archive_cta_menh();
+			echo '<div class="dql-rows">';
+		}
+	endwhile;
+
+	if ( $mo_rows ) {
+		echo '</div>';
+	}
 }
 
 /**
@@ -859,10 +980,7 @@ function dql_archive_cta_menh() {
 	}
 	?>
 	<aside class="dql-ar-cta">
-		<svg class="dql-ar-cta__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-			<circle cx="12" cy="12" r="9"/>
-			<path d="M12 3a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9"/>
-		</svg>
+		<span class="dql-gem dql-gem--vua dql-gem--ruby dql-ar-cta__icon"><?php dql_the_icon( 'phong-thuy' ); ?></span>
 
 		<div class="dql-ar-cta__chu">
 			<p class="dql-ar-cta__title"><?php esc_html_e( 'Đá nào hợp mệnh bạn?', 'kadence-daquylucyen' ); ?></p>

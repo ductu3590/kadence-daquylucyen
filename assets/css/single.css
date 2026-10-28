@@ -9,9 +9,87 @@
  * ------------------------------------------------------------------------- */
 
 .dql-single-meta {
-	margin: 0 0 1.75rem;
-	padding-bottom: 1rem;
-	border-bottom: 1px solid var(--global-palette7);
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.25rem 0;
+	margin: 0 0 var(--dql-k6);
+	padding-bottom: var(--dql-k4);
+	border-bottom: var(--dql-border);
+	font-size: 0.8125rem;
+	color: var(--global-palette6);
+}
+
+.dql-single-meta .dql-icon {
+	width: 16px;
+	height: 16px;
+	vertical-align: -0.2em;
+	margin-right: 0.35rem;
+}
+
+/* --- Đầu bài: nhãn chuyên mục có huy hiệu, tiêu đề serif lớn, đoạn dẫn ---- */
+
+.single .entry-header .dql-single-kicker {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	margin: 0 0 var(--dql-k3);
+}
+
+.single .entry-header .entry-title {
+	font-size: clamp(2rem, 3.2vw, 2.75rem);
+	line-height: 1.15;
+	letter-spacing: -0.015em;
+	text-wrap: pretty;
+}
+
+/* Kadence vẫn in dòng chuyên mục của nó nếu Customizer đã lưu khối tiêu đề;
+   theme in bản có huy hiệu ở trên, nên ẩn bản của Kadence để không trùng. */
+.single .entry-header .entry-taxonomies {
+	display: none;
+}
+
+.single .entry-header .entry-meta {
+	font-size: 0.8125rem;
+	color: var(--global-palette6);
+}
+
+.single .entry-header .entry-summary,
+.single .entry-header .entry-excerpt {
+	font-size: 1.1875rem;
+	line-height: 1.5;
+	color: var(--global-palette5);
+	max-width: 40em;
+}
+
+/* Ảnh bìa: bo góc lớn, chú thích canh giữa. */
+.single .post-thumbnail img,
+.single .entry-hero img.wp-post-image,
+.single .post-thumbnail-inner img {
+	border-radius: var(--dql-radius-lg);
+}
+
+/* Thẻ cuối bài: chip. */
+.single .entry-footer .entry-tags a,
+.single .entry-footer .tags-links a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 34px;
+	padding: 0 0.75rem;
+	margin: 0 0.4rem 0.4rem 0;
+	border: var(--dql-border);
+	border-radius: 999px;
+	background: var(--global-palette9);
+	font-size: 0.8125rem;
+	color: var(--global-palette4);
+	text-decoration: none;
+	transition: border-color var(--dql-transition), color var(--dql-transition);
+}
+
+.single .entry-footer .entry-tags a:hover,
+.single .entry-footer .tags-links a:hover {
+	border-color: var(--global-palette3);
+	color: var(--global-palette3);
 }
 
 /* ---------------------------------------------------------------------------
@@ -45,8 +123,8 @@ html {
 }
 
 .dql-toc__inner {
-	border: 1px solid var(--global-palette7);
-	border-radius: 10px;
+	border: var(--dql-border);
+	border-radius: var(--dql-radius);
 	overflow: hidden;
 }
 
@@ -58,9 +136,10 @@ html {
 	width: 100%;
 	background: var(--global-palette8);
 	border: 0;
-	padding: 0.85rem 1rem;
+	min-height: 44px;
+	padding: 0.75rem 1rem;
 	font-family: inherit;
-	font-size: 0.95rem;
+	font-size: 0.9375rem;
 	font-weight: 500;
 	color: var(--global-palette3);
 	text-align: left;
