@@ -56,17 +56,18 @@
 	--dql-chu-tren-dam-mo: #D6CEC4;
 
 	/* Màu đá của chuyên mục — bản sáng. Bản tối ở dark.css. Phải khớp với
-	   dql_mau_da_admin() trong inc/icons.php. Mọi màu ≥ 4.5:1 trên #F6F3EE. */
+	   dql_mau_da_admin() trong inc/icons.php. Mọi màu ≥ 4.5:1 trên nền trang, nền
+	   thẻ và nền hộp (#F6F3EE, #FFFFFF, #ECE6DC) — kể cả khi làm nhãn 12px chữ hoa. */
 	--dql-da-ruby: #A3122E;
 	--dql-da-garnet: #8B2635;
 	--dql-da-spinel: #1F4E8C;
 	--dql-da-sapphire: #2B4C9B;
 	--dql-da-tourmaline: #2F6B4F;
-	--dql-da-jade: #2E7D6B;
-	--dql-da-amber: #B8741A;
-	--dql-da-topaz: #C27A22;
+	--dql-da-jade: #246656;
+	--dql-da-amber: #8A5410;
+	--dql-da-topaz: #945A0F;
 	--dql-da-amethyst: #6B3F8E;
-	--dql-da-marble: #6B7280;
+	--dql-da-marble: #5A6170;
 	--dql-da-smoky: #7A5C3E;
 	--dql-da-coal: #44403B;
 
@@ -131,16 +132,29 @@
 	pointer-events: none;
 }
 
-/* Nền trang cũng có hạt rất nhẹ — đá hoa trắng không bao giờ phẳng lì. */
+/* Nền trang cũng có hạt rất nhẹ — đá hoa trắng không bao giờ phẳng lì.
+   Đặt absolute trên body, KHÔNG fixed: lớp fixed có blend buộc trình duyệt
+   tổng hợp lại cả trang mỗi khung hình cuộn, giật trên điện thoại tầm trung. */
+.dql-hat-da body {
+	position: relative;
+}
+
 .dql-hat-da body::before {
 	content: "";
-	position: fixed;
+	position: absolute;
 	inset: 0;
 	z-index: -1;
 	background-image: var(--dql-hat-anh);
 	background-size: 240px 240px;
 	opacity: 0.04;
 	pointer-events: none;
+}
+
+/* Điện thoại: bỏ hạt nền trang, giữ hạt trên hero và dải tối. */
+@media (max-width: 767px) {
+	.dql-hat-da body::before {
+		display: none;
+	}
 }
 
 /* Trên dải tối, hạt trộn sáng để nổi hạt thay vì tối thêm. */
@@ -285,7 +299,7 @@ a.dql-cat-label:hover {
 	backdrop-filter: blur(8px) saturate(160%);
 	-webkit-backdrop-filter: blur(8px) saturate(160%);
 	color: var(--global-palette3);
-	font-size: 0.72rem;
+	font-size: 0.75rem;
 	text-transform: none;
 	letter-spacing: 0;
 }
@@ -395,9 +409,9 @@ a.dql-cat-label:hover {
 	gap: 0.75rem;
 	margin: 0 0 var(--dql-k2);
 	font-size: 0.75rem;
-	line-height: 1.3;
+	line-height: 1.4;
 	font-weight: 600;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.06em;
 	text-transform: uppercase;
 	color: var(--global-palette1);
 }
@@ -603,19 +617,23 @@ a.dql-cat-label:hover {
  * ------------------------------------------------------------------------- */
 
 /*
- * Nền header là vật liệu mờ kiểu thanh điều hướng Apple: 78% màu nền + blur.
- * Phủ cả ba hàng của header builder. Kadence in nền từ Customizer bằng cùng
- * bộ chọn này nhưng không có #masthead ở đầu, nên quy tắc dưới thắng.
+ * Header đục hoàn toàn khi ở đầu trang (không có gì phía sau để làm mờ, blur
+ * chỉ tốn GPU). Khi đã cuộn (ui.js gắn .dql-da-cuon lên <html>) mới đổi sang
+ * vật liệu mờ kiểu thanh điều hướng Apple: 92% màu nền + blur — 92% chứ không
+ * 78% để chữ menu còn ≥ 4.5:1 khi header trôi qua ảnh. Phủ cả ba hàng của
+ * header builder. Kadence in nền từ Customizer bằng cùng bộ chọn này nhưng
+ * không có #masthead ở đầu, nên quy tắc dưới thắng.
  */
 #masthead .site-header-row-container-inner {
-	background: color-mix(in srgb, var(--global-palette8) 78%, transparent);
-	-webkit-backdrop-filter: blur(20px) saturate(180%);
-	backdrop-filter: blur(20px) saturate(180%);
+	background: var(--global-palette8);
 	border-bottom: 1px solid var(--dql-vien-mo);
+	transition: background-color var(--dql-transition), border-color var(--dql-transition);
 }
 
-/* Khi đã cuộn, viền rõ hơn một chút để tách header khỏi nội dung. */
 .dql-da-cuon #masthead .site-header-row-container-inner {
+	background: color-mix(in srgb, var(--global-palette8) 92%, transparent);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	backdrop-filter: blur(20px) saturate(180%);
 	border-bottom-color: var(--dql-vien);
 }
 
@@ -787,8 +805,21 @@ a.dql-cat-label:hover {
  * ------------------------------------------------------------------------- */
 
 .dql-strip {
+	position: relative;
 	background: var(--global-palette8);
 	border-bottom: var(--dql-border);
+}
+
+/* Mép phải mờ dần: báo còn chip phía sau khi thanh cuộn đã bị ẩn. */
+.dql-strip::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 1px;
+	width: 64px;
+	background: linear-gradient(90deg, transparent, var(--global-palette8));
+	pointer-events: none;
 }
 
 .dql-strip__in {
@@ -814,8 +845,10 @@ a.dql-cat-label:hover {
 	color: var(--global-palette3);
 }
 
+/* Chip trên dải là đích bấm chính của điện thoại: 44px theo HIG. */
 .dql-strip .dql-chip {
 	flex: none;
+	min-height: 44px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -912,7 +945,7 @@ a.dql-cat-label:hover {
 .dql-footer__tieude {
 	font-size: 0.75rem;
 	font-weight: 600;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.06em;
 	text-transform: uppercase;
 	color: #8B8176;
 	margin: 0 0 0.9rem;
@@ -1038,7 +1071,7 @@ a.dql-cat-label:hover {
 .dql-ad::before {
 	content: "Quảng cáo";
 	display: block;
-	font-size: 0.6875rem;
+	font-size: 0.75rem;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
 	color: var(--global-palette6);
@@ -1247,6 +1280,14 @@ select:focus-visible,
 	outline: 2px solid var(--global-palette1);
 	outline-offset: 2px;
 	border-radius: var(--dql-radius-sm);
+}
+
+/* Liên kết phủ cả thẻ nằm trong khung overflow hidden: vẽ vòng focus vào
+   trong để người dùng bàn phím vẫn thấy mình đang ở thẻ nào. */
+.dql-feat__link:focus-visible,
+.dql-card__link:focus-visible,
+.dql-pillar:focus-visible {
+	outline-offset: -3px;
 }
 
 ::selection {

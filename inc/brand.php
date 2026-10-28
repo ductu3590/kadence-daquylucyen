@@ -57,8 +57,8 @@ function dql_brand_palette() {
 		'palette2'  => '#6E0B20', // Ruby đậm — di chuột, nền đậm.
 		'palette3'  => '#1C1917', // Than đá — tiêu đề.
 		'palette4'  => '#44403B', // Đá đen ấm — nội dung bài.
-		'palette5'  => '#6F6861', // Đá xám — chú thích.
-		'palette6'  => '#7A716A', // Bụi đá — meta. 4.6:1 trên #F6F3EE.
+		'palette5'  => '#5E5750', // Đá xám — chú thích. 6.4:1 trên nền trang.
+		'palette6'  => '#6F6861', // Bụi đá — meta. 5.3:1 trên #F6F3EE, 4.6:1 trên nền hộp #ECE6DC.
 		'palette7'  => '#ECE6DC', // Vôi — viền, nền hộp.
 		'palette8'  => '#F6F3EE', // Đá hoa trắng — nền trang.
 		'palette9'  => '#FFFFFF', // Mặt thẻ.
@@ -66,7 +66,7 @@ function dql_brand_palette() {
 		'palette11' => '#2F6B4F', // Thành công — tourmaline.
 		'palette12' => '#1F4E8C', // Thông tin — spinel xanh.
 		'palette13' => '#B42318', // Lỗi.
-		'palette14' => '#B8741A', // Cảnh báo — hổ phách.
+		'palette14' => '#8A5410', // Cảnh báo — hổ phách đậm (bản sáng #B8741A chỉ 3.1:1).
 		'palette15' => '#C9961A', // Đánh giá sao.
 	);
 

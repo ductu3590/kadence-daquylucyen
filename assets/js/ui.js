@@ -23,6 +23,11 @@
 
 		document.querySelectorAll( '[data-dql-doi-nen]' ).forEach( function ( nut ) {
 			nut.setAttribute( 'aria-pressed', toi ? 'true' : 'false' );
+
+			// Nhãn nói việc nút sẽ làm, không phải trạng thái hiện tại.
+			if ( cfg.batSang && cfg.batToi ) {
+				nut.setAttribute( 'aria-label', toi ? cfg.batSang : cfg.batToi );
+			}
 		} );
 	}
 

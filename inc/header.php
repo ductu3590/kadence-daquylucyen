@@ -163,6 +163,8 @@ add_action( 'kadence_after_header', 'dql_progress_render', 4 );
 function dql_ui_strings() {
 	return array(
 		'doiNen'      => __( 'Đổi chế độ sáng / tối', 'kadence-daquylucyen' ),
+		'batSang'     => __( 'Bật chế độ sáng', 'kadence-daquylucyen' ),
+		'batToi'      => __( 'Bật chế độ tối', 'kadence-daquylucyen' ),
 		'coCheDoToi'  => dql_dark_mode_on(),
 		'nutDoiNen'   => dql_dark_mode_button(),
 		'lenDauTrang' => __( 'Lên đầu trang', 'kadence-daquylucyen' ),

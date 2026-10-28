@@ -45,7 +45,7 @@ function dql_featured_card( $post, $size, $extra ) {
 	$ghim  = is_sticky( $post->ID );
 	$lon   = 'dql-feat--lon' === $extra;
 	?>
-	<article class="dql-feat <?php echo esc_attr( $extra ); ?>" data-reveal>
+	<article class="dql-feat <?php echo esc_attr( $extra ); ?>">
 		<a class="dql-feat__link" href="<?php echo esc_url( get_permalink( $post ) ); ?>">
 			<?php
 			echo get_the_post_thumbnail(
@@ -54,8 +54,14 @@ function dql_featured_card( $post, $size, $extra ) {
 				array(
 					'alt'           => '',
 					'class'         => 'dql-feat__img',
-					'loading'       => $lon ? 'eager' : 'lazy',
+					// Cả ba thẻ nằm trên màn hình đầu: không tải lười, không hiện dần —
+					// ảnh lớn nhất trang (LCP) phải hiện ngay khi HTML tới.
+					'loading'       => 'eager',
+					'decoding'      => 'async',
 					'fetchpriority' => $lon ? 'high' : 'auto',
+					'sizes'         => $lon
+						? '(min-width: 1024px) 760px, 100vw'
+						: '(min-width: 1024px) 480px, (min-width: 561px) 50vw, 100vw',
 				)
 			);
 			?>

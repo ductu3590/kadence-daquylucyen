@@ -38,7 +38,7 @@ html[data-dql-theme="dark"] {
 	--dql-da-spinel: #6EA8E8;
 	--dql-da-sapphire: #7FA3F0;
 	--dql-da-tourmaline: #6FCB9F;
-	--dql-da-jade: #67C7B0;
+	--dql-da-jade: #6FC7B0;
 	--dql-da-amber: #F0B45A;
 	--dql-da-topaz: #E8A05A;
 	--dql-da-amethyst: #B48AE0;
@@ -91,8 +91,16 @@ html[data-dql-theme="dark"] #masthead .site-header-row-container-inner,
 html[data-dql-theme="dark"] #masthead .site-main-header-wrap .site-header-row-container-inner,
 html[data-dql-theme="dark"] #masthead .site-top-header-wrap .site-header-row-container-inner,
 html[data-dql-theme="dark"] #masthead .site-bottom-header-wrap .site-header-row-container-inner {
-	background: color-mix(in srgb, var(--global-palette8) 78%, transparent);
+	background: var(--global-palette8);
 	border-bottom-color: var(--dql-vien-mo);
+}
+
+html[data-dql-theme="dark"].dql-da-cuon #masthead .site-header-row-container-inner,
+html[data-dql-theme="dark"].dql-da-cuon #masthead .site-main-header-wrap .site-header-row-container-inner,
+html[data-dql-theme="dark"].dql-da-cuon #masthead .site-top-header-wrap .site-header-row-container-inner,
+html[data-dql-theme="dark"].dql-da-cuon #masthead .site-bottom-header-wrap .site-header-row-container-inner {
+	background: color-mix(in srgb, var(--global-palette8) 92%, transparent);
+	border-bottom-color: var(--dql-vien);
 }
 
 html[data-dql-theme="dark"] #masthead .site-title a,
@@ -125,9 +133,37 @@ html[data-dql-theme="dark"] .dql-toc__toggle {
 	background: var(--global-palette9);
 }
 
-html[data-dql-theme="dark"] .entry-content img {
+html[data-dql-theme="dark"] .entry-content img,
+html[data-dql-theme="dark"] .dql-feat__img,
+html[data-dql-theme="dark"] .dql-card__img,
+html[data-dql-theme="dark"] .dql-pillar__media img,
+html[data-dql-theme="dark"] .dql-tin__anh img {
 	/* Ảnh chụp trên nền trắng chói trên nền tối; hạ 8% là đủ dịu mà không xám. */
 	filter: brightness(0.92);
+}
+
+/* Thẻ nổi bật chưa có ảnh: nền than đậm thay cho nền palette3 (ở chế độ tối
+   palette3 là màu chữ sáng — sẽ thành ô kem chói). */
+html[data-dql-theme="dark"] .dql-feat {
+	background: var(--dql-nen-dam);
+}
+
+/* Nhãn nổi ở góc ảnh: nền tối đục thay nền trắng — chữ kem trên nền trắng
+   chỉ đạt 1.2:1. */
+html[data-dql-theme="dark"] .dql-cat-label--noi {
+	background: rgba(30, 26, 22, 0.88);
+	color: var(--global-palette3);
+}
+
+/* Những khung Kadence in nền sáng cố định. */
+html[data-dql-theme="dark"] #search-drawer .drawer-inner,
+html[data-dql-theme="dark"] .page-numbers:not(.current),
+html[data-dql-theme="dark"] .comment-body,
+html[data-dql-theme="dark"] .wp-block-table td,
+html[data-dql-theme="dark"] .wp-block-table th {
+	background-color: var(--global-palette9);
+	color: var(--global-palette3);
+	border-color: var(--global-palette7);
 }
 
 html[data-dql-theme="dark"] .dql-feat__phu {
