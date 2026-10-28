@@ -30,22 +30,53 @@ chắc chắn là Customizer đã có giá trị lưu sẵn.
 
 ## Bộ nhận diện
 
-Phương án **Sapphire sáng**. Sapphire chỉ dùng làm điểm nhấn trên nền trắng,
-không phủ xanh khắp trang — để bài đọc dài không gây mỏi mắt.
+Bản 2.0: ngôn ngữ **"Đá Thô"** — viên đá chưa mài. Nền đá hoa trắng Lục Yên có
+hạt, điểm nhấn ruby dùng tiết chế (liên kết, nút, nhãn; không bao giờ phủ nền
+rộng), chữ serif có "độ mềm" của đá bào. Khung sườn theo Apple Human Interface
+Guidelines: lưới 8pt, đích bấm 44px, header vật liệu mờ khi cuộn, chế độ tối.
+Bản thiết kế đã chốt nằm trên canvas Claude Design (Page 1), xem `docs/thiet-ke.md`.
 
 | Vai trò | Mã màu | Khe Kadence |
 |---|---|---|
-| Màu nhấn (link, nút) | `#2563AC` | palette1 |
-| Màu nhấn đậm (di chuột) | `#0F2E5F` | palette2 |
-| Tiêu đề | `#16203A` | palette3 |
-| Nội dung bài | `#3D4759` | palette4 |
-| Chữ nhạt (bạc) | `#7E93AE` | palette6 |
-| Nền sương | `#EEF2F8` | palette7 |
+| Ruby Lục Yên (link, nút, nhãn) | `#A3122E` | palette1 |
+| Ruby đậm (di chuột) | `#6E0B20` | palette2 |
+| Than đá (tiêu đề) | `#1C1917` | palette3 |
+| Đá đen ấm (nội dung bài) | `#44403B` | palette4 |
+| Đá xám (chú thích) | `#5E5750` | palette5 |
+| Bụi đá (meta, ngày tháng) | `#6F6861` | palette6 |
+| Vôi (viền, nền hộp) | `#ECE6DC` | palette7 |
+| Đá hoa trắng (nền trang) | `#F6F3EE` | palette8 |
+| Mặt thẻ | `#FFFFFF` | palette9 |
 
-Chữ: **Be Vietnam Pro** cho tiêu đề, **Inter** cho nội dung. Cả hai được tải về
-máy chủ (không gọi sang Google mỗi lần có khách) và **bắt buộc bật bộ ký tự
-`vietnamese`** — nếu tắt, chữ có dấu sẽ rơi về font dự phòng của hệ điều hành và
-trông lệch hẳn so với chữ không dấu.
+Mọi cặp chữ/nền đạt WCAG AA (≥ 4.5:1), kể cả nhãn 12px chữ hoa. Màu đá của 16
+chuyên mục (`--dql-da-*`) nằm ngoài bảng Kadence, khai báo ở đầu
+`assets/css/main.css` và phải khớp với `dql_mau_da_admin()` trong `inc/icons.php`.
+
+Chữ: **Fraunces** (serif, weight 500–700) cho tiêu đề, **Be Vietnam Pro** cho
+nội dung, 17px / 1.65. Kadence tải từ Google Fonts theo weight tĩnh; **bắt buộc
+bật bộ ký tự `vietnamese`** — nếu tắt, chữ có dấu sẽ rơi về font dự phòng của hệ
+điều hành và trông lệch hẳn so với chữ không dấu. Trục "SOFT" của Fraunces chỉ
+có trong mockup, không có trong file Kadence tải về; tự host font biến thiên là
+việc để sau.
+
+Khi nâng cấp từ 1.x, Customizer vẫn giữ bảng màu Sapphire cũ: vào **Customizer →
+Colors → khôi phục mặc định** để nhận bảng Đá Thô.
+
+## Giao diện Đá Thô: ba tùy chọn và bộ icon
+
+**Customizer → Giao diện Đá Thô** có ba công tắc, xử lý ở `inc/theme-mode.php`:
+
+| Tùy chọn | Mặc định | Ghi chú |
+|---|---|---|
+| Chế độ tối | Theo hệ điều hành | Script ở `<head>` đặt `data-dql-theme` trước khi trang vẽ, không nháy. Nút đổi tay: shortcode `[dql_doi_nen]` đặt trong header builder; không đặt thì `ui.js` tự chèn vào phần phải của header. Lựa chọn tay lưu trong trình duyệt. `assets/css/dark.css` chỉ đặt lại biến `--global-palette*` và ghi đè những chỗ Kadence in mã màu cố định. |
+| Dải "Khám phá" | Mọi trang | Hàng chip chuyên mục có huy hiệu đá dưới header (`inc/header.php`). Chọn chỉ trang chủ, hoặc tắt. |
+| Kết cấu hạt đá | Bật | Nhiễu SVG, không ảnh, không request. Nền trang 4%, hero và dải tối 12%. Tự tắt trên điện thoại ở nền trang. |
+
+**Icon chuyên mục** (`inc/icons.php`): 16 biểu tượng nét 1.75 trên lưới 24pt,
+mỗi chuyên mục nằm trong huy hiệu đá sáu cạnh lệch tô một màu đá. Theme tự khớp
+icon theo slug chuyên mục (`da-quy`, `phong-thuy`, `van-hoa`, `du-lich`, `am-thuc`…);
+chủ site đổi icon và màu ở **Bài viết → Chuyên mục → Sửa**. Chuyên mục không
+khớp slug nào nhận icon và màu mặc định, không bao giờ trống.
 
 ## Cấu trúc
 
@@ -58,17 +89,23 @@ inc/template-tags.php       Hàm dùng trong template (thời gian đọc, trụ
 inc/customizer.php          Tùy chọn nội dung trang chủ
 inc/sidebar.php             Cột bên trang chủ và cột bên bài viết
 inc/archive.php             Các khối của trang chuyên mục, và phần cắm vào Kadence
-front-page.php              Trang chủ, gọi bốn khối bên dưới
+inc/icons.php               16 icon chuyên mục, huy hiệu đá, màu đá, trường chọn ở màn Sửa chuyên mục
+inc/theme-mode.php          Chế độ tối, tùy chọn Customizer "Giao diện Đá Thô"
+inc/header.php              Dải "Khám phá" dưới header, dải tiến độ đọc
+front-page.php              Trang chủ, gọi các khối bên dưới
 category.php                Trang chuyên mục, tự dựng toàn bộ
 home.php                    Trang danh sách bài, dùng chung khối với category.php
 search.php                  Trang tìm kiếm, tự dựng toàn bộ
-template-parts/home/        hero · pillars · menh-tool · latest
+template-parts/home/        featured · hero · pillars · menh-tool · spotlight · latest · newsletter
 assets/css/main.css         CSS chung
 assets/css/home.css         CSS trang chủ, chỉ nạp ở trang chủ
 assets/css/archive.css      CSS chuyên mục · danh sách bài · tìm kiếm
 assets/css/sidebar.css      CSS cột bên, dùng chung cho cả ba trang
+assets/css/dark.css         Chế độ tối: đặt lại biến màu, ghi đè khung Kadence
 assets/css/editor.css       CSS trong trình soạn thảo
+assets/js/ui.js             Nút đổi chế độ, tiến độ đọc, header đã cuộn
 docs/thiet-ke.md            Quyết định thiết kế và lý do
+docs/kiem-thu-localwp.md    Danh mục kiểm thử trên LocalWP trước khi deploy
 ```
 
 ## Cấu trúc nội dung
@@ -91,15 +128,17 @@ trong Customizer.
 
 ## Trang chủ
 
-Năm dải, **nền xen kẽ có chủ đích**:
+Bản 2.0 theo thiết kế bản 1 trên canvas, **nền xen kẽ có chủ đích**:
 
 | Dải | Nền | Nội dung |
 |---|---|---|
-| hero | Xám nhạt | Câu định vị, ô tìm kiếm |
-| featured | Trắng | Bài nổi bật, một lớn hai nhỏ |
-| pillars | Xám nhạt | Ba trụ nội dung, có ảnh |
-| **menh-tool** | **Xanh đậm** | **Điểm nhấn — công cụ tra mệnh** |
-| latest | Trắng | Bài mới nhất |
+| featured | Đá hoa trắng | Bài nổi bật, một lớn hai nhỏ, chữ đè ảnh |
+| hero | Trắng | Câu định vị, ô tìm kiếm |
+| pillars | Đá hoa trắng | Trụ nội dung (tối đa 6), ảnh + huy hiệu đá đè mép dưới ảnh |
+| **menh-tool** | **Than đá** | **Điểm nhấn — công cụ tra mệnh, có hạt đá** |
+| spotlight | Đá hoa trắng | Chuyên mục tiêu điểm (chọn trong Customizer) |
+| latest | Đá hoa trắng | Bài mới nhất + cột bên (đọc nhiều, newsletter, từ điển) |
+| footer | Than đá | Bốn cột, nút lên đầu trang |
 
 Khi mọi dải cùng nền trắng, chúng trôi liền một mạch và mắt không nhận ra ranh
 giới — đó là nguyên nhân của cảm giác "rời rạc" dù nội dung vẫn đủ. Dải xanh đậm
@@ -128,6 +167,10 @@ gỡ là chủ site mất quyền chọn bài nổi bật mà không có lỗi n
 chạy và gắn class `dql-reveal-ready` lên thẻ `html`. JavaScript hỏng hay bị chặn
 thì mọi thứ hiện bình thường — không bao giờ có chuyện trang trắng xóa vì hiệu
 ứng lỗi. Tự tắt khi người dùng bật chế độ giảm chuyển động.
+
+Khối nổi bật **không** có hiệu ứng này: ba ảnh đó nằm trên màn hình đầu và ảnh
+lớn nhất là LCP của trang, ẩn chúng chờ JavaScript là tự làm trang chậm đi gần
+nửa giây. Cả ba ảnh tải `eager`, có `sizes` để trình duyệt chọn đúng cỡ.
 
 Script này nạp ở **đầu trang** chứ không phải cuối, để các khối không hiện ra rồi
 mới biến mất.
@@ -545,6 +588,9 @@ phần **Giao diện** của chính WPForms.
 - [x] Rà soát toàn bộ trước khi đưa lên chạy thật
 - [x] Logo chữ và favicon
 - [x] Đã chạy thật trên daquylucyen.net.vn, đồng bộ code qua GitHub + WP Pusher
+- [x] 2.0 — thiết kế "Đá Thô" chốt bản 1 (28/10/2026), code theo canvas, rà WCAG/hiệu năng
+- [ ] 2.0 — kiểm thử trên LocalWP theo `docs/kiem-thu-localwp.md`, rồi mới deploy
+- [ ] 2.0 — tự host Fraunces biến thiên (trục SOFT, opsz), preload 2 file
 
 **Màu viên đá trong logo cố ý lệch khỏi bảng màu site** — là quyết định, không
 phải sai sót. Xem `docs/thiet-ke.md`.

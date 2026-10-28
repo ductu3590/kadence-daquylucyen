@@ -278,3 +278,63 @@ không phải chờ phần dữ liệu.
   toàn bộ bình luận nếu Facebook đổi chính sách.
 - **Không đếm lượt xem trong theme.** Vẫn đúng: việc đếm nằm ở plugin `dql-core`,
   và không chạy lúc dựng trang. Xem mục "Đếm lượt xem" bên dưới.
+
+## Bản 2.0 — "Đá Thô" (chốt 28/10/2026)
+
+Làm lại giao diện khi site mở rộng khỏi đá quý sang văn hóa, du lịch, ẩm thực,
+lịch sử, làng nghề Lục Yên. Tham chiếu bố cục: demo "culture" của theme Newsfy
+(bố cục tạp chí, dải chủ đề dưới header, một lớn hai nhỏ, lưới + hàng). Không
+chép giao diện; chép **cấu trúc dẫn đọc**.
+
+| Quyết định | Lý do |
+|---|---|
+| Ẩn dụ "viên đá chưa mài": hạt, cạnh gãy, màu nằm sâu | Site nói về đá thật, không phải trang sức bóng loáng. Người đi chợ đá quý Lục Yên quý viên thô hơn viên đã mài; giao diện kể đúng chuyện đó. |
+| Ruby `#A3122E` làm màu nhấn, thay sapphire 1.x | Ruby là viên đá làm nên tên Lục Yên. Dùng tiết chế: không bao giờ phủ nền rộng, để bài đọc dài không mỏi. |
+| Fraunces (serif) tiêu đề, Be Vietnam Pro nội dung | Serif tạo cảm giác tạp chí và tách khỏi giao diện SaaS; Be Vietnam Pro do người Việt vẽ dấu, về đúng vai nội dung. |
+| Thang chữ ánh xạ Apple HIG, lưới 8pt, đích bấm 44 | Chủ site yêu cầu theo HIG. Lợi ích thật: một thang cỡ duy nhất cho mọi trang, không còn cỡ lẻ. |
+| Huy hiệu đá sáu cạnh LỆCH cho icon chuyên mục | Lục giác đều là "tinh thể trong sách"; lệch mới là đá thật. Đây là ký hiệu nhận diện mạnh nhất của bản này, dùng xuyên suốt từ chip 24px tới trụ 96px. |
+| Chế độ tối đặt lại biến `--global-palette*` | Mọi CSS đã dùng biến, nên chế độ tối chỉ là một khối biến cộng vài ghi đè nơi Kadence in mã màu cố định. Không viết CSS tối riêng cho từng thành phần. |
+| Màu đá chuyên mục nằm ngoài bảng Kadence | Chủ site đổi được bảng Kadence trong Customizer mà không phá 16 màu đá; và có hai bộ sáng/tối. |
+
+### Quy trình: thiết kế trước, code sau
+
+Lần đầu site dùng "design mode": dựng 7 artboard trên canvas Claude Design (ngôn
+ngữ thiết kế, bộ icon, trang chủ, chuyên mục, bài viết, điện thoại, chế độ tối),
+chuyển song song sang Figma, rồi mới viết code. Code chỉ được coi là bản nháp cho
+tới khi chủ site chốt canvas.
+
+### Thẩm định độc lập trước khi chốt
+
+Hai bản đánh giá chạy tách biệt khỏi người dựng thiết kế: một phê bình nghệ thuật
+(bố cục, bản sắc, nhất quán), một rà WCAG 2.x và hiệu năng trên mã màu thật.
+Kết luận: nền tảng 8/10, bản sắc 6/10. Báo cáo đầy đủ ở
+https://claude.ai/artifact/UodG8KxgvyQkZedxLG34R4.
+
+Từ đó dựng **bản 2** trên Page 2 của canvas (hero lật sáng, ảnh cắt vát, một menu
++ mega-menu, cột đọc 660, bốn họ màu). Chủ site xem cả hai và **chốt bản 1**; bản
+2 giữ lại trên canvas để đối chiếu, không triển khai.
+
+Những sửa chữa từ thẩm định được áp vào code bản 1 vì chúng không đổi diện mạo
+mà sửa lỗi đo được:
+
+- Bốn màu đá (hổ phách, topaz, jade, marble) và hai sắc xám meta tối thêm một
+  bậc: bản cũ chỉ 3,1–4,3:1 cho nhãn 12px chữ hoa. Bảng gốc trên canvas ghi
+  "tất cả ≥ 4,5:1" là sai và đã được code sửa đúng.
+- Chế độ tối: nhãn nổi trên ảnh dùng nền trắng cho chữ kem, tỉ lệ 1,2:1 — lỗi
+  nghiêm trọng nhất tìm được, sửa bằng nền tối 88%.
+- Header đục khi ở đầu trang, chỉ blur khi cuộn: blur 20px chạy liên tục trên
+  điện thoại tầm trung là tốn GPU vô ích. 92% thay 78% để menu còn đọc được khi
+  header trôi qua ảnh.
+- Hạt nền trang `position: fixed` + blend buộc trình duyệt tổng hợp lại cả trang
+  mỗi khung hình cuộn: đổi `absolute`, tắt trên điện thoại.
+- Khối nổi bật mang hiệu ứng hiện dần nên ảnh LCP bị ẩn tới khi JS chạy: bỏ.
+
+### Những gì cố ý không làm ở 2.0
+
+- **Không mega-menu, không cắt vát ảnh, không lật hero** (các đề xuất của bản 2):
+  chủ site chọn giữ hero chữ đè ảnh kiểu Newsfy và dải chip "Khám phá". Nếu sau
+  này đổi ý, Page 2 trên canvas đã có sẵn.
+- **Không tự host Fraunces biến thiên** trong đợt này: cần tải file font về máy
+  chủ, là việc có thể làm độc lập với theme.
+- **Không chuyển trang morph (View Transitions)** cho tới khi đã chạy ổn trên
+  LocalWP: hiệu ứng này đụng vào cách Kadence in ảnh đại diện, cần đo trước.
