@@ -72,6 +72,10 @@ $dql_kadence = function_exists( '\Kadence\kadence' ) ? \Kadence\kadence() : null
 					'class'         => 'dql-bai__bia-img',
 					'loading'       => false,
 					'fetchpriority' => 'high',
+					// LiteSpeed lazy-load mọi ảnh, kể cả ảnh lớn nhất màn hình đầu
+					// này — khung xám một nhịp rồi ảnh mới hiện. Thuộc tính này
+					// bảo nó bỏ qua.
+					'data-no-lazy'  => '1',
 					'sizes'         => '(max-width: 1080px) 100vw, 1000px',
 				)
 			);
