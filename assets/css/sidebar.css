@@ -227,14 +227,17 @@
 	color: var(--global-palette1);
 }
 
-.dql-sb-nut--dam {
+/* Bộ chọn nhắc lại cả ở trạng thái nghỉ: `.dql-sidebar a` (mục 4) đặc hiệu hơn
+   một class đơn và sẽ ép chữ về màu xám trên nền ruby. */
+.dql-sb-nut--dam,
+.dql-sidebar a.dql-sb-nut--dam,
+.primary-sidebar a.dql-sb-nut--dam {
 	background: var(--global-palette1);
 	border-color: var(--global-palette1);
 	color: #fff;
 }
 
-/* Bộ chọn nhắc lại .dql-sb-nut--dam để thắng quy tắc màu chữ của mục 4 ở trên,
-   vốn cũng là hai class. */
+/* Trạng thái hover: cùng lý do, bộ chọn nhắc lại để thắng `.dql-sidebar a:hover`. */
 .dql-sb-nut--dam:hover,
 .dql-sidebar a.dql-sb-nut--dam:hover,
 .primary-sidebar a.dql-sb-nut--dam:hover {

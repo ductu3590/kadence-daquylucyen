@@ -490,7 +490,7 @@ function dql_sb_module_tu_dien() {
 		<?php endforeach; ?>
 	</ul>
 
-	<a class="dql-sb-nut" href="<?php echo esc_url( get_post_type_archive_link( 'dql_thuat_ngu' ) ); ?>">
+	<a class="dql-sb-nut dql-sb-nut--dam" href="<?php echo esc_url( get_post_type_archive_link( 'dql_thuat_ngu' ) ); ?>">
 		<?php esc_html_e( 'Mở toàn bộ từ điển', 'kadence-daquylucyen' ); ?>
 	</a>
 	<?php
