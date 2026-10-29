@@ -845,6 +845,13 @@ a.dql-cat-label:hover {
 	margin-left: 0.5rem;
 }
 
+/* Header điện thoại: tìm kiếm và đổi chế độ đứng sát nhau, trước nút menu. */
+.dql-hd-nut {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--dql-k2);
+}
+
 /* Khi header không có chỗ nào để gắn nút, nó nổi ở góc dưới phải. */
 .dql-doi-nen-wrap--noi {
 	position: fixed;

@@ -52,7 +52,9 @@
 			return;
 		}
 
-		if ( document.querySelector( '[data-dql-doi-nen]' ) ) {
+		// Header điện thoại luôn có nút riêng (in từ PHP), nên chỉ xét header
+		// desktop.
+		if ( ( document.getElementById( 'main-header' ) || document ).querySelector( '[data-dql-doi-nen]' ) ) {
 			return;
 		}
 

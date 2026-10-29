@@ -257,6 +257,46 @@ function dql_progress_render() {
 add_action( 'kadence_after_header', 'dql_progress_render', 4 );
 
 /**
+ * Nút tìm kiếm và nút đổi chế độ trên header điện thoại, đứng trước nút menu.
+ *
+ * Header điện thoại của Kadence là một bộ dựng riêng, không lấy phần tử từ
+ * header desktop — trước đây trên điện thoại chỉ còn logo và nút menu. In bằng
+ * code thay vì kéo phần tử trong Customizer để production và Local giống nhau
+ * mà không phải sửa database.
+ *
+ * Ưu tiên 5: chạy trước Kadence (10), nên hai nút nằm bên trái nút menu.
+ * Nút tìm kiếm dùng luôn hàm của Kadence, nên mở đúng ngăn kéo tìm kiếm của
+ * Kadence (hàm tự gắn ngăn kéo vào footer nếu header desktop chưa có).
+ *
+ * @param string $row    Hàng header.
+ * @param string $column Cột trong hàng.
+ */
+function dql_mobile_header_nut( $row, $column ) {
+	if ( 'main' !== $row || 'right' !== $column || ! function_exists( '\Kadence\kadence' ) ) {
+		return;
+	}
+
+	$co_san = \Kadence\kadence()->option( 'header_mobile_items' );
+	$co_san = isset( $co_san['main']['main_right'] ) && is_array( $co_san['main']['main_right'] ) ? $co_san['main']['main_right'] : array();
+	$tim    = ! in_array( 'search', $co_san, true ) && function_exists( '\Kadence\header_search' );
+	$nen    = dql_dark_mode_button();
+
+	if ( ! $tim && ! $nen ) {
+		return;
+	}
+
+	echo '<div class="site-header-item dql-hd-nut">';
+
+	if ( $tim ) {
+		\Kadence\header_search();
+	}
+
+	echo $nen; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Nút do theme dựng, đã escape bên trong.
+	echo '</div>';
+}
+add_action( 'kadence_render_mobile_header_column', 'dql_mobile_header_nut', 5, 2 );
+
+/**
  * Chuỗi cho JavaScript giao diện.
  *
  * @return array
