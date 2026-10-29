@@ -719,3 +719,25 @@ Chợ đá quý); 5 mục còn lại tự hiện khi có bài đầu tiên.
 **Đã khớp sẵn, không phải sửa**: font Fraunces + Be Vietnam Pro, bố cục header,
 logo ruby, logo chân trang trắng, chữ trang chủ (đúng mặc định theme). So CSS
 Kadence giữa Local và production: ngoài bảng màu không lệch dòng nào.
+
+### 14.4 Chuyển hướng: đã làm qua REST (2026-10-29)
+
+Không phải bấm tay. `POST /wp-json/rankmath/v1/updateSettings` với
+`{"type":"redirections","settings":{"id":…,"sources":[{"pattern":…,"comparison":"exact","ignore":""}],"url_to":…,"header_code":"301","status":"active"}}`
+tạo mới (bỏ `id`) hoặc sửa theo `id`. Trả `true` là xong.
+
+- Sửa đích 8 quy tắc ở bảng 14.2 (ID 59, 61, 55, 64, 56, 58, 9, 70).
+- Tạo 6 quy tắc mới ở bảng 14.2, cộng thêm `travel` → `/luc-yen/du-lich/` (lý do
+  ở dưới). Tổng còn 84 quy tắc.
+- Kiểm: mọi URL chuyên mục cũ trả 301 **một bước** tới trang 200.
+- Sau cùng: LiteSpeed → Purge All, vì `/travel/` còn dính bản 404 trong cache.
+
+**Bẫy `danh-muc/`**: tiền tố chuyên mục của site là `danh-muc`, và tính năng bỏ
+tiền tố của Rank Math chuyển `/danh-muc/x` → `/x/` **trước** khi xét danh sách
+chuyển hướng. Nên các quy tắc nguồn `danh-muc/…` không bao giờ chạy. Đường đi
+thật là `/danh-muc/da-quy` → `/da-quy/` → `/kien-thuc/da-quy/` (2 bước), và vì
+thế mới cần quy tắc `travel`.
+
+Rà toàn bộ quy tắc: không còn đích nào trỏ về đường dẫn chuyên mục cũ. Có 9 quy
+tắc cũ mà đích thiếu `/` cuối nên đi thêm một bước, vẫn tới đúng trang; không
+liên quan đợt sắp chuyên mục này.
