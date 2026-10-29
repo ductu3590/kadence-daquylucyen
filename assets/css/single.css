@@ -331,3 +331,66 @@ html {
 		width: 255px;
 	}
 }
+
+/* ---------------------------------------------------------------------------
+ * Đọc tiếp trong <chuyên mục> — cuối bài, thay "Similar Posts" của Kadence
+ *
+ * Theo bản 1: dải mặt thẻ trắng tràn ngang, viền trên, ba thẻ ảnh 170px.
+ * Thẻ dùng chung .dql-card của main.css; ở đây chỉ chỉnh cỡ cho khối này.
+ * ------------------------------------------------------------------------- */
+
+.dql-doc-tiep {
+	margin-top: var(--dql-k7);
+	margin-bottom: 0;
+	background: var(--global-palette9);
+	border-top: var(--dql-border);
+}
+
+.dql-doc-tiep__in {
+	display: flex;
+	flex-direction: column;
+	gap: var(--dql-k5);
+	padding-top: var(--dql-k7);
+	padding-bottom: var(--dql-k8);
+}
+
+.dql-doc-tiep__head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 0 var(--dql-k4);
+}
+
+.dql-doc-tiep__title {
+	margin: 0;
+	font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+	line-height: 1.2;
+	color: var(--global-palette3);
+}
+
+.dql-doc-tiep__all {
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	min-height: 44px;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--global-palette1);
+	text-decoration: none;
+}
+
+.dql-doc-tiep__all:hover {
+	color: var(--global-palette2);
+}
+
+.dql-card--doc-tiep .dql-card__media {
+	aspect-ratio: auto;
+	height: 170px;
+}
+
+.dql-card--doc-tiep .dql-card__title {
+	font-size: 1.125rem;
+	line-height: 1.35;
+}
