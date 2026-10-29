@@ -17,9 +17,10 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Thứ tự chip trên dải, theo slug — đúng thứ tự thiết kế bản 1.
+ * Các chip trên dải, theo slug — đúng danh sách và thứ tự thiết kế bản 1.
  *
- * Chuyên mục không có trong danh sách đứng sau, xếp theo số bài giảm dần.
+ * Chỉ chuyên mục có trong danh sách mới lên dải. Chuyên mục khác (Đá bán quý,
+ * Tư vấn…) vẫn có trong menu chính; đưa hết lên đây thì dải dài quá màn hình.
  *
  * @return string[]
  */
@@ -57,10 +58,10 @@ function dql_strip_labels() {
 /**
  * Các chuyên mục hiện trên dải.
  *
- * Chuyên mục cấp lá (không có con) có bài, bỏ "Chưa phân loại". Chuyên mục cha
- * như "Kiến thức đá quý" hay "Lục Yên" đã có trong menu chính; dải đưa người
- * đọc thẳng tới chủ đề cụ thể. Tối đa 10 — nhiều hơn thì dải cuộn ngang, và
- * một dải cuộn quá dài thành vô nghĩa.
+ * Chuyên mục cấp lá (không có con) có bài và nằm trong dql_strip_order().
+ * Chuyên mục cha như "Kiến thức đá quý" hay "Lục Yên" đã có trong menu chính;
+ * dải đưa người đọc thẳng tới chủ đề cụ thể. Mục nào chưa có bài thì chưa hiện,
+ * có bài đầu tiên là tự lên đúng chỗ.
  *
  * @return WP_Term[]
  */
@@ -84,7 +85,7 @@ function dql_strip_terms() {
 	$co_bai = array();
 
 	foreach ( $tat_ca as $t ) {
-		if ( ! in_array( (int) $t->term_id, $co_con, true ) ) {
+		if ( isset( $thu_tu[ $t->slug ] ) && ! in_array( (int) $t->term_id, $co_con, true ) ) {
 			$co_bai[] = array( $t, (int) $t->count );
 		}
 	}
@@ -92,10 +93,7 @@ function dql_strip_terms() {
 	usort(
 		$co_bai,
 		function ( $a, $b ) use ( $thu_tu ) {
-			$ta = $thu_tu[ $a[0]->slug ] ?? PHP_INT_MAX;
-			$tb = $thu_tu[ $b[0]->slug ] ?? PHP_INT_MAX;
-
-			return $ta === $tb ? $b[1] - $a[1] : $ta <=> $tb;
+			return $thu_tu[ $a[0]->slug ] <=> $thu_tu[ $b[0]->slug ];
 		}
 	);
 
