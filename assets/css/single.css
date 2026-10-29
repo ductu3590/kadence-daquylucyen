@@ -27,6 +27,25 @@
 	margin-right: 0.35rem;
 }
 
+/* ---------------------------------------------------------------------------
+ * Căn đều hai bên cho thân bài
+ *
+ * Căn trái làm mép phải lởm chởm, dòng thò ra thụt vào. Bài tiếng Việt
+ * quen căn đều như báo in: từ ngắn, ít khoảng trắng bị giãn.
+ * Chỉ áp cho đoạn văn và mục danh sách nằm thẳng trong thân bài. Bảng, chú
+ * thích ảnh và khối tự đặt căn lề (has-text-align-*, style="text-align…")
+ * vẫn giữ như soạn.
+ * ------------------------------------------------------------------------- */
+
+.entry-content > p:not([class*="has-text-align"]):not([style*="text-align"]):not(.dql-single-meta),
+.entry-content > ul > li,
+.entry-content > ol > li,
+.entry-content > blockquote p {
+	text-align: justify;
+	text-justify: inter-word;
+	overflow-wrap: break-word;
+}
+
 /* --- Đầu bài: nhãn chuyên mục có huy hiệu, tiêu đề serif lớn, đoạn dẫn ---- */
 
 .single .entry-header .dql-single-kicker {
