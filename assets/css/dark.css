@@ -111,6 +111,29 @@ html[data-dql-theme="dark"] #masthead .header-html {
 	color: var(--global-palette3);
 }
 
+/* Menu trong ngăn kéo điện thoại: Customizer tô chữ bằng palette8 (vì ngăn kéo
+   mặc định nền đen), mà ở chế độ tối palette8 lại là màu nền của chính ngăn
+   kéo — chữ chìm hẳn vào nền. */
+html[data-dql-theme="dark"] .mobile-navigation ul li > a,
+html[data-dql-theme="dark"] .mobile-navigation ul li.menu-item-has-children > .drawer-nav-drop-wrap {
+	color: var(--global-palette3);
+}
+
+html[data-dql-theme="dark"] .mobile-navigation ul li.current-menu-item > a,
+html[data-dql-theme="dark"] .mobile-navigation ul li.current-menu-item.menu-item-has-children > .drawer-nav-drop-wrap {
+	color: var(--global-palette1);
+}
+
+html[data-dql-theme="dark"] .mobile-navigation ul li.menu-item-has-children .drawer-nav-drop-wrap,
+html[data-dql-theme="dark"] .mobile-navigation ul li:not(.menu-item-has-children) a,
+html[data-dql-theme="dark"] .mobile-navigation:not(.drawer-navigation-parent-toggle-true) ul li.menu-item-has-children .drawer-nav-drop-wrap button {
+	border-color: var(--dql-vien-mo);
+}
+
+html[data-dql-theme="dark"] #mobile-drawer .drawer-header .drawer-toggle {
+	color: var(--global-palette3);
+}
+
 html[data-dql-theme="dark"] .header-navigation .header-menu-container ul ul.sub-menu {
 	background: var(--global-palette9);
 	border-color: var(--global-palette7);
