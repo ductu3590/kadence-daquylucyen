@@ -104,6 +104,33 @@ function dql_brand_palette() {
 add_filter( 'kadence_global_palette_defaults', 'dql_brand_palette' );
 
 /**
+ * Bỏ bảng màu Sapphire 1.x còn lưu trong database, một lần.
+ *
+ * Kadence lưu bảng màu vào option 'kadence_global_palette' khi ai đó bấm Lưu
+ * trong Customizer → Colors. Production có sẵn bản lưu Sapphire từ 1.x, đè lên
+ * mặc định ruby ở trên — nên lên 2.0 mà site vẫn xanh. Xoá bản lưu thì Kadence
+ * quay về mặc định của theme.
+ *
+ * Chỉ xoá khi màu nhấn đúng là Sapphire #2563AC, và chỉ chạy một lần: sau đó
+ * chủ site đổi màu trong Customizer thế nào thì giữ thế ấy.
+ */
+function dql_brand_bo_bang_mau_cu() {
+	if ( get_option( 'dql_bang_mau_2_0' ) ) {
+		return;
+	}
+
+	$luu  = json_decode( (string) get_option( 'kadence_global_palette', '' ), true );
+	$dang = isset( $luu['active'] ) ? $luu['active'] : 'palette';
+
+	if ( isset( $luu[ $dang ][0]['color'] ) && '#2563ac' === strtolower( $luu[ $dang ][0]['color'] ) ) {
+		delete_option( 'kadence_global_palette' );
+	}
+
+	update_option( 'dql_bang_mau_2_0', 1 );
+}
+add_action( 'admin_init', 'dql_brand_bo_bang_mau_cu' );
+
+/**
  * Giá trị mặc định cho chữ, bố cục và header.
  *
  * @param array $defaults Mặc định gốc của Kadence.
