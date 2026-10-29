@@ -623,6 +623,11 @@ a.dql-cat-label:hover {
  * 78% để chữ menu còn ≥ 4.5:1 khi header trôi qua ảnh. Phủ cả ba hàng của
  * header builder. Kadence in nền từ Customizer bằng cùng bộ chọn này nhưng
  * không có #masthead ở đầu, nên quy tắc dưới thắng.
+ *
+ * Riêng nền header DÍNH (sticky_background) Kadence in bằng bộ chọn nặng hơn
+ * (`#masthead .kadence-sticky-header.item-is-fixed:not(.item-at-start) > …`,
+ * mặc định #ffffff) — phải lặp lại đúng bộ chọn đó, không thì header đã cuộn
+ * vẫn trắng đục 100%.
  */
 #masthead .site-header-row-container-inner {
 	background: var(--global-palette8);
@@ -630,7 +635,8 @@ a.dql-cat-label:hover {
 	transition: background-color var(--dql-transition), border-color var(--dql-transition);
 }
 
-.dql-da-cuon #masthead .site-header-row-container-inner {
+.dql-da-cuon #masthead .site-header-row-container-inner,
+.dql-da-cuon #masthead .kadence-sticky-header.item-is-fixed:not(.item-at-start) > .site-header-row-container-inner {
 	background: color-mix(in srgb, var(--global-palette8) 92%, transparent);
 	-webkit-backdrop-filter: blur(20px) saturate(180%);
 	backdrop-filter: blur(20px) saturate(180%);

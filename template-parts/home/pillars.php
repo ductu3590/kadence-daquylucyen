@@ -63,6 +63,8 @@ $dql_blog  = get_option( 'page_for_posts' );
 								array(
 									'alt'     => '',
 									'loading' => 'lazy',
+									// Ba cột ~400px từ 1024px; hai cột ở khổ vừa. Dưới 600px ảnh bị ẩn.
+									'sizes'   => '(min-width: 1024px) 400px, 50vw',
 								)
 							);
 							?>

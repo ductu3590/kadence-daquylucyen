@@ -313,9 +313,11 @@ function dql_brand_typography( $defaults ) {
 
 	// --- Cột bên -----------------------------------------------------------
 	//
-	// Trang bài viết và trang chuyên mục dùng HAI vùng widget khác nhau. Nội
-	// dung cột bên bài viết do inc/sidebar.php dựng; 'dql-sb-post' là ô tự do.
-	$defaults['post_layout']              = 'right';
+	// Bài viết mặc định MỘT cột hẹp 760px (README, mục "Trang bài viết"),
+	// mục lục dính ở lề trái — CSS mục lục dính chỉ chạy khi body không có
+	// .has-sidebar. Chủ site vẫn bật lại được cột bên trong Customizer; khi đó
+	// nội dung cột bên do inc/sidebar.php dựng, 'dql-sb-post' là ô tự do.
+	$defaults['post_layout']              = 'narrow';
 	$defaults['post_sidebar_id']          = 'dql-sb-post';
 	$defaults['post_archive_layout']      = 'right';
 	$defaults['post_archive_sidebar_id']  = 'sidebar-primary';

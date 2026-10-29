@@ -61,7 +61,7 @@ function dql_featured_card( $post, $size, $extra ) {
 					'fetchpriority' => $lon ? 'high' : 'auto',
 					'sizes'         => $lon
 						? '(min-width: 1024px) 760px, 100vw'
-						: '(min-width: 1024px) 480px, (min-width: 561px) 50vw, 100vw',
+						: '(min-width: 1024px) 480px, 50vw', // Hai thẻ nhỏ đứng cạnh nhau cả trên điện thoại.
 				)
 			);
 			?>

@@ -85,7 +85,18 @@ $dql_blog     = get_option( 'page_for_posts' );
 						<li class="dql-tin" data-reveal>
 							<a class="dql-tin__link" href="<?php the_permalink(); ?>">
 								<span class="dql-tin__anh dql-hat">
-									<?php the_post_thumbnail( 'dql-card', array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
+									<?php
+									// sizes khớp cột ảnh 168px / 104px (≤ 560px) trong home.css,
+									// để trình duyệt chọn bản nhỏ trong srcset thay vì bản 720px.
+									the_post_thumbnail(
+										'dql-card',
+										array(
+											'alt'     => '',
+											'loading' => 'lazy',
+											'sizes'   => '(max-width: 560px) 104px, 168px',
+										)
+									);
+									?>
 								</span>
 
 								<span class="dql-tin__chu">

@@ -37,7 +37,7 @@ function dql_dark_mode_on() {
  * Script gắn chế độ lên <html> trước khi trang vẽ.
  *
  * In ở wp_head với ưu tiên 0 để đứng trước mọi <link rel="stylesheet">.
- * Không có JS thì trang hiện ở chế độ sáng — không có gì hỏng.
+ * Không có JS thì dql_dark_mode_noscript() lo phần theo hệ điều hành.
  */
 function dql_dark_mode_head_script() {
 	if ( ! dql_dark_mode_on() ) {
@@ -57,6 +57,36 @@ function dql_dark_mode_head_script() {
 	</script>
 	<?php
 }
+
+/**
+ * Chế độ tối khi trình duyệt tắt JavaScript.
+ *
+ * Không có script ở trên thì <html> không bao giờ có data-dql-theme, và toàn bộ
+ * dark.css nằm im. Bản trong <noscript> là chính dark.css với tiền tố
+ * html[data-dql-theme="dark"] đổi thành html:not([data-dql-theme]) — cùng độ
+ * ưu tiên nên vẫn thắng :root của Kadence — gói trong media query của hệ điều
+ * hành. Một nguồn CSS duy nhất, sửa dark.css là bản này tự đi theo. In ở cuối
+ * <head> để đứng sau các stylesheet như dark.css thật. Trình duyệt bật JS bỏ
+ * qua nội dung <noscript>.
+ */
+function dql_dark_mode_noscript() {
+	if ( ! dql_dark_mode_on() ) {
+		return;
+	}
+
+	$css = file_get_contents( DQL_DIR . '/assets/css/dark.css' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Tệp cục bộ của theme.
+
+	if ( ! $css ) {
+		return;
+	}
+
+	$css = str_replace( 'html[data-dql-theme="dark"]', 'html:not([data-dql-theme])', $css );
+	$css = preg_replace( '#/\*.*?\*/#s', '', $css );
+	$css = preg_replace( '/\s+/', ' ', $css );
+
+	echo '<noscript><style id="dql-dark-nojs" media="(prefers-color-scheme: dark)">' . trim( $css ) . '</style></noscript>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS tĩnh của theme.
+}
+add_action( 'wp_head', 'dql_dark_mode_noscript', 999 );
 add_action( 'wp_head', 'dql_dark_mode_head_script', 0 );
 
 /**

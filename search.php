@@ -60,9 +60,11 @@ $dql_co_bai     = $dql_bai->have_posts();
  * header.php của Kadence đã mở sẵn <main id="inner-wrap">, và HTML chỉ cho phép
  * một <main> hiển thị trên một trang. Lồng thêm một cái nữa làm trình đọc màn
  * hình báo hai vùng nội dung chính và người dùng phải chọn giữa hai thứ giống hệt.
+ *
+ * id="main": đích của liên kết "Skip to content" mà Kadence gắn cứng href="#main".
  */
 ?>
-<div id="dql-search" class="dql-search-page">
+<div id="main" class="dql-search-page">
 	<section class="dql-section">
 		<div class="dql-container dql-container--narrow">
 

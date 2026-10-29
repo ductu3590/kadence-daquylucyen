@@ -29,9 +29,11 @@ if ( function_exists( '\Kadence\kadence' ) ) {
  *
  * header.php của Kadence đã mở sẵn <main id="inner-wrap">, và HTML chỉ cho phép
  * một <main> hiển thị trên một trang.
+ *
+ * id="main": đích của liên kết "Skip to content" mà Kadence gắn cứng href="#main".
  */
 ?>
-<div id="dql-home" class="dql-home">
+<div id="main" class="dql-home">
 	<?php
 	/*
 	 * Thứ tự các dải và nền xen kẽ nhau có chủ đích:
