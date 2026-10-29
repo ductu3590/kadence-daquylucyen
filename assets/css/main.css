@@ -681,6 +681,37 @@ a.dql-cat-label:hover {
 	display: none;
 }
 
+/* --- Logo: ánh sáng lướt qua mặt kính ---------------------------------------
+ *
+ * Một dải trong mờ chạy chéo (60°) qua logo rồi nghỉ một nhịp, lặp mãi — như
+ * đèn quét qua mặt đá. Dùng mask trên thẻ <a> nên không phụ thuộc ảnh logo nào:
+ * logo chữ trắng của chế độ tối (đổi bằng content: ở dark.css) cũng ăn theo, và
+ * đổi logo trong Customizer không phải sửa gì ở đây.
+ *
+ * Chỉ chạy khi người dùng không chọn giảm chuyển động; chọn rồi thì logo đứng yên.
+ */
+@keyframes dql-logo-kinh {
+	0% {
+		-webkit-mask-position: 140% 140%;
+		mask-position: 140% 140%;
+	}
+
+	60%,
+	100% {
+		-webkit-mask-position: -20% -20%;
+		mask-position: -20% -20%;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	#masthead .site-branding a.brand.has-logo-image,
+	.dql-footer__logo {
+		-webkit-mask: linear-gradient(-60deg, #fff 30%, rgb(255 255 255 / 0.33), #000 50%) right center / 300% 100%;
+		mask: linear-gradient(-60deg, #fff 30%, rgb(255 255 255 / 0.33), #000 50%) right center / 300% 100%;
+		animation: dql-logo-kinh 4s ease infinite;
+	}
+}
+
 /* --- Menu chính ---------------------------------------------------------- */
 
 .header-navigation .header-menu-container > ul > li > a {
