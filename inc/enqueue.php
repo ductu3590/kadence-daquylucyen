@@ -63,7 +63,7 @@ function dql_enqueue_styles() {
 	 */
 	$dql_co_cot = function_exists( '\Kadence\kadence' ) && \Kadence\kadence()->has_sidebar();
 
-	if ( is_front_page() || ( $dql_co_cot && ! is_category() && ! is_home() ) ) {
+	if ( is_front_page() || ( $dql_co_cot && ! is_category() && ! is_home() && ! is_author() ) ) {
 		wp_enqueue_style(
 			'dql-sidebar',
 			DQL_URI . '/assets/css/sidebar.css',
@@ -108,6 +108,16 @@ function dql_enqueue_styles() {
 			DQL_URI . '/assets/css/archive.css',
 			array( 'dql-main' ),
 			dql_asset_version( 'assets/css/archive.css' )
+		);
+	}
+
+	// Trang tác giả: phần riêng của đầu trang. Danh sách bài dùng archive.css.
+	if ( is_author() ) {
+		wp_enqueue_style(
+			'dql-author',
+			DQL_URI . '/assets/css/author.css',
+			array( 'dql-archive' ),
+			dql_asset_version( 'assets/css/author.css' )
 		);
 	}
 

@@ -150,6 +150,10 @@ function dql_icon_giao_dien() {
 		'la-chan'    => '<path d="M12 3 4 7v6c0 5 3.4 7.4 8 8 4.6-.6 8-3 8-8V7l-8-4Z"/><path d="m9 12 2 2 4-4"/>',
 		'cong'       => '<path d="M5 12h14"/><path d="M12 5v14"/>',
 		'canh-bao'   => '<path d="M12 3 2 20h20z"/><path d="M12 9v5"/><path d="M12 17h.01"/>',
+		'sach'       => '<path d="M4 19.5V5a1.5 1.5 0 0 1 1.5-1.5H20v15H5.5A1.5 1.5 0 0 0 4 20Z"/><path d="M8 7.5h8M8 11h5.5"/>',
+		'ra-ngoai'   => '<path d="M7 17 17 7M8 7h9v9"/>',
+		'lien-ket'   => '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+		'dung'       => '<path d="m5 12 5 5 9-10"/>',
 	);
 }
 

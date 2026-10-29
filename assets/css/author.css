@@ -1,0 +1,390 @@
+/*
+ * Trang tác giả — phần riêng của đầu trang.
+ *
+ * Khung đầu trang (.dql-chead), hộp bên phải (.dql-batdau), dải chip, danh sách
+ * bài, phân trang và dải mời (.dql-ar-cta) đều dùng chung archive.css. File này
+ * chỉ thêm những gì trang chuyên mục không có: chân dung, tiểu sử, nút mạng xã
+ * hội, ba ô số liệu.
+ *
+ * Dựng theo artboard "08 · Trang tác giả" và "09 · Trang tác giả (điện thoại)"
+ * trên canvas Đá Thô, trang Bản 1.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. Chân dung, tên, chức danh
+ * ------------------------------------------------------------------------- */
+
+.dql-tghead__ten {
+	display: flex;
+	align-items: center;
+	gap: var(--dql-k5);
+	margin-top: var(--dql-k5);
+}
+
+/*
+ * Chân dung cắt theo hình viên đá thô — cùng hình với huy hiệu chuyên mục, để
+ * trang tác giả nhìn là biết thuộc cùng một bộ với trang chuyên mục.
+ *
+ * Chữ cái đầu tên nằm dưới, ảnh Gravatar nằm trên. Chưa có Gravatar thì ảnh trong
+ * suốt (get_avatar với mặc định 'blank') và lộ chữ cái.
+ */
+.dql-tghead__anh {
+	position: relative;
+	flex: none;
+	width: 136px;
+	height: 136px;
+	clip-path: var(--dql-da-hinh);
+	background: var(--global-palette1);
+	overflow: hidden;
+}
+
+.dql-tghead__chu {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: var(--global-heading-font-family, Georgia, serif);
+	font-size: 3.25rem;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--global-palette9);
+}
+
+.dql-tghead__img {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 0;
+}
+
+.dql-tghead .dql-kicker {
+	margin-bottom: var(--dql-k1);
+}
+
+.dql-tghead__vai {
+	margin: var(--dql-k2) 0 0;
+	font-size: 1.0625rem;
+	font-weight: 600;
+	line-height: 1.4;
+	color: var(--global-palette4);
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Tiểu sử
+ * ------------------------------------------------------------------------- */
+
+.dql-tghead__bio {
+	margin-top: var(--dql-k5);
+	line-height: 1.6;
+}
+
+/* Lời nhắc cho người sửa được hồ sơ khi tiểu sử trống. Nét đứt như các ô nhắc
+   khác của theme, để không ai nhầm nó với nội dung thật. */
+.dql-tghead__cho {
+	max-width: 64ch;
+	margin: var(--dql-k5) 0 0;
+	padding: var(--dql-k3) var(--dql-k4);
+	border: 1px dashed var(--global-palette6);
+	border-radius: var(--dql-radius);
+	font-size: 0.875rem;
+	line-height: 1.55;
+	color: var(--global-palette5);
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Nút mạng xã hội
+ * ------------------------------------------------------------------------- */
+
+.dql-tglink {
+	margin-top: var(--dql-k5);
+}
+
+.dql-tglink__nhan {
+	margin: 0 0 var(--dql-k2);
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--global-palette6);
+}
+
+.dql-tglink__ds {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--dql-k2);
+	max-width: 720px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-tglink__a {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--dql-k2);
+	min-height: 44px;
+	padding: 0 14px 0 12px;
+	border: var(--dql-border);
+	border-radius: 999px;
+	background: var(--global-palette9);
+	font-size: 0.875rem;
+	font-weight: 500;
+	line-height: 1.2;
+	color: var(--global-palette3);
+	text-decoration: none;
+	transition: border-color var(--dql-transition), color var(--dql-transition);
+}
+
+.dql-tglink__a:hover {
+	border-color: var(--global-palette1);
+	color: var(--global-palette1);
+}
+
+.dql-tglink__a .dql-icon {
+	flex: none;
+	width: 18px;
+	height: 18px;
+}
+
+.dql-tglink__a .dql-tglink__ra {
+	width: 14px;
+	height: 14px;
+	opacity: 0.55;
+}
+
+/* Link không thuộc mạng nào quen thuộc (Trang web, URL hồ sơ bổ sung): nền đá
+   hoa và viền đứt, để tách khỏi nhóm mạng xã hội mà không cần thêm nhãn. */
+.dql-tglink__muc--web .dql-tglink__a {
+	background: var(--global-palette8);
+	border-style: dashed;
+}
+
+.dql-tglink__muc--web .dql-tglink__ten {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 28ch;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Ba ô số liệu
+ * ------------------------------------------------------------------------- */
+
+.dql-tgso {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--dql-k3);
+	max-width: 620px;
+	margin: var(--dql-k5) 0 0;
+}
+
+/* Số đứng trên, nhãn đứng dưới — nhưng trong markup nhãn (dt) đi trước số (dd),
+   đúng thứ tự đọc của danh sách mô tả. */
+.dql-tgso__o {
+	display: flex;
+	flex-direction: column-reverse;
+	justify-content: flex-end;
+	gap: 2px;
+	min-width: 0;
+	padding: 14px 18px;
+	border: var(--dql-border);
+	border-radius: 14px;
+	background: var(--global-palette8);
+}
+
+.dql-tgso dt {
+	font-size: 0.8125rem;
+	line-height: 1.35;
+	color: var(--global-palette6);
+}
+
+.dql-tgso dd {
+	margin: 0;
+	font-family: var(--global-heading-font-family, Georgia, serif);
+	font-size: 1.625rem;
+	font-weight: 600;
+	line-height: 1.15;
+	color: var(--global-palette3);
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Hộp "Nguyên tắc khi viết"
+ * ------------------------------------------------------------------------- */
+
+.dql-tgnt .dql-batdau__title {
+	margin-bottom: var(--dql-k2);
+}
+
+.dql-tgnt__ds {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-tgnt__ds li {
+	display: flex;
+	gap: var(--dql-k3);
+	padding: var(--dql-k3) 0;
+	border-top: var(--dql-border);
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--global-palette4);
+}
+
+.dql-tgnt__ds li:last-child {
+	padding-bottom: 0;
+}
+
+.dql-tgnt__ds .dql-icon {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	margin-top: 2px;
+	color: var(--dql-da-tourmaline);
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Dải chip lọc chủ đề và đầu danh sách
+ * ------------------------------------------------------------------------- */
+
+.dql-tgchip {
+	align-items: center;
+}
+
+.dql-tgchip__nhan {
+	margin-right: var(--dql-k1);
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--global-palette6);
+	white-space: nowrap;
+}
+
+.dql-tglist__dau {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--dql-k2) var(--dql-k4);
+	margin-bottom: var(--dql-k3);
+}
+
+/* Có ba thẻ "Đọc nhiều nhất" ở trên thì chừa khoảng cách trước danh sách. */
+.dql-cards + .dql-tglist__dau {
+	margin-top: var(--dql-k7);
+}
+
+.dql-tglist__title {
+	margin: 0;
+	font-size: 1.75rem;
+	line-height: 1.2;
+}
+
+.dql-tglist__so {
+	font-size: 0.875rem;
+	color: var(--global-palette6);
+}
+
+.dql-tg-tudien {
+	margin-top: var(--dql-k7);
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Màn hình hẹp
+ * ------------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+	.dql-tghead__ten {
+		gap: var(--dql-k4);
+		margin-top: var(--dql-k4);
+	}
+
+	.dql-tghead__anh {
+		width: 88px;
+		height: 88px;
+	}
+
+	.dql-tghead__chu {
+		font-size: 2.125rem;
+	}
+
+	.dql-tghead__vai {
+		margin-top: var(--dql-k1);
+		font-size: 0.9375rem;
+	}
+
+	.dql-tghead__bio {
+		margin-top: var(--dql-k4);
+		font-size: 1rem;
+	}
+
+	/* Mạng xã hội quen thuộc: chỉ còn nút tròn icon, tên ẩn khỏi mắt nhưng vẫn
+	   còn cho trình đọc màn hình. Cả hàng vừa một dòng thay vì ba. */
+	.dql-tglink__muc:not(.dql-tglink__muc--web) .dql-tglink__a {
+		justify-content: center;
+		width: 44px;
+		padding: 0;
+	}
+
+	.dql-tglink__muc:not(.dql-tglink__muc--web) .dql-tglink__ten {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	.dql-tglink__muc:not(.dql-tglink__muc--web) .dql-tglink__ra {
+		display: none;
+	}
+
+	/* Link lạ thì phải đọc được tên miền: mỗi link một dòng, rộng hết cột. */
+	.dql-tglink__muc--web {
+		flex-basis: 100%;
+		min-width: 0;
+	}
+
+	.dql-tglink__muc--web .dql-tglink__a {
+		display: flex;
+		width: 100%;
+		box-sizing: border-box;
+		border-radius: var(--dql-radius);
+	}
+
+	.dql-tglink__muc--web .dql-tglink__ten {
+		flex: 1;
+		min-width: 0;
+		max-width: none;
+	}
+
+	/* Ô ngày rộng hơn hai ô kia: "03/08/2026" là chuỗi không ngắt được, chia đều
+	   ba cột thì nó tràn khỏi ô ở màn 375. */
+	.dql-tgso {
+		grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.8fr) minmax(0, 1.4fr);
+		gap: var(--dql-k2);
+	}
+
+	.dql-tgso__o {
+		padding: var(--dql-k3);
+		border-radius: var(--dql-radius);
+	}
+
+	.dql-tgso dt {
+		font-size: 0.75rem;
+	}
+
+	.dql-tgso dd {
+		font-size: 1.125rem;
+	}
+
+	.dql-tglist__title {
+		font-size: 1.375rem;
+	}
+
+	.dql-cards + .dql-tglist__dau,
+	.dql-tg-tudien {
+		margin-top: var(--dql-k6);
+	}
+}

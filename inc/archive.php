@@ -541,6 +541,19 @@ function dql_archive_breadcrumb( $term = null ) {
 		);
 	}
 
+	dql_crumb_in( $muc );
+}
+
+/**
+ * In một đường dẫn phân cấp đã dựng sẵn, kèm schema BreadcrumbList.
+ *
+ * Tách khỏi dql_archive_breadcrumb() để trang tác giả (inc/author.php) dùng
+ * chung đúng một markup và một khối schema, thay vì chép lại cả hai.
+ *
+ * @param array[] $muc Các cấp, mỗi cấp gồm 'ten' và 'url'. Cấp cuối là trang
+ *                     hiện tại — in thành chữ, nhưng URL vẫn vào schema.
+ */
+function dql_crumb_in( $muc ) {
 	$cuoi = count( $muc ) - 1;
 	?>
 	<nav class="dql-crumb" aria-label="<?php esc_attr_e( 'Đường dẫn', 'kadence-daquylucyen' ); ?>">
@@ -916,14 +929,17 @@ function dql_archive_card( $hien_cat = false ) {
  * trông như danh sách bị gãy.
  *
  * @param bool $hien_cat In nhãn chuyên mục trên từng bài hay không.
+ * @param bool $tap_chi  Dựng kiểu tạp chí (thẻ đầu trang, dải chèn giữa) hay
+ *                       chỉ hàng ngang. Trang tác giả truyền false: nó đã có
+ *                       ba thẻ "Đọc nhiều nhất" riêng ở trên danh sách.
  */
-function dql_archive_loop( $hien_cat = false ) {
+function dql_archive_loop( $hien_cat = false, $tap_chi = true ) {
 	global $wp_query;
 
 	$trang   = max( 1, (int) get_query_var( 'paged' ) );
 	$so_bai  = (int) $wp_query->post_count;
-	$so_the  = ( 1 === $trang && $so_bai >= 5 ) ? 3 : 0;
-	$chen    = ( 1 === $trang ) ? $so_the + 3 : 0;
+	$so_the  = ( $tap_chi && 1 === $trang && $so_bai >= 5 ) ? 3 : 0;
+	$chen    = ( $tap_chi && 1 === $trang ) ? $so_the + 3 : 0;
 	$dem     = 0;
 	$mo_rows = false;
 
