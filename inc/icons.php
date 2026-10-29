@@ -181,8 +181,10 @@ function dql_mau_da_danh_muc() {
 /**
  * Bảng khớp icon theo từ khóa trong slug chuyên mục.
  *
- * Thứ tự quan trọng: mục nào đứng trước được thử trước. "da-ban-quy" phải đứng
- * trước "da-quy" vì slug 'da-ban-quy' chứa cả hai chuỗi.
+ * Thứ tự quan trọng: mục nào đứng trước được thử trước. Mục có từ khóa dễ lẫn
+ * vào slug ghép phải đứng trước "da-quy": 'da-ban-quy', 'tranh-da-quy',
+ * 'cho-da-quy', 'trang-suc-da-quy', 'kiem-dinh-da-quy', 'tu-van-da-quy' đều chứa
+ * chuỗi 'da-quy'. "phong-thuy" đứng trước "tu-van" vì có 'tu-van-phong-thuy'.
  *
  * @return array<string, string[]> icon => danh sách từ khóa.
  */
@@ -191,12 +193,13 @@ function dql_icon_tu_khoa() {
 		'da-ban-quy'   => array( 'ban-quy', 'thach-anh', 'tourmaline', 'garnet' ),
 		'tranh-da-quy' => array( 'tranh' ),
 		'cho-da-quy'   => array( 'cho-da', 'cho-', 'thi-truong', 'gia-' ),
-		'da-quy'       => array( 'da-quy', 'ruby', 'sapphire', 'spinel', 'kien-thuc' ),
 		'trang-suc'    => array( 'trang-suc', 'nhan', 'vong', 'mat-day' ),
 		'phong-thuy'   => array( 'phong-thuy', 'menh', 'hop-menh' ),
 		'kiem-dinh'    => array( 'kiem-dinh', 'that-gia', 'chung-nhan', 'phan-biet', 'giam-dinh' ),
 		'tu-van'       => array( 'tu-van', 'chon-mua', 'mua-' ),
-		'van-hoa'      => array( 'van-hoa', 'con-nguoi', 'dan-toc', 'le-hoi', 'nguoi-tay', 'ban-lang' ),
+		'da-quy'       => array( 'da-quy', 'ruby', 'sapphire', 'spinel', 'kien-thuc' ),
+		// 'luc-yen': chuyên mục cha "Lục Yên" nhận icon nhà sàn.
+		'van-hoa'      => array( 'van-hoa', 'con-nguoi', 'dan-toc', 'le-hoi', 'nguoi-tay', 'ban-lang', 'luc-yen' ),
 		'du-lich'      => array( 'du-lich', 'diem-den', 'thac-ba', 'kham-pha' ),
 		'am-thuc'      => array( 'am-thuc', 'mon-an', 'dac-san', 'an-uong' ),
 		'lich-su'      => array( 'lich-su', 'di-tich', 'den-', 'co-' ),

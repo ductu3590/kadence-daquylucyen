@@ -298,11 +298,14 @@ function dql_archive_nen_tang( $term ) {
 	$chon = array_values( array_filter( array_unique( $chon ) ) );
 
 	if ( $chon ) {
+		// 'cat' lọc lại theo chuyên mục: bài đã chọn tay mà sau đó bị chuyển sang
+		// chuyên mục khác thì không còn là bài nền tảng của chuyên mục này.
 		$q = new WP_Query(
 			array(
 				'post_type'           => 'post',
 				'post_status'         => 'publish',
 				'post__in'            => $chon,
+				'cat'                 => $term->term_id,
 				'orderby'             => 'post__in',
 				'posts_per_page'      => 3,
 				'ignore_sticky_posts' => true,

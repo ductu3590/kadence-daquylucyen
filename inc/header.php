@@ -3,7 +3,7 @@
  * Dải chuyên mục dưới header, và vài thứ cắm vào header của Kadence.
  *
  * Dải "Khám phá": một hàng chip có huy hiệu đá, mỗi chip là một chuyên mục
- * cha. Lấy cảm hứng từ thanh "trending" của các theme tạp chí, nhưng ở đây dẫn
+ * cấp lá (Đá quý, Kiểm định, Du lịch…), không phải chuyên mục cha. Lấy cảm hứng từ thanh "trending" của các theme tạp chí, nhưng ở đây dẫn
  * bằng CHỦ ĐỀ chứ không bằng bài — đúng nguyên tắc "cổng kiến thức" của site.
  * Đây cũng là nơi người đọc thấy ngay site viết về cả Lục Yên: văn hóa, du
  * lịch, ẩm thực… không chỉ đá quý.
@@ -17,10 +17,50 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Thứ tự chip trên dải, theo slug — đúng thứ tự thiết kế bản 1.
+ *
+ * Chuyên mục không có trong danh sách đứng sau, xếp theo số bài giảm dần.
+ *
+ * @return string[]
+ */
+function dql_strip_order() {
+	return apply_filters(
+		'dql_strip_order',
+		array( 'da-quy', 'phong-thuy', 'kiem-dinh', 'trang-suc', 'van-hoa', 'du-lich', 'am-thuc', 'cho-da-quy', 'lich-su' )
+	);
+}
+
+/**
+ * Tên ngắn của chip, theo slug — bản 1 vẽ "Phong thủy", "Chợ đá" chứ không
+ * phải tên đầy đủ "Phong thủy & hợp mệnh", "Chợ đá quý".
+ *
+ * Chuyên mục không có trong danh sách hiện tên đầy đủ.
+ *
+ * @return string[]
+ */
+function dql_strip_labels() {
+	return apply_filters(
+		'dql_strip_labels',
+		array(
+			'phong-thuy' => __( 'Phong thủy', 'kadence-daquylucyen' ),
+			'van-hoa'    => __( 'Văn hóa', 'kadence-daquylucyen' ),
+			'lich-su'    => __( 'Lịch sử', 'kadence-daquylucyen' ),
+			'dia-chat'   => __( 'Địa chất', 'kadence-daquylucyen' ),
+			'cho-da-quy' => __( 'Chợ đá', 'kadence-daquylucyen' ),
+			'lang-nghe'  => __( 'Làng nghề', 'kadence-daquylucyen' ),
+			'san-vat'    => __( 'Sản vật', 'kadence-daquylucyen' ),
+			'tu-van'     => __( 'Tư vấn', 'kadence-daquylucyen' ),
+		)
+	);
+}
+
+/**
  * Các chuyên mục hiện trên dải.
  *
- * Chuyên mục cha có bài, bỏ "Chưa phân loại", xếp theo số bài giảm dần. Tối đa
- * 10 — nhiều hơn thì dải cuộn ngang, và một dải cuộn quá dài thành vô nghĩa.
+ * Chuyên mục cấp lá (không có con) có bài, bỏ "Chưa phân loại". Chuyên mục cha
+ * như "Kiến thức đá quý" hay "Lục Yên" đã có trong menu chính; dải đưa người
+ * đọc thẳng tới chủ đề cụ thể. Tối đa 10 — nhiều hơn thì dải cuộn ngang, và
+ * một dải cuộn quá dài thành vô nghĩa.
  *
  * @return WP_Term[]
  */
@@ -32,28 +72,30 @@ function dql_strip_terms() {
 	}
 
 	$mac_dinh = (int) get_option( 'default_category' );
-	$tops     = get_categories(
+	$tat_ca   = get_categories(
 		array(
-			'parent'     => 0,
-			'hide_empty' => false,
+			'hide_empty' => true,
 			'exclude'    => array( $mac_dinh ),
 		)
 	);
+	$co_con   = array_map( 'intval', wp_list_pluck( get_categories( array( 'hide_empty' => false ) ), 'parent' ) );
+	$thu_tu   = array_flip( dql_strip_order() );
 
 	$co_bai = array();
 
-	foreach ( $tops as $t ) {
-		$n = dql_category_deep_count( $t );
-
-		if ( $n ) {
-			$co_bai[] = array( $t, $n );
+	foreach ( $tat_ca as $t ) {
+		if ( ! in_array( (int) $t->term_id, $co_con, true ) ) {
+			$co_bai[] = array( $t, (int) $t->count );
 		}
 	}
 
 	usort(
 		$co_bai,
-		function ( $a, $b ) {
-			return $b[1] - $a[1];
+		function ( $a, $b ) use ( $thu_tu ) {
+			$ta = $thu_tu[ $a[0]->slug ] ?? PHP_INT_MAX;
+			$tb = $thu_tu[ $b[0]->slug ] ?? PHP_INT_MAX;
+
+			return $ta === $tb ? $b[1] - $a[1] : $ta <=> $tb;
 		}
 	);
 
@@ -104,20 +146,19 @@ function dql_strip_render() {
 
 	$current = 0;
 
+	// Chip là chuyên mục cấp lá, nên tô sáng đúng chuyên mục đang xem (hoặc
+	// chuyên mục của bài). Ở trang chuyên mục cha thì không chip nào sáng.
 	if ( is_category() ) {
 		$obj = get_queried_object();
 
 		if ( $obj && ! is_wp_error( $obj ) ) {
-			// Đang ở chuyên mục con thì tô sáng chuyên mục cha gốc của nó.
-			$to_tien = get_ancestors( $obj->term_id, 'category' );
-			$current = $to_tien ? (int) end( $to_tien ) : (int) $obj->term_id;
+			$current = (int) $obj->term_id;
 		}
 	} elseif ( is_singular( 'post' ) ) {
 		$chinh = dql_post_main_category();
 
 		if ( $chinh ) {
-			$to_tien = get_ancestors( $chinh->term_id, 'category' );
-			$current = $to_tien ? (int) end( $to_tien ) : (int) $chinh->term_id;
+			$current = (int) $chinh->term_id;
 		}
 	}
 	?>
@@ -131,7 +172,7 @@ function dql_strip_render() {
 					<?php echo $current === (int) $t->term_id ? ' aria-current="true"' : ''; ?>
 				>
 					<?php dql_the_category_badge( $t, 'nho' ); ?>
-					<span><?php echo esc_html( $t->name ); ?></span>
+					<span><?php echo esc_html( dql_strip_labels()[ $t->slug ] ?? $t->name ); ?></span>
 				</a>
 			<?php endforeach; ?>
 		</div>
@@ -139,6 +180,68 @@ function dql_strip_render() {
 	<?php
 }
 add_action( 'kadence_after_header', 'dql_strip_render', 5 );
+
+/**
+ * Ẩn khỏi menu những chuyên mục chưa có bài.
+ *
+ * Menu dựng sẵn đủ chuyên mục con của "Lục Yên" để khỏi sửa menu mỗi khi một
+ * chuyên mục có bài đầu tiên; mục nào còn rỗng thì không in ra, khỏi dẫn người
+ * đọc tới trang trống. Mục con của mục bị ẩn cũng ẩn theo.
+ *
+ * @param WP_Post[] $items Các mục menu.
+ * @return WP_Post[]
+ */
+function dql_menu_hide_empty_categories( $items ) {
+	$an = array();
+
+	foreach ( $items as $item ) {
+		if ( 'taxonomy' !== $item->type || 'category' !== $item->object ) {
+			continue;
+		}
+
+		if ( ! dql_category_deep_count( get_term( (int) $item->object_id, 'category' ) ) ) {
+			$an[ (int) $item->ID ] = true;
+		}
+	}
+
+	if ( ! $an ) {
+		return $items;
+	}
+
+	// Lặp tới khi không còn mục nào có cha bị ẩn — menu có thể nhiều cấp.
+	do {
+		$them = false;
+
+		foreach ( $items as $item ) {
+			if ( ! isset( $an[ (int) $item->ID ] ) && isset( $an[ (int) $item->menu_item_parent ] ) ) {
+				$an[ (int) $item->ID ] = true;
+				$them                  = true;
+			}
+		}
+	} while ( $them );
+
+	$items = array_values(
+		array_filter(
+			$items,
+			function ( $item ) use ( $an ) {
+				return ! isset( $an[ (int) $item->ID ] );
+			}
+		)
+	);
+
+	// WordPress gắn class 'menu-item-has-children' TRƯỚC filter này. Mục cha
+	// mất hết con thì phải gỡ class, không thì vẫn hiện mũi tên thả xuống rỗng.
+	$con_cua = array_map( 'intval', wp_list_pluck( $items, 'menu_item_parent' ) );
+
+	foreach ( $items as $item ) {
+		if ( ! in_array( (int) $item->ID, $con_cua, true ) ) {
+			$item->classes = array_diff( (array) $item->classes, array( 'menu-item-has-children' ) );
+		}
+	}
+
+	return $items;
+}
+add_filter( 'wp_nav_menu_objects', 'dql_menu_hide_empty_categories' );
 
 /**
  * Dải tiến độ đọc ở đầu trang bài viết.

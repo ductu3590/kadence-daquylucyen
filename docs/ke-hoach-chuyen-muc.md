@@ -10,7 +10,11 @@ icon, 03 Trang chủ, 04 Chuyên mục "Văn hóa Lục Yên", 05 Bài viết, 0
 > không mega-menu, không ảnh cắt vát. Mọi tinh chỉnh đi theo bản 1.
 
 Số liệu lấy từ production qua REST API (chỉ đọc). **Chưa thay đổi gì trên
-production.** Đây là kế hoạch để duyệt.
+production.**
+
+> **Đã chốt 2026-10-29**: cấu trúc cha/con; phương án A cho Đá quý / Đá bán quý;
+> có menu con. Sửa thêm: mục menu thứ hai là **"Kiến thức"**, chuyên mục cha slug
+> **`kien-thuc`** (thay cho `kien-thuc-da-quy`). Đang chạy thử trên Local.
 
 Danh sách 47 bài cần viết để lấp các chuyên mục còn trống:
 [danh-sach-bai-can-viet.md](danh-sach-bai-can-viet.md).
@@ -106,7 +110,7 @@ sẵn trong `inc/icons.php`.
 
 | Chuyên mục cha | Chuyên mục con | Slug | ID production | Màu đá | Bài |
 |---|---|---|---|---|---|
-| **Kiến thức đá quý** `kien-thuc-da-quy` (mới) | Đá quý | `da-quy` | 2 (giữ) | ruby | 7 |
+| **Kiến thức đá quý** `kien-thuc` (mới) | Đá quý | `da-quy` | 2 (giữ) | ruby | 7 |
 | | Đá bán quý | `da-ban-quy` | 10 (giữ) | garnet | 45 |
 | | Kiểm định | `kiem-dinh` | mới | tourmaline | 6 |
 | | Trang sức | `trang-suc` | 4 (giữ, đổi tên từ "Trang sức đá quý") | hổ phách | 9 |
@@ -153,21 +157,23 @@ một vùng đất sống bằng đá và bằng lúa").
 
 ### 5.1 Menu chính (header)
 
-Sáu mục, đúng thứ tự bản 1. Mục có `▾` mở menu con khi rê chuột. Bản 1 không vẽ
-menu con, nên phần menu con là **đề xuất thêm**, để đi tới chuyên mục con mà
-không phải qua dải chip. Bỏ menu con thì header vẫn đúng bản 1.
+Sáu mục theo thứ tự bản 1. Riêng mục thứ hai, bản 1 ghi "Đá quý"; theo chủ site
+(2026-10-29) đổi thành **"Kiến thức"**, trỏ vào chuyên mục cha slug `kien-thuc`.
+Chuyên mục cha vẫn tên "Kiến thức đá quý", nên breadcrumb và trụ trang chủ giữ
+đúng chữ bản 1. Mục có `▾` mở menu con khi rê chuột, gồm các chuyên mục con của
+Kiến thức đá quý.
 
 ```
 Header
 ├── Trang chủ ............................. /
-├── Đá quý ▾ .............................. /kien-thuc-da-quy/
-│   ├── Đá quý ............................ /kien-thuc-da-quy/da-quy/
-│   ├── Đá bán quý ........................ /kien-thuc-da-quy/da-ban-quy/
-│   ├── Trang sức ......................... /kien-thuc-da-quy/trang-suc/
-│   ├── Tranh đá quý ...................... /kien-thuc-da-quy/tranh-da-quy/
-│   └── Tư vấn chọn mua ................... /kien-thuc-da-quy/tu-van/
+├── Kiến thức ▾ ........................... /kien-thuc/
+│   ├── Đá quý ............................ /kien-thuc/da-quy/
+│   ├── Đá bán quý ........................ /kien-thuc/da-ban-quy/
+│   ├── Trang sức ......................... /kien-thuc/trang-suc/
+│   ├── Tranh đá quý ...................... /kien-thuc/tranh-da-quy/
+│   └── Tư vấn chọn mua ................... /kien-thuc/tu-van/
 ├── Phong thủy ............................ /phong-thuy/
-├── Kiểm định ............................. /kien-thuc-da-quy/kiem-dinh/
+├── Kiểm định ............................. /kien-thuc/kiem-dinh/
 ├── Lục Yên ▾ ............................. /luc-yen/
 │   ├── Văn hóa & con người ............... /luc-yen/van-hoa/
 │   ├── Du lịch ........................... /luc-yen/du-lich/
@@ -183,7 +189,7 @@ Nút bên phải: Tìm kiếm · Đổi sáng/tối
 ```
 
 "Kiểm định" đứng riêng ở menu chính (như bản 1) dù nằm dưới Kiến thức đá quý,
-nên không lặp lại trong menu con của "Đá quý".
+nên không lặp lại trong menu con của "Kiến thức".
 
 ### 5.2 Dải "Khám phá" (dưới header, mọi trang)
 
@@ -433,11 +439,11 @@ vào chúng. Tạo trong **Rank Math → Redirections**: REST của Rank Math ch
 
 | Nguồn (regex) | Đích |
 |---|---|
-| `^da-quy(/page/\d+)?/?$` | `/kien-thuc-da-quy/da-quy$1/` |
-| `^da-ban-quy(/page/\d+)?/?$` | `/kien-thuc-da-quy/da-ban-quy$1/` |
-| `^trang-suc(/page/\d+)?/?$` | `/kien-thuc-da-quy/trang-suc$1/` |
-| `^tranh-da-quy(/page/\d+)?/?$` | `/kien-thuc-da-quy/tranh-da-quy$1/` |
-| `^tu-van(/page/\d+)?/?$` | `/kien-thuc-da-quy/tu-van$1/` |
+| `^da-quy(/page/\d+)?/?$` | `/kien-thuc/da-quy$1/` |
+| `^da-ban-quy(/page/\d+)?/?$` | `/kien-thuc/da-ban-quy$1/` |
+| `^trang-suc(/page/\d+)?/?$` | `/kien-thuc/trang-suc$1/` |
+| `^tranh-da-quy(/page/\d+)?/?$` | `/kien-thuc/tranh-da-quy$1/` |
+| `^tu-van(/page/\d+)?/?$` | `/kien-thuc/tu-van$1/` |
 | `^tu-van-phong-thuy(/page/\d+)?/?$` | `/phong-thuy$1/` |
 | `^category/(.+)$` | Thử trước trên Local. Hiện WordPress đoán `/category/da-quy/` thành **bài** `/cho-da-quy-luc-yen/`, sai chỗ |
 
@@ -445,11 +451,11 @@ vào chúng. Tạo trong **Rank Math → Redirections**: REST của Rank Math ch
 
 | Nguồn | Đích hiện tại | Đích mới | Lượt |
 |---|---|---|---|
-| `san-pham/tranh-da-quy.html` | `/tranh-da-quy` | `/kien-thuc-da-quy/tranh-da-quy/` | 510 |
-| `san-pham/nhan-mat-da.html` | `/trang-suc` | `/kien-thuc-da-quy/trang-suc/` | 236 |
-| `danh-muc/da-quy`, `tag/da-quy` | `/da-quy` | `/kien-thuc-da-quy/da-quy/` | 0 |
-| `danh-muc/trang-suc` | `/trang-suc` | `/kien-thuc-da-quy/trang-suc/` | 0 |
-| `danh-muc/tranh-da-quy` | `/tranh-da-quy` | `/kien-thuc-da-quy/tranh-da-quy/` | 0 |
+| `san-pham/tranh-da-quy.html` | `/tranh-da-quy` | `/kien-thuc/tranh-da-quy/` | 510 |
+| `san-pham/nhan-mat-da.html` | `/trang-suc` | `/kien-thuc/trang-suc/` | 236 |
+| `danh-muc/da-quy`, `tag/da-quy` | `/da-quy` | `/kien-thuc/da-quy/` | 0 |
+| `danh-muc/trang-suc` | `/trang-suc` | `/kien-thuc/trang-suc/` | 0 |
+| `danh-muc/tranh-da-quy` | `/tranh-da-quy` | `/kien-thuc/tranh-da-quy/` | 0 |
 | `danh-muc/travel` | `/danh-muc/da-ban-quy` (**đích chết**) | `/luc-yen/du-lich/` | 0 |
 | `khuyen-tai-nam-vang-trang` | `https://khuyen-tai-nam` (**đích hỏng, thiếu tên miền**) | `/khuyen-tai-nam/` | **120** |
 
@@ -458,7 +464,7 @@ Hai dòng cuối là lỗi có sẵn, phát hiện lúc rà. Riêng quy tắc
 tồn tại.
 
 **Kiểm tra va chạm slug**: chuyên mục cấp cao nhất chiếm `/<slug>/`, ngang hàng
-với bài và trang. Ba slug cha (`kien-thuc-da-quy`, `phong-thuy`, `luc-yen`) không
+với bài và trang. Ba slug cha (`kien-thuc`, `phong-thuy`, `luc-yen`) không
 trùng bài hay trang nào trên production (đã đối chiếu 89 bài, 6 trang).
 
 ## 9. Các bước thực hiện
@@ -468,7 +474,7 @@ trùng bài hay trang nào trên production (đã đối chiếu 89 bài, 6 tran
 | 1 | Sao lưu chuyên mục, thẻ, quan hệ bài–chuyên mục–thẻ, menu, chuyển hướng ra JSON. Kèm script khôi phục | production → `deploy/` | REST, chỉ đọc |
 | 2 | Chạy thử toàn bộ trên **Local**, khớp bài theo slug (Local có bản sao các bài cùng slug). Kiểm chứng URL `/<cha>/<con>/` với Rank Math, breadcrumb, dải chip, số đếm của chuyên mục cha | Local | Script PHP dùng `wp_insert_term` / `wp_set_post_terms`, chạy lại nhiều lần vẫn cho cùng kết quả |
 | 3 | Viết mô tả cho 3 chuyên mục cha + 14 chuyên mục con | — | Chủ site duyệt câu chữ |
-| 4 | Production: tạo 2 chuyên mục cha mới (`kien-thuc-da-quy`, `luc-yen`); đổi tên/slug/cha cho 6 chuyên mục cũ; tạo 9 chuyên mục con mới; gắn mô tả | production | REST `wp/v2/categories`. Có chế độ chạy thử, chỉ in ra thay đổi |
+| 4 | Production: tạo 2 chuyên mục cha mới (`kien-thuc`, `luc-yen`); đổi tên/slug/cha cho 6 chuyên mục cũ; tạo 9 chuyên mục con mới; gắn mô tả | production | REST `wp/v2/categories`. Có chế độ chạy thử, chỉ in ra thay đổi |
 | 5 | Xếp lại 89 bài (mỗi bài đúng 1 chuyên mục), gắn thẻ, tạo 6 thẻ mới, xoá 24 thẻ | production | REST `wp/v2/posts`, `wp/v2/tags` |
 | 6 | Thêm 6 quy tắc chuyển hướng mới, sửa 8 quy tắc cũ | production | **Làm tay** trong wp-admin → Rank Math → Redirections |
 | 7 | Dựng menu theo sơ đồ 5.1 | production | wp-admin → Giao diện → Menu (hoặc REST `wp/v2/menu-items`) |
@@ -495,7 +501,7 @@ nhiều nhất trong chuyên mục" đều **đã có** và đúng bản 1. Còn
    - `luc-yen` không khớp từ khóa nào, nên rơi về icon đá quý màu ruby. Chọn tay
      icon Văn hóa (nhà sàn) hoặc Địa chất qua term meta, hoặc thêm `luc-yen` vào
      bảng từ khóa.
-   - `kien-thuc-da-quy` khớp `da-quy` → ruby, đúng.
+   - `kien-thuc` khớp từ khóa `kien-thuc` (nhóm icon đá quý) → ruby, đúng.
    - `phong-thuy` → sapphire, đúng.
 3. **Thứ tự bảng từ khóa icon**: đưa `trang-suc` và `tu-van` lên trước
    `da-quy`, để slug ghép như `trang-suc-da-quy` không bị bắt nhầm (lỗi đã thấy
@@ -516,7 +522,7 @@ nhiều nhất trong chuyên mục" đều **đã có** và đúng bản 1. Còn
 
    Danh sách bài cần viết bổ sung 4 bài cho Đá quý, nên với phương án A mục này
    lên 11 bài.
-3. **Menu con** dưới "Đá quý" và "Lục Yên" (sơ đồ 5.1): thêm hay giữ menu phẳng
+3. **Menu con** dưới "Kiến thức" và "Lục Yên" (sơ đồ 5.1): thêm hay giữ menu phẳng
    đúng như bản 1?
 4. **Chuyên mục con của Phong thủy & hợp mệnh**: tạm chưa chia. Khi số bài vượt
    khoảng 25, có thể tách "Hợp mệnh" và "Vật phẩm phong thủy".
@@ -534,3 +540,156 @@ nhiều nhất trong chuyên mục" đều **đã có** và đúng bản 1. Còn
   chuyên mục.
 - Bài `trang-suc-da-quy-thiet-ke-rieng` có câu "tìm đơn vị chế tác uy tín", dễ
   đọc thành quảng cáo. Nên rà lại theo hướng "trang kiến thức thuần".
+
+## 13. Kết quả chạy thử trên Local (2026-10-29)
+
+**Dữ liệu và script** nằm ngoài git, ở `deploy/chuyen-muc/`:
+- `du-lieu.json`: nguồn dữ liệu duy nhất (17 chuyên mục kèm mô tả nháp, 11 thẻ,
+  89 bài khớp theo slug). Bản chạy production sẽ đọc lại đúng file này.
+- `chay-local.php`: mặc định chỉ in ra việc sẽ làm; `--ap-dung` để ghi thật,
+  `--menu` để dựng menu.
+
+**Sao lưu** DB Local trước khi chạy: `deploy/backup-local/local-truoc-chuyen-muc-2026-10-29.sql`.
+
+| Kiểm tra | Kết quả |
+|---|---|
+| Chạy lại lần hai | 0 thay đổi |
+| Mỗi bài đúng 1 chuyên mục | 81/81 bài trên Local (8 bài mới của production chưa có ở Local) |
+| ID cũ giữ nguyên | `kien-thuc` #2 (trước là `kien-thuc-da-quy`), `da-quy` #3, `da-ban-quy` #4, `trang-suc` #6, `tranh-da-quy` #7, `tu-van` #9, `phong-thuy` #10 |
+| Chuyên mục cũ của Local đã xoá | `trang-suc-va-ung-dung`, `tu-van-chon-mua` |
+| Menu "Menu chính (bản 1)" | Trang chủ · Kiến thức ▾ (5 mục con) · Phong thủy · Kiểm định · Lục Yên ▾ · Từ điển. Lục Yên chỉ hiện 2 mục con có bài, 6 mục rỗng tự ẩn. Menu cũ vẫn còn |
+| Dải "Khám phá" | Đá quý · Phong thủy & hợp mệnh · Kiểm định · Trang sức · Chợ đá quý · Đá bán quý · Tư vấn chọn mua · Địa chất & khoáng sản · Tranh đá quý. Chip của chuyên mục đang xem được tô sáng |
+| Breadcrumb | `Trang chủ › Kiến thức đá quý › Đá quý`, `Trang chủ › Lục Yên`, đúng bản 1 |
+| Icon và màu | `kien-thuc` ruby, `phong-thuy` sapphire, `luc-yen` nhà sàn tourmaline, `dia-chat` thạch anh khói |
+| Thẻ cuối bài | `/da-ruby/` hiện `#ruby` |
+| Lỗi PHP | 0 từ theme (debug.log chỉ có Deprecated của WP Pusher) |
+| Điện thoại 390px | Menu ngăn kéo có đủ menu con |
+
+**Theme đã sửa** (chưa commit):
+- `inc/header.php`: dải chip lấy chuyên mục cấp lá theo thứ tự bản 1; menu tự
+  ẩn chuyên mục 0 bài và gỡ mũi tên thả xuống khi mục cha không còn con.
+- `inc/icons.php`: đổi thứ tự bảng từ khóa; `luc-yen` nhận icon nhà sàn.
+- `inc/archive.php`: hộp "Chưa biết bắt đầu từ đâu?" lọc lại bài chọn tay theo
+  chuyên mục. Lỗi tìm ra khi chạy thử: Đá quý vẫn hiện bài Aquamarine dù bài đã
+  sang Đá bán quý.
+
+**Customizer Local**:
+- trụ trang chủ: Kiến thức đá quý · Phong thủy & hợp mệnh · **Lục Yên** (tạm);
+- chuyên mục tiêu điểm: Lục Yên.
+
+Trụ thứ ba để "Lục Yên" chứ chưa phải "Văn hóa & con người" như bản 1, vì Văn
+hóa còn 0 bài. Đổi lại khi các bài #11–#14 trong danh sách cần viết đã đăng.
+
+**Chưa kiểm được trên Local**:
+- **Dạng URL.** Local không có Rank Math nên URL còn `/category/kien-thuc/da-quy/`.
+  Dạng `/kien-thuc/da-quy/` trên production dựa vào cách Rank Math bỏ
+  `category/` (nó ghép đường dẫn chuyên mục cha khi sinh rewrite rule). Phải
+  xác nhận trên production ngay sau bước 4, trước khi tạo các quy tắc chuyển hướng ở mục 8.
+- **Tên chip.** Chip dùng tên đầy đủ của chuyên mục ("Phong thủy & hợp mệnh"),
+  trong khi bản 1 vẽ tên ngắn ("Phong thủy", "Văn hóa", "Chợ đá"). Nếu muốn khớp
+  hẳn bản 1, cần thêm ô "tên ngắn" ở màn Sửa chuyên mục.
+
+**Quay lại trạng thái cũ**: nhập lại file `.sql` ở trên vào DB Local.
+
+## 14. Chạy trên production
+
+Script: `deploy/chuyen-muc/chay-production.mjs`. Script dùng REST API với
+Application Password (cặp đầu tiên trong `deploy/wp-api.txt`) và đọc cùng
+`du-lieu.json` như bản Local. Mỗi lần chạy đều **sao lưu trước** vào
+`deploy/backup-production/`, gồm chuyên mục, thẻ, chuyên mục và thẻ của từng
+bài, ngày sửa của từng bài, menu và chuyển hướng.
+
+```bash
+cd "C:/Users/ductu/Local Sites/daquylucyen/deploy/chuyen-muc"
+node chay-production.mjs --menu            # chạy thử khô: chỉ sao lưu và in ra
+node chay-production.mjs --ap-dung         # ghi thật: chuyên mục, thẻ, bài
+node chay-production.mjs --ap-dung --menu  # ghi thật cả menu
+```
+
+**Chạy thử khô ngày 2026-10-29**
+(`backup-production/truoc-chuyen-muc-2026-10-29T02-02-46-448Z.json`):
+
+| | Kết quả |
+|---|---|
+| Chuyên mục | Tạo 11: 2 cha `kien-thuc`, `luc-yen` và 9 con. Giữ ID cả 6 cái cũ: `da-quy` #2, `da-ban-quy` #10, `trang-suc` #4, `tranh-da-quy` #3, `tu-van` #6, và #41 (đổi slug `tu-van-phong-thuy` → `phong-thuy`) |
+| Bài | **60 đổi** (47 đổi chuyên mục, 13 chỉ thêm thẻ), 29 giữ. Không bài nào lệch giữa site và `du-lieu.json` |
+| Thẻ | Tạo 6, giữ 5 (ruby, spinel, thạch anh, nhẫn, sapphire), xoá 24 |
+| Menu | Tạo "Menu chính (bản 1)", gán vào `primary` (đang là menu #22) và `mobile` (đang trống). Menu #22 vẫn giữ trong wp-admin |
+
+**Ba điều cần biết trước khi ghi thật**
+
+1. **Ngày sửa của bài sẽ đổi.** REST không có cách gắn chuyên mục mà không cập
+   nhật bài, nên mỗi bài đổi sẽ có ngày sửa là ngày chạy. 77/89 bài đã có ngày
+   sửa trong tháng 10/2026 (đợt dọn thông tin công ty), nên thực tế chỉ có
+   **6 bài đã đăng** bị đẩy ngày sửa từ 2019–2023 lên 10/2026 (sapphire, topaz,
+   Swarovski, charm, nhẫn ruby nam, kiểu nhẫn đẹp) và 2 bản nháp. Ngày sửa cũ
+   có trong file sao lưu. Muốn giữ nguyên thì phải gắn chuyên mục bằng PHP trên
+   server (thêm một lệnh tạm vào plugin `dql-core`).
+2. **Menu: đợi theme v2.** Theme v1 đang chạy **không** có bộ lọc ẩn chuyên mục
+   rỗng (bộ lọc đó mới thêm ở v2). Chạy `--menu` lúc còn v1 thì menu "Lục Yên"
+   sẽ hiện 6 mục dẫn tới trang trống. Nên chạy `--ap-dung` trước (an toàn với
+   v1) và chạy `--menu` sau khi deploy v2.
+3. **Thứ tự ngay sau khi ghi**: script in ra URL thật của từng chuyên mục.
+   - Kiểm dạng `/kien-thuc/da-quy/` (Rank Math bỏ `category/`).
+   - Rồi tạo ngay 6 quy tắc chuyển hướng và sửa 8 quy tắc ở mục 8.
+   - Trong khoảng thời gian giữa hai bước này, `/da-quy/`, `/trang-suc/`… trả 404.
+
+**Quay lại**: file sao lưu có đủ dữ liệu để gán lại chuyên mục/thẻ cũ cho từng
+bài và khôi phục slug, tên, cha của 6 chuyên mục cũ. Chưa viết script khôi
+phục; viết khi cần.
+
+### 14.1 Đã ghi thật ngày 2026-10-29
+
+- Lần chạy đầu dừng giữa chừng vì site vào chế độ bảo trì (WordPress tự cập
+  nhật, trả 503). Lúc dừng, phần chuyên mục đã xong; thẻ và bài chưa ghi. Chạy
+  lại khi site lên (sao lưu `truoc-chuyen-muc-2026-10-29T02-09-20-208Z.json`)
+  thì hoàn tất.
+- Kết quả: 17 chuyên mục, 11 thẻ, 60 bài đổi. Chạy khô lần ba: 0 thay đổi.
+- URL thật: `/kien-thuc/`, `/kien-thuc/da-quy/`, `/luc-yen/cho-da-quy/`,
+  `/phong-thuy/`… Rank Math giữ đường dẫn cha, đúng như kế hoạch.
+
+**Sự cố ngay sau khi ghi**: quy tắc rewrite của Rank Math chưa được làm mới,
+vì Rank Math chỉ làm mới khi có thao tác trong wp-admin, còn ghi qua REST thì
+không. Kết quả:
+- URL mới `/kien-thuc/da-quy/` bị WordPress đoán sang bài `/cho-da-quy-luc-yen/`;
+- `/kien-thuc/`, `/phong-thuy/`, `/luc-yen/` trả 404;
+- URL cũ `/da-quy/` vẫn chạy.
+
+Cách sửa (làm tay, khoảng 1 phút):
+
+1. wp-admin → **Cài đặt → Đường dẫn tĩnh** → bấm **Lưu thay đổi**, không sửa gì.
+2. Thanh admin → **LiteSpeed Cache → Purge All**. LiteSpeed đã cache các
+   trang 404 ở trên trong 1 giờ.
+
+Lần sau chạy script, làm hai bước này ngay sau `--ap-dung`.
+
+### 14.2 Chuyển hướng cần tạo (Rank Math → Redirections → Add New, loại 301)
+
+Làm **sau** bước 14.1, vì lúc đó URL cũ mới bắt đầu 404.
+
+| # | Nguồn (Exact) | Đích |
+|---|---|---|
+| 1 | `da-quy` | `https://daquylucyen.net.vn/kien-thuc/da-quy/` |
+| 2 | `da-ban-quy` | `https://daquylucyen.net.vn/kien-thuc/da-ban-quy/` |
+| 3 | `trang-suc` | `https://daquylucyen.net.vn/kien-thuc/trang-suc/` |
+| 4 | `tranh-da-quy` | `https://daquylucyen.net.vn/kien-thuc/tranh-da-quy/` |
+| 5 | `tu-van` | `https://daquylucyen.net.vn/kien-thuc/tu-van/` |
+| 6 | `tu-van-phong-thuy` | `https://daquylucyen.net.vn/phong-thuy/` |
+
+Trang phân trang cũ (`/da-quy/page/2/`) bỏ qua: trang chuyên mục đang
+`noindex`, gần như không có link ngoài trỏ vào.
+
+**Sửa đích** 8 quy tắc cũ (Rank Math → Redirections, tìm theo nguồn, bấm Edit):
+
+| Nguồn | Đích mới |
+|---|---|
+| `san-pham/tranh-da-quy.html` | `https://daquylucyen.net.vn/kien-thuc/tranh-da-quy/` |
+| `san-pham/nhan-mat-da.html` | `https://daquylucyen.net.vn/kien-thuc/trang-suc/` |
+| `danh-muc/da-quy` | `https://daquylucyen.net.vn/kien-thuc/da-quy/` |
+| `tag/da-quy` | `https://daquylucyen.net.vn/kien-thuc/da-quy/` |
+| `danh-muc/trang-suc` | `https://daquylucyen.net.vn/kien-thuc/trang-suc/` |
+| `danh-muc/tranh-da-quy` | `https://daquylucyen.net.vn/kien-thuc/tranh-da-quy/` |
+| `danh-muc/travel` | `https://daquylucyen.net.vn/luc-yen/du-lich/` |
+| `khuyen-tai-nam-vang-trang` | `https://daquylucyen.net.vn/khuyen-tai-nam/` |
+
+Sau khi tạo xong, bảo Claude kiểm lại: mỗi URL cũ phải trả 301 đúng một bước.
