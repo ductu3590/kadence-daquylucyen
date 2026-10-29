@@ -212,8 +212,51 @@ function dql_theme_mode_body_class( $classes ) {
 
 	if ( dql_dark_mode_on() ) {
 		$classes[] = 'dql-co-che-do-toi';
+
+		if ( dql_dark_logo_url() ) {
+			$classes[] = 'dql-co-logo-toi';
+		}
 	}
 
 	return $classes;
 }
 add_filter( 'body_class', 'dql_theme_mode_body_class' );
+
+/**
+ * Địa chỉ logo dùng cho nền tối.
+ *
+ * Logo header là bản màu cho nền sáng (chữ "Đá Quý" đen), đặt lên nền than đá
+ * thì chữ biến mất. Bản chữ trắng đã có sẵn ở ô "Logo footer" trong Customizer,
+ * nên dùng lại chính ô đó thay vì thêm một ô thứ hai phải nhớ điền.
+ *
+ * @return string URL, hoặc chuỗi rỗng nếu chưa chọn logo footer.
+ */
+function dql_dark_logo_url() {
+	$id = (int) get_theme_mod( 'dql_footer_logo', 0 );
+
+	if ( ! $id ) {
+		return '';
+	}
+
+	$url = wp_get_attachment_image_url( $id, 'full' );
+
+	return $url ? $url : '';
+}
+
+/**
+ * Đưa URL logo tối cho dark.css qua biến CSS.
+ *
+ * CSS tĩnh không biết ảnh nào được chọn trong Customizer, nên địa chỉ đi qua
+ * một biến trên :root. In ở wp_head ưu tiên 0, trước các stylesheet.
+ */
+function dql_dark_logo_var() {
+	$url = dql_dark_mode_on() ? dql_dark_logo_url() : '';
+
+	if ( ! $url ) {
+		return;
+	}
+
+	printf( "<style id=\"dql-logo-toi\">:root{--dql-logo-toi:url(\"%s\")}</style>
+", esc_url( $url ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Đã qua esc_url().
+}
+add_action( 'wp_head', 'dql_dark_logo_var', 0 );

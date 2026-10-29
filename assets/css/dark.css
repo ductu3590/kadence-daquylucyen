@@ -123,6 +123,14 @@ html[data-dql-theme="dark"] .site-branding img.custom-logo {
 	filter: brightness(0) invert(0.92);
 }
 
+/* Có bản logo chữ trắng (ô "Logo footer" trong Customizer) thì thay hẳn ảnh:
+   bộ lọc ở trên biến cả huy hiệu ruby thành một khối trắng, mất hình viên đá
+   và mất màu "Lục Yên". Địa chỉ ảnh đi qua --dql-logo-toi, xem inc/theme-mode.php. */
+html[data-dql-theme="dark"] body.dql-co-logo-toi .site-branding img.custom-logo {
+	content: var(--dql-logo-toi);
+	filter: none;
+}
+
 /* --- Thẻ, hộp, bảng trong bài -------------------------------------------- */
 
 html[data-dql-theme="dark"] .entry-content blockquote,
