@@ -31,6 +31,7 @@ require_once DQL_DIR . '/inc/template-tags.php';
 require_once DQL_DIR . '/inc/customizer.php';
 require_once DQL_DIR . '/inc/header.php';
 require_once DQL_DIR . '/inc/toc.php';
+require_once DQL_DIR . '/inc/single.php';
 require_once DQL_DIR . '/inc/archive.php';
 require_once DQL_DIR . '/inc/patterns.php';
 require_once DQL_DIR . '/inc/footer.php';

@@ -1,30 +1,226 @@
 /*
- * Trang bài viết đơn — bố cục "một cột, mục lục dính bên trái".
+ * Trang bài viết đơn — bản 1: đầu bài 800 → ảnh bìa 1000 → thân bài với cột
+ * lề trái 220 (mục lục dính + thuật ngữ) và bài 720.
  *
- * Chỉ nạp ở bài viết đơn.
+ * Markup: template-parts/content/single-entry.php. Chỉ nạp ở bài viết đơn.
  */
 
 /* ---------------------------------------------------------------------------
- * Thời gian đọc
+ * Đầu bài
  * ------------------------------------------------------------------------- */
 
-.dql-single-meta {
+.dql-bai__dau {
+	padding-top: var(--dql-k7);
+	padding-bottom: var(--dql-k5);
+}
+
+.dql-bai__dau-in {
+	max-width: 800px;
+	margin: 0 auto;
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	gap: var(--dql-k4);
+}
+
+/* .dql-crumb gốc nằm ở archive.css, không nạp ở trang bài — chép phần cần. */
+.dql-bai__crumb {
+	display: flex;
 	flex-wrap: wrap;
-	gap: 0.25rem 0;
-	margin: 0 0 var(--dql-k6);
-	padding-bottom: var(--dql-k4);
-	border-bottom: var(--dql-border);
+	align-items: center;
+	gap: 0.35rem;
 	font-size: 0.8125rem;
 	color: var(--global-palette6);
 }
 
-.dql-single-meta .dql-icon {
+.dql-bai__crumb a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.dql-bai__crumb a:hover {
+	color: var(--global-palette1);
+}
+
+.dql-bai__crumb .dql-icon {
+	width: 14px;
+	height: 14px;
+	opacity: 0.7;
+	flex: none;
+}
+
+.dql-bai__chuyen-muc {
+	align-self: flex-start;
+}
+
+.dql-bai__chuyen-muc .dql-gem--nho {
+	width: 24px;
+	height: 24px;
+}
+
+.dql-bai__chuyen-muc .dql-gem--nho .dql-icon {
+	width: 13px;
+	height: 13px;
+}
+
+.dql-bai .dql-bai__tieu-de {
+	margin: 0;
+	font-size: clamp(2rem, 3.2vw, 2.75rem);
+	line-height: 1.18;
+	font-weight: 600;
+	letter-spacing: -0.015em;
+	color: var(--global-palette3);
+	text-wrap: pretty;
+}
+
+.dql-bai__sapo {
+	margin: 0;
+	font-size: 1.1875rem;
+	line-height: 1.5;
+	color: var(--global-palette6);
+}
+
+.dql-bai__meta {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--dql-k2) var(--dql-k4);
+	padding-top: var(--dql-k2);
+	border-top: var(--dql-border);
+	font-size: 0.8125rem;
+	line-height: 1.4;
+	color: var(--global-palette6);
+}
+
+.dql-bai__meta-muc {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.dql-bai__meta-muc .dql-icon {
 	width: 16px;
 	height: 16px;
-	vertical-align: -0.2em;
-	margin-right: 0.35rem;
+}
+
+.dql-bai__nut {
+	display: flex;
+	gap: var(--dql-k2);
+	margin-left: auto;
+}
+
+/* Điện thoại: bỏ dấu chấm và icon đồng hồ để hai nút còn chung hàng với
+   meta, không rớt xuống một dòng riêng. */
+@media (max-width: 599px) {
+	.dql-bai__dau {
+		padding-top: var(--dql-k6);
+	}
+
+	.dql-bai__meta {
+		column-gap: var(--dql-k3);
+	}
+
+	.dql-bai__meta-cham,
+	.dql-bai__meta-muc .dql-icon {
+		display: none;
+	}
+}
+
+/* Nút tròn 44px viền mảnh — cùng dáng nút tìm kiếm, đổi nền ở header. */
+.dql-nut-tron {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: var(--dql-border);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--global-palette9) 60%, transparent);
+	color: var(--global-palette3);
+	cursor: pointer;
+	transition: border-color var(--dql-transition), color var(--dql-transition), background var(--dql-transition);
+}
+
+.dql-nut-tron:hover,
+.dql-nut-tron:focus-visible {
+	border-color: var(--global-palette1);
+	color: var(--global-palette1);
+	background: var(--global-palette9);
+}
+
+.dql-nut-tron .dql-icon {
+	width: 18px;
+	height: 18px;
+}
+
+.dql-nut-tron[aria-pressed="true"] {
+	border-color: var(--global-palette1);
+	background: var(--global-palette1);
+	color: var(--global-palette9);
+}
+
+.dql-nut-tron[aria-pressed="true"] .dql-icon {
+	fill: currentColor;
+}
+
+/* Thông báo nhỏ sau khi lưu / chép liên kết. */
+.dql-bao {
+	position: fixed;
+	left: 50%;
+	bottom: var(--dql-k5);
+	z-index: 1000;
+	max-width: calc(100vw - 32px);
+	padding: 10px 18px;
+	border-radius: 999px;
+	background: var(--dql-nen-dam);
+	color: var(--dql-chu-tren-dam);
+	font-size: 0.875rem;
+	box-shadow: var(--dql-bong);
+	transform: translate(-50%, 12px);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity var(--dql-transition), transform var(--dql-transition);
+}
+
+.dql-bao.is-hien {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+/* ---------------------------------------------------------------------------
+ * Ảnh bìa — khổ 1000, bo 20. Không kéo tràn: phần lớn ảnh gốc dưới 1200px.
+ * ------------------------------------------------------------------------- */
+
+.dql-bai__bia {
+	max-width: calc(1000px + 2 * var(--dql-k5));
+	margin: 0 auto;
+	padding-bottom: var(--dql-k7);
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.dql-bai__bia-img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	border-radius: var(--dql-radius-lg);
+	background: var(--global-palette7);
+}
+
+@media (max-width: 599px) {
+	.dql-bai__bia {
+		padding-bottom: var(--dql-k6);
+	}
+}
+
+.dql-bai__bia figcaption {
+	font-size: 0.8125rem;
+	line-height: 1.4;
+	color: var(--global-palette6);
+	text-align: center;
 }
 
 /* ---------------------------------------------------------------------------
@@ -44,71 +240,6 @@
 	text-align: justify;
 	text-justify: inter-word;
 	overflow-wrap: break-word;
-}
-
-/* --- Đầu bài: nhãn chuyên mục có huy hiệu, tiêu đề serif lớn, đoạn dẫn ---- */
-
-.single .entry-header .dql-single-kicker {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem 1rem;
-	margin: 0 0 var(--dql-k3);
-}
-
-.single .entry-header .entry-title {
-	font-size: clamp(2rem, 3.2vw, 2.75rem);
-	line-height: 1.15;
-	letter-spacing: -0.015em;
-	text-wrap: pretty;
-}
-
-/* Kadence vẫn in dòng chuyên mục của nó nếu Customizer đã lưu khối tiêu đề;
-   theme in bản có huy hiệu ở trên, nên ẩn bản của Kadence để không trùng. */
-.single .entry-header .entry-taxonomies {
-	display: none;
-}
-
-.single .entry-header .entry-meta {
-	font-size: 0.8125rem;
-	color: var(--global-palette6);
-}
-
-.single .entry-header .entry-summary,
-.single .entry-header .entry-excerpt {
-	font-size: 1.1875rem;
-	line-height: 1.5;
-	color: var(--global-palette5);
-	max-width: 40em;
-}
-
-/* Ảnh bìa: bo góc lớn, chú thích canh giữa. */
-.single .post-thumbnail img,
-.single .entry-hero img.wp-post-image,
-.single .post-thumbnail-inner img {
-	border-radius: var(--dql-radius-lg);
-}
-
-/* Thẻ cuối bài: chip. */
-.single .entry-footer .entry-tags a,
-.single .entry-footer .tags-links a {
-	display: inline-flex;
-	align-items: center;
-	min-height: 34px;
-	padding: 0 0.75rem;
-	margin: 0 0.4rem 0.4rem 0;
-	border: var(--dql-border);
-	border-radius: 999px;
-	background: var(--global-palette9);
-	font-size: 0.8125rem;
-	color: var(--global-palette4);
-	text-decoration: none;
-	transition: border-color var(--dql-transition), color var(--dql-transition);
-}
-
-.single .entry-footer .entry-tags a:hover,
-.single .entry-footer .tags-links a:hover {
-	border-color: var(--global-palette3);
-	color: var(--global-palette3);
 }
 
 /* ---------------------------------------------------------------------------
@@ -178,29 +309,15 @@ html {
 }
 
 /*
- * Nút đóng mở có tác dụng ở MỌI trường hợp, TRỪ chế độ cột lề trái.
+ * Nút đóng mở có tác dụng ở MỌI trường hợp, TRỪ khi mục lục nằm ở cột lề.
  *
- * Hai lỗi đã gặp thật ở chỗ này, sửa lần lượt:
- *
- *   1. Ban đầu quy tắc ẩn áp dụng mọi khổ màn hình. Ở chế độ cột lề, nếu
- *      aria-expanded còn sót giá trị "false" thì mục lục biến mất mà không có
- *      cách nào mở lại — vì ở chế độ đó nút chỉ đóng vai trò tiêu đề.
- *
- *   2. Sửa lần một bằng cách bọc trong @media (max-width: 1319px). Nhưng khi
- *      bài có cột bên, mục lục ở dạng thanh gập ngay cả trên màn 1440px — và
- *      quy tắc ẩn không với tới, nên bấm nút không đóng được gì.
- *
- * Cách đúng: ẩn là hành vi MẶC ĐỊNH, chỉ vô hiệu hóa nó ở đúng chế độ cột lề.
- * Điều kiện khớp chính xác với điều kiện tạo ra chế độ cột lề bên dưới.
+ * Ẩn là hành vi MẶC ĐỊNH, chỉ vô hiệu hóa ở đúng chế độ cột lề (xem phần
+ * "Thân bài" bên dưới). Làm ngược lại — chỉ ẩn trong một media query — từng
+ * gây hai lỗi: mục lục biến mất không mở lại được ở cột lề, và nút không đóng
+ * được gì ở khổ có cột bên.
  */
 .dql-toc__toggle[aria-expanded="false"] + .dql-toc__nav {
 	display: none;
-}
-
-@media (min-width: 1320px) {
-	body:not(.has-sidebar) .dql-toc__toggle[aria-expanded="false"] + .dql-toc__nav {
-		display: block;
-	}
 }
 
 .dql-toc__nav {
@@ -249,106 +366,516 @@ html {
 }
 
 /* ---------------------------------------------------------------------------
- * Mục lục — màn hình rộng: đẩy ra lề trái, dính khi cuộn
+ * Thân bài: cột lề 220 + bài 720, căn giữa trong khung 1280
  *
- * Ngưỡng 1320px là con số ĐO ĐƯỢC, không phải ước lượng. Ở 1240px khung bài
- * của Kadence còn rộng nên lề trái chỉ dư 7px — mục lục chạm sát mép màn hình.
- * Tại 1320px lề dư khoảng 47px, đủ thoáng. Dưới ngưỡng này mục lục giữ dạng
- * thanh gập ở đầu bài.
+ * Bài không có mục lục (dưới 3 tiêu đề) và không có thuật ngữ thì không có
+ * cột lề — bài 720 đứng giữa, không chừa ô trống bên trái.
  *
- * JavaScript KHÔNG lặp lại con số này — nó đọc thẳng position của phần tử để
- * biết đang ở chế độ nào.
- *
- * ĐIỀU KIỆN body:not(.has-sidebar) LÀ BẮT BUỘC.
- *
- * Khi bài viết có cột bên, cột đó ăn hết phần lề phải và đẩy cột nội dung sang
- * trái. Đo thực tế ở màn 1440px: mục lục rơi xuống left: -113px, tức hơn nửa
- * cột nằm ngoài màn hình. Có cột bên thì mục lục giữ nguyên dạng thanh gập ở
- * đầu bài.
- *
- * Bật/tắt cột bên ở Customizer → Bài viết → Bố cục. JavaScript tự đi theo vì nó
- * đọc position thật của phần tử.
+ * Dưới 1100px cột lề lên đầu bài: mục lục thành thanh gập (dạng mặc định ở
+ * trên), thuật ngữ thành một hàng liên kết.
  * ------------------------------------------------------------------------- */
 
-@media (min-width: 1320px) {
-	body:not(.has-sidebar) .single .entry-content-wrap,
-	.single:not(.has-sidebar) .entry-content-wrap {
-		position: relative;
+.dql-bai__than {
+	display: grid;
+	grid-template-columns: minmax(0, 720px);
+	justify-content: center;
+	align-items: start;
+	gap: var(--dql-k5) 60px;
+	padding-bottom: var(--dql-k8);
+}
+
+.dql-bai__cot {
+	min-width: 0;
+}
+
+.dql-bai__le .dql-toc {
+	margin: 0;
+}
+
+/* Thuật ngữ trong bài — hộp nền vôi. */
+.dql-bai__tn {
+	display: flex;
+	flex-direction: column;
+	gap: var(--dql-k2);
+	margin-top: var(--dql-k3);
+	padding: var(--dql-k4);
+	border-radius: var(--dql-radius);
+	background: var(--global-palette7);
+}
+
+.dql-bai__tn-tieu-de {
+	margin: 0;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--global-palette3);
+}
+
+.dql-bai__tn-ds {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-bai__tn-ds a {
+	font-size: 0.875rem;
+	line-height: 1.4;
+	color: var(--global-palette1);
+	text-decoration: none;
+}
+
+.dql-bai__tn-ds a:hover {
+	color: var(--global-palette2);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+@media (max-width: 1099px) {
+	.dql-bai__tn-ds {
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 6px 16px;
+	}
+}
+
+@media (min-width: 1100px) {
+	.dql-bai__than--co-le {
+		grid-template-columns: 220px minmax(0, 720px);
 	}
 
-	/* Cột hẹp ở khổ vừa. Đo thực tế trên màn 1280px: cột 215px cách mép trái
-	   chỉ 27px, và ngay tại ngưỡng 1240px chỉ còn 14px — chạm sát mép. Cột
-	   180px cho lề khoảng 60px, đủ thoáng ở cả hai đầu khoảng. */
-	body:not(.has-sidebar) .dql-toc {
-		position: absolute;
-		top: 0;
-		left: -205px;
-		width: 180px;
-		height: 100%;
-		margin: 0;
-	}
-
-	/* Con nằm sticky trong cha absolute: cha cho chiều cao để trượt,
-	   con dính lại khi chạm mốc trên. */
-	body:not(.has-sidebar) .dql-toc__inner {
+	/* Cột lề dính. Cha (ô lưới) cao bằng cả bài nhờ align-items: start + chính
+	   nó là ô lưới — sticky trượt trong ô đó. */
+	.dql-bai__le {
 		position: sticky;
 		top: 100px;
-		border: 0;
-		border-left: 2px solid var(--global-palette7);
-		border-radius: 0;
-		max-height: calc(100vh - 140px);
+		display: flex;
+		flex-direction: column;
+		gap: var(--dql-k3);
+		max-height: calc(100vh - 120px);
 		overflow-y: auto;
+		scrollbar-width: thin;
 	}
 
-	body:not(.has-sidebar) .dql-toc__toggle {
+	.admin-bar .dql-bai__le {
+		top: 132px;
+		max-height: calc(100vh - 152px);
+	}
+
+	.dql-bai__le .dql-toc__inner {
+		border: 0;
+		border-radius: 0;
+		overflow: visible;
+	}
+
+	.dql-bai__le .dql-toc__toggle,
+	html[data-dql-theme="dark"] .dql-bai__le .dql-toc__toggle {
+		min-height: 0;
+		padding: 0 0 var(--dql-k3);
 		background: none;
-		padding: 0 0 0.75rem 1rem;
 		font-size: 0.75rem;
-		letter-spacing: 0.06em;
+		font-weight: 600;
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--global-palette6);
 		cursor: default;
 	}
 
-	/* Ở khổ này mục lục luôn mở, nên mũi tên không còn ý nghĩa. */
-	body:not(.has-sidebar) .dql-toc__chevron {
+	/* Ở cột lề mục lục luôn mở; mũi tên không còn ý nghĩa. */
+	.dql-bai__le .dql-toc__chevron {
 		display: none;
 	}
 
-	body:not(.has-sidebar) .dql-toc__nav {
-		padding: 0 0 0 1rem;
+	.dql-bai__le .dql-toc__toggle[aria-expanded="false"] + .dql-toc__nav {
+		display: block;
 	}
 
-	body:not(.has-sidebar) .dql-toc__link.is-current {
-		position: relative;
+	.dql-bai__le .dql-toc__nav {
+		padding: 0;
+		border-left: 2px solid var(--global-palette7);
 	}
 
-	/* Vạch đánh dấu chồng lên đúng vị trí đường viền trái của cột. */
-	body:not(.has-sidebar) .dql-toc__link.is-current::before {
-		content: "";
-		position: absolute;
-		left: -1rem;
-		top: 0;
-		bottom: 0;
-		width: 2px;
+	.dql-bai__le .dql-toc__item {
+		margin: 0;
+	}
+
+	.dql-bai__le .dql-toc__link {
+		display: block;
 		margin-left: -2px;
-		background: var(--global-palette1);
+		padding: 6px 0 6px 14px;
+		border-left: 2px solid transparent;
+		font-size: 0.875rem;
+		line-height: 1.45;
+		color: var(--global-palette6);
+	}
+
+	/* Cột lề chỉ liệt kê H2, như bản 1. Bài dài có hai ba chục H3 — liệt kê
+	   hết thì cột cao hơn màn hình, phải cuộn trong cột, và hộp thuật ngữ bị
+	   đẩy khuất. H3 vẫn có trong thanh gập ở khổ hẹp. */
+	.dql-bai__le .dql-toc__item--h3 {
+		display: none;
+	}
+
+	.dql-bai__le .dql-toc__link.is-current {
+		border-left-color: var(--global-palette1);
+		color: var(--global-palette1);
+	}
+
+	.dql-bai__tn {
+		margin-top: 0;
 	}
 }
 
-/* Màn hình rộng: cột rộng hơn, tiêu đề dài đỡ bị ngắt dòng nhiều. */
-@media (min-width: 1440px) {
-	body:not(.has-sidebar) .dql-toc {
-		left: -250px;
-		width: 215px;
+/* ---------------------------------------------------------------------------
+ * Thẻ cuối bài: "Thẻ:" + chip, viền trên
+ * ------------------------------------------------------------------------- */
+
+.dql-bai__the {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--dql-k2);
+	margin-top: var(--dql-k7);
+	padding-top: var(--dql-k5);
+	border-top: var(--dql-border);
+}
+
+.dql-bai__the-nhan {
+	margin-right: var(--dql-k1);
+	font-size: 0.8125rem;
+	color: var(--global-palette6);
+}
+
+.dql-bai__the-chip {
+	display: inline-flex;
+	align-items: center;
+	min-height: 34px;
+	padding: 0 var(--dql-k3);
+	border: var(--dql-border);
+	border-radius: 999px;
+	background: var(--global-palette9);
+	font-size: 0.8125rem;
+	color: var(--global-palette4);
+	text-decoration: none;
+	transition: border-color var(--dql-transition), color var(--dql-transition);
+}
+
+.dql-bai__the-chip:hover {
+	border-color: var(--global-palette1);
+	color: var(--global-palette1);
+}
+
+/* ---------------------------------------------------------------------------
+ * Hộp tác giả
+ *
+ * Ảnh vuông viền trắng như ảnh in dán lên trang; trỏ chuột vào thì ảnh xoay
+ * một vòng. Tắt xoay khi người đọc yêu cầu giảm chuyển động.
+ * ------------------------------------------------------------------------- */
+
+.dql-tac-gia {
+	display: grid;
+	grid-template-columns: 112px minmax(0, 1fr);
+	align-items: start;
+	gap: var(--dql-k5);
+	margin-top: var(--dql-k6);
+	padding: var(--dql-k5);
+	border: var(--dql-border);
+	border-radius: 16px;
+	background: var(--global-palette9);
+}
+
+.dql-tac-gia__anh {
+	position: relative;
+	display: block;
+	width: 112px;
+	height: 112px;
+	border: 4px solid var(--global-palette9);
+	border-radius: var(--dql-radius);
+	overflow: hidden;
+	background: var(--dql-gem, var(--global-palette1));
+	box-shadow: 0 1px 2px rgba(28, 25, 23, 0.08), 0 8px 20px -6px rgba(28, 25, 23, 0.35);
+	transition: transform 0.7s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.dql-tac-gia:hover .dql-tac-gia__anh {
+	transform: rotate(360deg);
+}
+
+.dql-tac-gia__chu {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: var(--global-heading-font-family, Georgia, serif);
+	font-size: 2.75rem;
+	font-weight: 600;
+	color: var(--global-palette9);
+}
+
+.dql-tac-gia__img {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 0;
+}
+
+.dql-tac-gia__than {
+	display: flex;
+	flex-direction: column;
+	gap: var(--dql-k2);
+	min-width: 0;
+}
+
+.dql-tac-gia__dau {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--dql-k2) var(--dql-k3);
+	margin: 0;
+}
+
+.dql-bai .dql-tac-gia__ten {
+	font-family: var(--global-heading-font-family, Georgia, serif);
+	font-size: 1.25rem;
+	line-height: 1.3;
+	font-weight: 600;
+	color: var(--global-palette3);
+	text-decoration: none;
+	border: 0;
+}
+
+.dql-bai .dql-tac-gia__ten:hover {
+	color: var(--global-palette1);
+}
+
+.dql-tac-gia__vai {
+	display: inline-flex;
+	align-items: center;
+	min-height: 22px;
+	padding: 0 8px;
+	border-radius: var(--dql-radius-sm);
+	background: var(--global-palette3);
+	font-size: 0.75rem;
+	font-weight: 500;
+	line-height: 1;
+	color: var(--global-palette9);
+}
+
+.dql-bai .dql-tac-gia__bio {
+	margin: 0;
+	font-size: 0.9375rem;
+	line-height: 1.65;
+	color: var(--global-palette4);
+	text-align: left;
+}
+
+.dql-tac-gia__chan {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--dql-k2) var(--dql-k4);
+	margin-top: var(--dql-k1);
+}
+
+.dql-tac-gia__mxh {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 0 0 -10px;
+	padding: 0;
+	list-style: none;
+}
+
+.dql-bai .dql-tac-gia__mxh a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border: 0;
+	border-radius: 999px;
+	color: var(--global-palette4);
+	transition: color var(--dql-transition), background var(--dql-transition);
+}
+
+.dql-bai .dql-tac-gia__mxh a:hover {
+	color: var(--global-palette1);
+	background: var(--global-palette8);
+}
+
+.dql-tac-gia__mxh .dql-icon {
+	width: 19px;
+	height: 19px;
+}
+
+.dql-bai .dql-tac-gia__tat-ca {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 40px;
+	margin-left: auto;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: var(--global-palette1);
+	text-decoration: none;
+	border: 0;
+}
+
+.dql-tac-gia__tat-ca .dql-icon {
+	width: 16px;
+	height: 16px;
+	transition: transform var(--dql-transition);
+}
+
+.dql-tac-gia__tat-ca:hover .dql-icon {
+	transform: translateX(3px);
+}
+
+@media (max-width: 599px) {
+	.dql-tac-gia {
+		grid-template-columns: 80px minmax(0, 1fr);
+		gap: var(--dql-k4);
+		padding: var(--dql-k4);
+	}
+
+	.dql-tac-gia__anh {
+		width: 80px;
+		height: 80px;
+		border-width: 3px;
+	}
+
+	.dql-tac-gia__chu {
+		font-size: 2rem;
 	}
 }
 
-@media (min-width: 1650px) {
-	body:not(.has-sidebar) .dql-toc {
-		left: -300px;
-		width: 255px;
+@media (prefers-reduced-motion: reduce) {
+	.dql-tac-gia__anh {
+		transition: none;
 	}
+
+	.dql-tac-gia:hover .dql-tac-gia__anh {
+		transform: none;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * Bài trước / bài sau
+ * ------------------------------------------------------------------------- */
+
+.dql-dh {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--dql-k4);
+	margin-top: var(--dql-k6);
+}
+
+.dql-bai .dql-dh__the {
+	display: flex;
+	align-items: center;
+	gap: var(--dql-k3);
+	min-height: 104px;
+	padding: var(--dql-k3);
+	border: var(--dql-border);
+	border-radius: var(--dql-radius);
+	background: var(--global-palette9);
+	color: var(--global-palette3);
+	text-decoration: none;
+	transition: border-color var(--dql-transition), box-shadow var(--dql-transition);
+}
+
+.dql-bai .dql-dh__the:hover {
+	border-color: var(--global-palette6);
+	box-shadow: var(--dql-bong);
+}
+
+.dql-dh__the--sau {
+	flex-direction: row-reverse;
+	text-align: right;
+}
+
+.dql-dh__anh {
+	flex: none;
+	width: 80px;
+	height: 80px;
+	border-radius: var(--dql-radius-sm);
+	overflow: hidden;
+	background: var(--global-palette7);
+}
+
+.dql-dh__anh img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.4s ease;
+}
+
+.dql-dh__the:hover .dql-dh__anh img {
+	transform: scale(1.06);
+}
+
+.dql-dh__chu {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+
+.dql-dh__nhan {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 0.8125rem;
+	color: var(--global-palette6);
+}
+
+.dql-dh__the--sau .dql-dh__nhan {
+	justify-content: flex-end;
+}
+
+.dql-dh__nhan .dql-icon {
+	width: 14px;
+	height: 14px;
+}
+
+.dql-dh__ten {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	font-size: 0.9375rem;
+	line-height: 1.4;
+	font-weight: 600;
+	transition: color var(--dql-transition);
+}
+
+.dql-dh__the:hover .dql-dh__ten {
+	color: var(--global-palette1);
+}
+
+@media (max-width: 599px) {
+	.dql-dh {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.dql-dh__trong {
+		display: none;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * Bình luận — cùng khổ 720 với bài
+ * ------------------------------------------------------------------------- */
+
+.dql-bai__binh-luan {
+	max-width: calc(720px + 2 * var(--dql-k5));
+	padding-top: var(--dql-k7);
+	padding-bottom: var(--dql-k8);
 }
 
 /* ---------------------------------------------------------------------------

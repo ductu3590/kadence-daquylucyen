@@ -127,6 +127,29 @@ function dql_enqueue_styles() {
 			dql_asset_version( 'assets/js/toc.js' ),
 			true
 		);
+
+		// Nút Lưu bài và Chia sẻ ở đầu bài.
+		wp_enqueue_script(
+			'dql-single',
+			DQL_URI . '/assets/js/single.js',
+			array(),
+			dql_asset_version( 'assets/js/single.js' ),
+			true
+		);
+
+		wp_localize_script(
+			'dql-single',
+			'dqlBai',
+			array(
+				'luu'     => __( 'Lưu bài để đọc sau', 'kadence-daquylucyen' ),
+				'boLuu'   => __( 'Bỏ lưu bài này', 'kadence-daquylucyen' ),
+				'daLuu'   => __( 'Đã lưu bài trên trình duyệt này', 'kadence-daquylucyen' ),
+				'daBoLuu' => __( 'Đã bỏ lưu', 'kadence-daquylucyen' ),
+				'chiaSe'  => __( 'Chia sẻ bài viết', 'kadence-daquylucyen' ),
+				'daChep'  => __( 'Đã chép liên kết bài viết', 'kadence-daquylucyen' ),
+				'chepTay' => __( 'Chép liên kết bài viết:', 'kadence-daquylucyen' ),
+			)
+		);
 	}
 
 	// Giao diện chung: nút đổi chế độ, tiến độ đọc, header đã cuộn. Nạp cuối

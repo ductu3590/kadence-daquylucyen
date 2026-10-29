@@ -29,8 +29,11 @@
 	// Chế độ hiện tại đọc từ CSS chứ không lặp lại con số ngưỡng ở đây. Nếu
 	// ngưỡng trong single.css đổi, file này tự đi theo — không có cách nào để
 	// hai bên lệch nhau.
+	// Ở cột lề (single.css, từ 1100px) khung chứa mục lục dính lại.
+	var le = toc.closest( '.dql-bai__le' );
+
 	function isWide() {
-		return window.getComputedStyle( toc ).position === 'absolute';
+		return !! le && window.getComputedStyle( le ).position === 'sticky';
 	}
 
 	// Người đọc đã tự bấm thì tôn trọng lựa chọn của họ, không ghi đè khi
@@ -78,10 +81,31 @@
 		return;
 	}
 
+	// Mục H2 chứa mỗi liên kết. Cột lề chỉ hiện H2, nên khi đang đọc một H3
+	// thì H2 cha của nó phải sáng thay — không thì cột lề không sáng mục nào.
+	var cha = [];
+	var h2Gan = null;
+
+	links.forEach( function ( link, i ) {
+		if ( link.parentNode.classList.contains( 'dql-toc__item--h2' ) ) {
+			h2Gan = link;
+		}
+
+		cha[ i ] = h2Gan;
+	} );
+
 	function setCurrent( id ) {
+		var chaSang = null;
+
+		links.forEach( function ( link, i ) {
+			if ( decodeURIComponent( link.getAttribute( 'href' ).slice( 1 ) ) === id ) {
+				chaSang = cha[ i ];
+			}
+		} );
+
 		links.forEach( function ( link ) {
 			var match = decodeURIComponent( link.getAttribute( 'href' ).slice( 1 ) ) === id;
-			link.classList.toggle( 'is-current', match );
+			link.classList.toggle( 'is-current', match || link === chaSang );
 
 			if ( match ) {
 				link.setAttribute( 'aria-current', 'true' );
