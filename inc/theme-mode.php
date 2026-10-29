@@ -45,7 +45,7 @@ function dql_dark_mode_head_script() {
 	}
 	?>
 	<meta name="color-scheme" content="light dark">
-	<script id="dql-theme-init">
+	<script id="dql-theme-init" data-no-optimize="1" data-no-defer="1" data-cfasync="false">
 	( function () {
 		try {
 			var s = localStorage.getItem( 'dql-theme' );
@@ -88,6 +88,33 @@ function dql_dark_mode_noscript() {
 }
 add_action( 'wp_head', 'dql_dark_mode_noscript', 999 );
 add_action( 'wp_head', 'dql_dark_mode_head_script', 0 );
+
+/**
+ * Miễn cho script chế độ tối khỏi bị LiteSpeed hoãn.
+ *
+ * LiteSpeed Cache trên production bật "Load JS Deferred: Delayed": mọi script,
+ * kể cả script nội tuyến, bị đổi thành type="litespeed/javascript" và chỉ chạy
+ * khi người đọc chạm hay cuộn lần đầu. Script ở trên mà bị hoãn thì trang luôn
+ * hiện sáng rồi mới nhảy sang tối khi chạm. Các thuộc tính data-no-optimize,
+ * data-no-defer và data-cfasync="false" trên thẻ script đưa nó ra ngoài mọi tối
+ * ưu JS của LiteSpeed (và Rocket Loader của Cloudflare).
+ *
+ * ui.js cùng biến dqlUi của nó cũng được miễn hoãn: nút đổi chế độ nằm ngay
+ * trên header điện thoại, và lần chạm đầu vào nút không được phép mất đi chỉ
+ * vì script chưa nạp. Guest Mode của LiteSpeed (đang bật trên production) đọc
+ * danh sách loại trừ qua một filter khác, nên gắn vào cả hai.
+ *
+ * @param string[] $loai_tru Các chuỗi mà script khớp thì không bị hoãn.
+ * @return string[]
+ */
+function dql_litespeed_khong_hoan( $loai_tru ) {
+	$loai_tru   = is_array( $loai_tru ) ? $loai_tru : array();
+	$loai_tru[] = '/assets/js/ui.js';
+	$loai_tru[] = 'var dqlUi';
+	return $loai_tru;
+}
+add_filter( 'litespeed_optm_js_defer_exc', 'dql_litespeed_khong_hoan' );
+add_filter( 'litespeed_optm_gm_js_exc', 'dql_litespeed_khong_hoan' );
 
 /**
  * Nút đổi chế độ sáng/tối.
