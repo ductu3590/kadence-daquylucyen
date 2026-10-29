@@ -814,10 +814,27 @@
 	flex: 1 1 18rem;
 }
 
-.dql-newsletter__form input[type="email"],
-.dql-newsletter__form input[type="text"] {
+/* Màu, bo góc, nút: bộ biến --wpforms-* ở main.css. Ở đây chỉ còn bố cục. Bộ
+   chọn dài vì CSS của WPForms nạp sau và dùng `div.wpforms-container-full
+   input[type=email]`; ngắn hơn là thua. */
+.dql-newsletter__form div.wpforms-container,
+.dql-newsletter__form div.wpforms-container .wpforms-form {
+	margin: 0;
+}
+
+.dql-newsletter__form div.wpforms-container .wpforms-form input[type="email"],
+.dql-newsletter__form div.wpforms-container .wpforms-form input[type="text"] {
 	width: 100%;
-	border-radius: var(--dql-radius);
+	max-width: 100%;
+	box-sizing: border-box;
+	font-family: inherit;
+}
+
+.dql-newsletter__form div.wpforms-container .wpforms-form button[type="submit"],
+.dql-newsletter__form div.wpforms-container .wpforms-form input[type="submit"] {
+	font-family: inherit;
+	font-weight: 600;
+	cursor: pointer;
 }
 
 .dql-newsletter--placeholder .dql-newsletter__box {

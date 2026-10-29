@@ -402,6 +402,31 @@ a.dql-cat-label:hover {
 	color: var(--global-palette9);
 }
 
+/*
+ * Form WPForms: một bộ biến cho mọi nơi trong theme (cột bên, khối đăng ký email
+ * ở trang chủ). Không đặt biến thì WPForms rơi về màu mặc định của nó — nút xanh
+ * dương, ô vuông viền xám — lạc hẳn khỏi bảng màu ruby.
+ *
+ * Đặt trên khối cha chứ không trên #wpforms-N: thẻ <style> của WPForms chỉ gán
+ * biến cỡ (chiều cao ô, cỡ chữ, đệm), còn màu và bo góc để trống cho ta.
+ */
+.dql-sb-mail__form,
+.dql-newsletter__form {
+	--wpforms-field-border-radius: 999px;
+	--wpforms-field-border-color: var(--global-palette6);
+	--wpforms-field-background-color: var(--global-palette9);
+	--wpforms-field-text-color: var(--global-palette3);
+	--wpforms-label-color: var(--global-palette5);
+	--wpforms-label-sublabel-color: var(--global-palette6);
+	--wpforms-button-border-radius: 999px;
+	/* WPForms dùng bản "-alt" cho nút lúc nghỉ và bản thường khi hover — ngược với
+	   cách đặt tên, nên ruby (nghỉ) nằm ở -alt, ruby đậm (hover) ở bản thường. */
+	--wpforms-button-background-color: var(--global-palette2);
+	--wpforms-button-background-color-alt: var(--global-palette1);
+	--wpforms-button-text-color: #fff;
+	--wpforms-button-text-color-alt: #fff;
+}
+
 /* Dòng dẫn nhỏ trên mỗi khối, kèm vạch khía — vết đục trên đá. */
 .dql-kicker {
 	display: flex;
@@ -752,15 +777,21 @@ a.dql-cat-label:hover {
 	transition: background-color var(--dql-transition), color var(--dql-transition);
 }
 
-.header-navigation .header-menu-container ul ul.sub-menu li a:hover,
-.header-navigation .header-menu-container ul ul.sub-menu li a:focus-visible {
-	background: var(--global-palette8);
-	color: var(--global-palette1);
-}
-
-.header-navigation .header-menu-container ul ul.sub-menu li.current-menu-item > a {
+/* Kadence in sẵn một nền đậm (--global-palette4) cho mục đang xem của menu con,
+   bằng bộ chọn `ul ul li.menu-item.current-menu-item > a`. Chữ ruby trên nền
+   than đá đó gần như không đọc được, nên phải đặt lại nền ở đây: đặc hiệu
+   ngang và nạp sau thì thắng. `.menu-item` đứng riêng để các trạng thái hover và
+   focus bên dưới không thua quy tắc của Kadence. */
+.header-navigation .header-menu-container ul ul.sub-menu li.menu-item.current-menu-item > a {
+	background: transparent;
 	color: var(--global-palette1);
 	font-weight: 500;
+}
+
+.header-navigation .header-menu-container ul ul.sub-menu li.menu-item > a:hover,
+.header-navigation .header-menu-container ul ul.sub-menu li.menu-item > a:focus-visible {
+	background: var(--global-palette8);
+	color: var(--global-palette1);
 }
 
 /* --- Nút tròn trên header: tìm kiếm (Kadence) và đổi chế độ (theme) --------

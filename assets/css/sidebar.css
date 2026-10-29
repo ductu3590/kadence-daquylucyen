@@ -188,8 +188,16 @@
 .primary-sidebar a {
 	color: var(--global-palette4);
 	text-decoration: none;
-	border-bottom: 0;
 	transition: color var(--dql-transition);
+}
+
+/* Bỏ gạch chân dạng border-bottom, TRỪ các liên kết tự vẽ viền quanh mình (nút,
+   chip thuật ngữ). Bộ chọn này đặc hiệu hơn `.dql-sb-nut { border }` nên nếu
+   không loại ra, viền dưới của chúng biến mất — hover chỉ còn viền ruby ở trên
+   và hai đầu. :where() giữ độ đặc hiệu không đổi. */
+.dql-sidebar a:where(:not(.dql-sb-nut, .dql-sb-tudien__chip)),
+.primary-sidebar a:where(:not(.dql-sb-nut, .dql-sb-tudien__chip)) {
+	border-bottom: 0;
 }
 
 .dql-sidebar a:hover,
@@ -380,18 +388,7 @@
  *      input[type=email]` — bộ chọn ngắn hơn sẽ thua và không có gì xảy ra.
  */
 .dql-sb-mail__form {
-	--wpforms-field-border-radius: 999px;
-	--wpforms-field-border-color: var(--global-palette7);
-	--wpforms-field-background-color: var(--global-palette9);
-	--wpforms-field-text-color: var(--global-palette3);
-	--wpforms-label-color: var(--global-palette5);
-	--wpforms-label-sublabel-color: var(--global-palette6);
-	--wpforms-button-border-radius: 999px;
-	--wpforms-button-background-color: var(--global-palette1);
-	--wpforms-button-background-color-alt: var(--global-palette2);
-	--wpforms-button-text-color: #fff;
-	--wpforms-button-text-color-alt: #fff;
-
+	/* Bộ biến --wpforms-* dùng chung nằm ở main.css, cạnh .dql-nut. */
 	text-align: left;
 }
 
