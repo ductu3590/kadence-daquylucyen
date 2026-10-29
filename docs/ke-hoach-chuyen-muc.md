@@ -693,3 +693,29 @@ Trang phân trang cũ (`/da-quy/page/2/`) bỏ qua: trang chuyên mục đang
 | `khuyen-tai-nam-vang-trang` | `https://daquylucyen.net.vn/khuyen-tai-nam/` |
 
 Sau khi tạo xong, bảo Claude kiểm lại: mỗi URL cũ phải trả 301 đúng một bước.
+
+### 14.3 Menu và cài đặt theme (2026-10-29)
+
+**Code** đẩy lên `main` (WP Pusher tự cập nhật trong khoảng 1 phút):
+- `943b6cf`: dải chip lấy chuyên mục cấp lá, hiện tên ngắn như bản 1
+  (`dql_strip_labels()`); menu ẩn chuyên mục 0 bài; thứ tự icon; hộp bài nền tảng.
+- `cda5481`: production đặt **Đá quý (#2)** làm chuyên mục mặc định, mà theme
+  giấu chuyên mục mặc định ở 6 chỗ (dải chip, chân trang, cột bên, trang
+  chuyên mục…) vì coi nó là "Chưa phân loại". Nên chip Đá quý biến mất. Sửa:
+  `dql_uncategorized_id()` chỉ giấu khi slug đúng là `uncategorized` /
+  `chua-phan-loai` / `khong-phan-loai`.
+- `5ea09f6`: xoá một lần bảng màu Sapphire 1.x (`#2563AC`) còn lưu trong option
+  `kadence_global_palette`, để Kadence dùng bảng ruby mặc định của theme. Cờ
+  `dql_bang_mau_2_0` đánh dấu đã chạy; sau đó đổi màu trong Customizer thì giữ.
+
+**Menu**: `node chay-production.mjs --ap-dung --menu` tạo "Menu chính (bản 1)"
+(#86), gán primary + mobile. Menu cũ #22 vẫn còn trong wp-admin, gán lại là quay
+về được. Lục Yên hiện hiện 3 mục con có bài (Du lịch, Địa chất & khoáng sản,
+Chợ đá quý); 5 mục còn lại tự hiện khi có bài đầu tiên.
+
+**Customizer → Trang chủ Đá Quý**: trụ 1–3 = Kiến thức đá quý (68) · Phong thủy
+& hợp mệnh (41) · Lục Yên (70); chuyên mục tiêu điểm = Lục Yên (70).
+
+**Đã khớp sẵn, không phải sửa**: font Fraunces + Be Vietnam Pro, bố cục header,
+logo ruby, logo chân trang trắng, chữ trang chủ (đúng mặc định theme). So CSS
+Kadence giữa Local và production: ngoài bảng màu không lệch dòng nào.
