@@ -76,3 +76,24 @@ function dql_editor_support() {
 	// Ghi đè ở đây sẽ cắt đứt liên kết đó.
 }
 add_action( 'after_setup_theme', 'dql_editor_support', 20 );
+
+/**
+ * Xoá cache trang của LiteSpeed sau mỗi lần triển khai theme.
+ *
+ * WP Pusher kéo code mới về nhưng không báo cho LiteSpeed, nên các trang đã
+ * cache (giữ tới 7 ngày) vẫn mang HTML cũ — sửa header, sửa script đầu trang
+ * đều không thấy tác dụng cho tới khi có người bấm "Purge All". WP Pusher ghi
+ * lại toàn bộ file mỗi lần triển khai, nên thời điểm sửa của style.css đổi:
+ * thấy số đó khác số đã lưu thì xoá cache một lần rồi lưu số mới.
+ */
+function dql_purge_sau_trien_khai() {
+	$moc = (string) filemtime( DQL_DIR . '/style.css' );
+
+	if ( get_option( 'dql_moc_trien_khai' ) === $moc ) {
+		return;
+	}
+
+	update_option( 'dql_moc_trien_khai', $moc, true );
+	do_action( 'litespeed_purge_all' );
+}
+add_action( 'wp_loaded', 'dql_purge_sau_trien_khai' );
