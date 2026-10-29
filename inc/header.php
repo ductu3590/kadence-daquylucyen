@@ -71,7 +71,7 @@ function dql_strip_terms() {
 		return $cache;
 	}
 
-	$mac_dinh = (int) get_option( 'default_category' );
+	$mac_dinh = dql_uncategorized_id();
 	$tat_ca   = get_categories(
 		array(
 			'hide_empty' => true,

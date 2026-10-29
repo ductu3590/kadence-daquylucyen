@@ -72,7 +72,7 @@ $dql_term = get_queried_object();
 								'number'  => 4,
 								'orderby' => 'count',
 								'order'   => 'DESC',
-								'exclude' => array( (int) get_option( 'default_category' ) ),
+								'exclude' => array( dql_uncategorized_id() ),
 							)
 						);
 

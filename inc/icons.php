@@ -427,7 +427,7 @@ function dql_post_main_category( $post = null ) {
 		return null;
 	}
 
-	$mac_dinh = (int) get_option( 'default_category' );
+	$mac_dinh = dql_uncategorized_id();
 	$ids      = wp_list_pluck( $cats, 'term_id' );
 	$ung_vien = array();
 

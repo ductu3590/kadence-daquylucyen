@@ -219,7 +219,7 @@ function dql_footer_markup() {
 								array(
 									'parent'     => 0,
 									'hide_empty' => false,
-									'exclude'    => array( (int) get_option( 'default_category' ) ),
+									'exclude'    => array( dql_uncategorized_id() ),
 								)
 							);
 

@@ -336,7 +336,7 @@ function dql_sb_card_end() {
  * @param int $toi_da Số mục tối đa.
  */
 function dql_sb_module_chuyen_muc( $toi_da = 8 ) {
-	$mac_dinh = (int) get_option( 'default_category' );
+	$mac_dinh = dql_uncategorized_id();
 
 	$cats = get_categories(
 		array(

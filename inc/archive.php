@@ -55,7 +55,7 @@ function dql_archive_nav_terms() {
 		// "Chưa phân loại" là cái rọ hứng bài chưa gán chuyên mục, không phải
 		// một chủ đề. Để nó đứng cạnh ba trụ nội dung làm người đọc tưởng đó
 		// cũng là một mảng kiến thức.
-		$default_cat = (int) get_option( 'default_category' );
+		$default_cat = dql_uncategorized_id();
 
 		$tops = array_filter(
 			$tops,

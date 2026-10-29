@@ -136,6 +136,27 @@ function dql_home_pillars() {
 }
 
 /**
+ * ID chuyên mục "Chưa phân loại", hoặc 0 nếu site không có.
+ *
+ * Theme giấu chuyên mục này khỏi dải chip, chân trang, cột bên vì nó là cái rọ
+ * hứng bài chưa gán chuyên mục, không phải chủ đề. Nhưng chuyên mục mặc định
+ * của WordPress không phải lúc nào cũng là "Chưa phân loại": production đặt
+ * "Đá quý" làm mặc định, giấu theo ID thì mất luôn một chủ đề thật. Nên chỉ
+ * giấu khi slug đúng là slug rọ.
+ *
+ * @return int
+ */
+function dql_uncategorized_id() {
+	$mac_dinh = get_term( (int) get_option( 'default_category' ), 'category' );
+
+	if ( ! $mac_dinh || is_wp_error( $mac_dinh ) ) {
+		return 0;
+	}
+
+	return in_array( $mac_dinh->slug, array( 'uncategorized', 'chua-phan-loai', 'khong-phan-loai' ), true ) ? (int) $mac_dinh->term_id : 0;
+}
+
+/**
  * Đếm số bài của một chuyên mục, tính cả bài nằm trong các chuyên mục con.
  *
  * WordPress lưu sẵn $term->count nhưng con số đó chỉ đếm bài gán TRỰC TIẾP vào
