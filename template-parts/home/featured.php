@@ -47,6 +47,8 @@ function dql_featured_card( $post, $size, $extra ) {
 	?>
 	<article class="dql-feat <?php echo esc_attr( $extra ); ?>">
 		<a class="dql-feat__link" href="<?php echo esc_url( get_permalink( $post ) ); ?>">
+			<?php // Ảnh và lớp phủ chung một khối để phóng to cùng nhau — xem home.css. ?>
+			<span class="dql-feat__anh">
 			<?php
 			echo get_the_post_thumbnail(
 				$post,
@@ -67,6 +69,7 @@ function dql_featured_card( $post, $size, $extra ) {
 			?>
 
 			<span class="dql-feat__phu"></span>
+			</span>
 
 			<span class="dql-feat__body">
 				<?php if ( $cat ) : ?>

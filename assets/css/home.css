@@ -72,9 +72,15 @@
 	min-height: 0;
 }
 
+/* Góc bo lộ viền sáng: Chrome cắt góc bo (cả overflow lẫn clip-path) riêng cho
+   từng lớp con. Ở mép bo, ảnh và lớp phủ cùng bị làm mờ răng cưa nên lớp phủ
+   tối không che hết ảnh — ảnh nền trắng lộ thành cung sáng, rõ nhất ở chế độ tối.
+   will-change đưa thẻ lên lớp ghép riêng: cả khối được ghép xong rồi mới cắt
+   góc một lần, mép chỉ còn màu tối của lớp phủ. */
 .dql-feat {
 	position: relative;
-	overflow: hidden;
+	clip-path: inset(0 round var(--dql-radius-lg));
+	will-change: transform;
 	border-radius: var(--dql-radius-lg);
 	background: var(--global-palette3);
 	min-height: 0;
@@ -89,6 +95,20 @@
 	border: 0;
 }
 
+/* Ảnh và lớp phủ phóng to chung một khối khi rê chuột. Phóng riêng ảnh thì ảnh
+   bị tách ra lớp ghép riêng và cắt mép khác lớp phủ: ở mép lẻ điểm ảnh, ảnh
+   lọt ra ngoài lớp phủ thành viền sáng quanh thẻ. */
+.dql-feat__anh {
+	position: absolute;
+	inset: 0;
+	display: block;
+	transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.dql-feat:hover .dql-feat__anh {
+	transform: scale(1.04);
+}
+
 .dql-feat__img {
 	position: absolute;
 	inset: 0;
@@ -96,18 +116,14 @@
 	height: 100%;
 	object-fit: cover;
 	display: block;
-	transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.dql-feat:hover .dql-feat__img {
-	transform: scale(1.04);
 }
 
 /* Lớp phủ than đá chuyển dần từ đáy. Bắt buộc: ảnh đá quý thường chụp trên
-   nền trắng, chữ trắng đặt thẳng lên sẽ không đọc được. */
+   nền trắng, chữ trắng đặt thẳng lên sẽ không đọc được.
+   Tràn ra 2px (bị thẻ cắt đi) để luôn phủ kín hàng điểm ảnh lẻ ở mép thẻ. */
 .dql-feat__phu {
 	position: absolute;
-	inset: 0;
+	inset: -2px;
 	background: linear-gradient(
 		to top,
 		rgba(21, 18, 15, 0.94) 0%,
