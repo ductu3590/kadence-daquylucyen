@@ -338,3 +338,23 @@ mà sửa lỗi đo được:
   chủ, là việc có thể làm độc lập với theme.
 - **Không chuyển trang morph (View Transitions)** cho tới khi đã chạy ổn trên
   LocalWP: hiệu ứng này đụng vào cách Kadence in ảnh đại diện, cần đo trước.
+
+## Logo bản 2.0: "Ruby trong đá hoa trắng" (29/10/2026)
+
+Logo xanh navy của 1.x lệch tông với bảng ruby/than đá, nên vẽ lại. Bản đầu tôi
+đưa ra là khối đá sáu mặt không có icon, chữ hai dòng: **sai so với canvas đã
+duyệt** và chủ site đã bác. Bản chốt bám đúng dấu hiệu nhận diện trên canvas:
+huy hiệu sáu cạnh lệch, gradient ruby có hạt, icon viên đá nét trắng, tên site
+một dòng.
+
+Ba phương án đưa Lục Yên vào huy hiệu, chủ site chọn B:
+
+| | Ý | Vì sao chọn / không chọn |
+|---|---|---|
+| A | Thêm đường đá gốc dưới viên đá | Sạch nhất nhưng vẫn là "đá quý" chung chung |
+| **B** | **Đáy huy hiệu là đá hoa trắng, viên đá mọc liền từ đá** | **Dấu ấn địa chất riêng của Lục Yên (ruby sinh trong marble), cũng là hình "đá chưa mài" của cả theme; còn đọc được ở 16px nhờ hai mảng màu rõ** |
+| C | Hoa văn ô trám thổ cẩm Tày dệt chìm trên mặt đá | Có chiều sâu ở cỡ lớn nhưng thành nhiễu từ 32px, người ngoài vùng không nhận ra |
+
+Kỹ thuật: SVG dựng bằng script, chữ Fraunces 600 (opsz 24, SOFT 60) chuyển thành
+đường nét bằng fontTools + HarfBuzz nên không phụ thuộc font cài trên máy; hạt
+đá là feTurbulence trong SVG. Tỉ lệ 5,2:1 giữ nguyên `logo_width` cũ.

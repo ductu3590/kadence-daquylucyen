@@ -429,21 +429,21 @@ và `dql_ad_min_paragraphs`.
 
 ## Logo
 
-Ba file trong Thư viện:
+Bản 2.0 (29/10/2026): phương án "Ruby trong đá hoa trắng". Huy hiệu sáu cạnh
+lệch đúng dấu hiệu nhận diện trên canvas (gradient ruby có hạt, icon viên đá nét
+trắng), đáy huy hiệu là đá hoa trắng Lục Yên có vân, viên đá mọc liền từ đá. Tên
+site một dòng Fraunces 600, "Lục Yên" màu ruby. Bản gốc SVG nằm ở `assets/brand/`
+(chữ đã chuyển thành đường nét, không cần font); PNG tải lên Thư viện media.
 
 | File | Dùng ở đâu | Gắn qua |
 |---|---|---|
-| `logo-header.png` (640×187) | Header | `custom_logo` |
-| `logo-header-trang.png` | Footer nền xanh đậm | theme mod `dql_footer_logo` |
-| `favicon.png` (512×512) | Biểu tượng trình duyệt | Site icon |
+| `logo-header.png` (1200×231) | Header, nền sáng | Customizer → Site Identity → Logo |
+| `logo-header-trang.png` (1200×231) | Footer nền than đá | Customizer → Footer → "Logo footer" (theme mod `dql_footer_logo`) |
+| `favicon.png` (512×512) | Biểu tượng trình duyệt | Customizer → Site Identity → Site Icon |
 
-File gốc là khối vuông 2000×2000 với **82% diện tích là khoảng trống**, và có cả
-dòng phụ "Kiến thức đá quý chuyên sâu". Bản dùng cho header đã cắt sát nội dung
-và **bỏ dòng phụ** — ở chiều cao 48px dòng đó không đọc được, mà lại làm khối
-logo bè ngang.
-
-Bản footer chỉ đổi **phần chữ** sang trắng, giữ nguyên màu viên đá. Logo gốc chữ
-màu navy đặt lên nền footer `#0F2E5F` sẽ gần như biến mất.
+Tỉ lệ 5,2:1, bằng logo xanh của bản 1.x, nên `logo_width` 165/150/135 trong
+`inc/brand.php` giữ nguyên và menu không đổi ở màn 1045px. PNG xuất 1200px
+(gấp đôi cỡ hiển thị) để nét trên màn Retina; WordPress tự tạo bản nhỏ.
 
 ### Hai bẫy đã mắc
 
