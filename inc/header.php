@@ -257,6 +257,30 @@ function dql_progress_render() {
 add_action( 'kadence_after_header', 'dql_progress_render', 4 );
 
 /**
+ * Nút "Lên đầu trang" nổi ở góc phải dưới — chỉ màn hình desktop.
+ *
+ * Viền nút chạy theo tỉ lệ trang đã cuộn (assets/js/ui.js). Nút hiện khi đã
+ * cuộn quá nửa màn hình. Điện thoại và tablet không hiện nút này (CSS ẩn):
+ * nút nổi che nội dung trên màn nhỏ, và footer đã có liên kết "Lên đầu trang".
+ *
+ * Là <button>, không phải liên kết neo: Kadence tự bắt mọi liên kết "#…" cùng
+ * trang để cuộn và đẩy "#wrapper" lên thanh địa chỉ. Nút chỉ hiện khi JS bật
+ * class is-hien, nên không cần đường lui không-JS — footer đã có liên kết neo.
+ */
+function dql_len_dau_render() {
+	?>
+	<button type="button" class="dql-len-dau" data-dql-len-dau aria-label="<?php esc_attr_e( 'Lên đầu trang', 'kadence-daquylucyen' ); ?>">
+		<svg class="dql-len-dau__vien" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+			<rect class="dql-len-dau__ray" x="1" y="1" width="46" height="46" rx="12" />
+			<rect class="dql-len-dau__chay" x="1" y="1" width="46" height="46" rx="12" pathLength="100" data-dql-len-dau-chay />
+		</svg>
+		<?php dql_the_icon( 'len', array( 'stroke' => 2 ) ); ?>
+	</button>
+	<?php
+}
+add_action( 'wp_footer', 'dql_len_dau_render' );
+
+/**
  * Nút tìm kiếm và nút đổi chế độ trên header điện thoại, đứng trước nút menu.
  *
  * Header điện thoại của Kadence là một bộ dựng riêng, không lấy phần tử từ

@@ -292,9 +292,9 @@ function dql_footer_markup() {
 
 				<?php
 				/*
-				 * Lên đầu trang: liên kết neo thuần, không JS. Kadence có nút
-				 * "scroll to top" riêng nhưng nó nổi lửng giữa trang; đặt ở
-				 * footer gọn hơn và không che nội dung.
+				 * Lên đầu trang: liên kết neo thuần, không JS. Không dùng nút
+				 * "scroll to top" của Kadence; desktop có nút nổi riêng của
+				 * theme (dql_len_dau_render() trong inc/header.php).
 				 */
 				?>
 				<a class="dql-footer__len" href="#wrapper">

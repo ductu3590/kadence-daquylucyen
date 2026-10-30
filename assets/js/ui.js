@@ -1,11 +1,13 @@
 /*
- * Giao diện Đá Thô — ba việc nhỏ, không phụ thuộc jQuery.
+ * Giao diện Đá Thô — bốn việc nhỏ, không phụ thuộc jQuery.
  *
  *   1. Nút đổi chế độ sáng/tối: lưu lựa chọn, đổi thuộc tính trên <html>.
  *      Nếu header chưa có nút (chủ site chưa đặt shortcode [dql_doi_nen] vào
  *      header builder), tự chèn một nút vào phần bên phải của header Kadence.
  *   2. Dải tiến độ đọc ở trang bài viết.
  *   3. Header dính: gắn class khi đã cuộn qua, để CSS đổi sang vật liệu mờ.
+ *   4. Nút lên đầu trang nổi (desktop): hiện khi đã cuộn, viền chạy theo
+ *      tỉ lệ trang đã cuộn.
  *
  * Nguyên tắc: không có script này thì mọi thứ vẫn dùng được — chế độ tối chỉ
  * theo hệ điều hành, không đổi tay được; tiến độ đọc không hiện.
@@ -160,10 +162,70 @@
 		capNhat();
 	}
 
+	/* --- 4. Nút lên đầu trang (desktop) ----------------------------------- */
+
+	function khoiDongLenDau() {
+		var nut = document.querySelector( '[data-dql-len-dau]' );
+
+		if ( ! nut ) {
+			return;
+		}
+
+		var chay = nut.querySelector( '[data-dql-len-dau-chay]' );
+		var ticking = false;
+
+		function capNhat() {
+			ticking = false;
+
+			// Dưới 1025px CSS ẩn hẳn nút (display: none): khỏi tính. Vẫn nghe
+			// resize nên cửa sổ rộng ra là nút chạy lại.
+			if ( ! nut.getClientRects().length ) {
+				return;
+			}
+
+			var cuon = window.scrollY;
+			var dai = document.documentElement.scrollHeight - window.innerHeight;
+			var pt = dai > 0 ? Math.min( 1, Math.max( 0, cuon / dai ) ) : 0;
+
+			nut.classList.toggle( 'is-hien', cuon > window.innerHeight * 0.5 );
+
+			if ( chay ) {
+				chay.style.strokeDashoffset = ( 100 - pt * 100 ).toFixed( 2 );
+			}
+		}
+
+		function onScroll() {
+			if ( ! ticking ) {
+				ticking = true;
+				window.requestAnimationFrame( capNhat );
+			}
+		}
+
+		nut.addEventListener( 'click', function () {
+			var giam = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+			var dich = document.getElementById( 'wrapper' );
+
+			window.scrollTo( { top: 0, behavior: giam ? 'auto' : 'smooth' } );
+
+			// Đưa tiêu điểm bàn phím về đầu trang, để Tab tiếp theo đi từ đầu.
+			if ( dich ) {
+				if ( ! dich.hasAttribute( 'tabindex' ) ) {
+					dich.setAttribute( 'tabindex', '-1' );
+				}
+				dich.focus( { preventScroll: true } );
+			}
+		} );
+
+		window.addEventListener( 'scroll', onScroll, { passive: true } );
+		window.addEventListener( 'resize', onScroll );
+		capNhat();
+	}
+
 	function batDau() {
 		khoiDongDoiNen();
 		khoiDongTienDo();
 		khoiDongHeader();
+		khoiDongLenDau();
 	}
 
 	if ( 'loading' === document.readyState ) {

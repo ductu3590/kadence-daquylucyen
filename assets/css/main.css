@@ -948,6 +948,105 @@ a.dql-cat-label:hover {
 	transition: transform 0.1s linear;
 }
 
+/* Desktop: dải dày 4px, dính sát mép trên cửa sổ (dưới admin bar nếu có) thay
+   vì nằm sau header, chuyển màu thạch anh tím sang hồng ngọc. Điện thoại giữ
+   vạch 2px như cũ. */
+@media (min-width: 1025px) {
+	.dql-progress {
+		position: fixed;
+		top: var(--wp-admin--admin-bar--height, 0px);
+		left: 0;
+		right: 0;
+		z-index: 100000;
+		height: 4px;
+		pointer-events: none;
+	}
+
+	.dql-progress__bar {
+		background: linear-gradient(90deg, var(--dql-da-amethyst), var(--global-palette1));
+	}
+}
+
+/* --- Nút lên đầu trang (desktop) ------------------------------------------
+ *
+ * Ô vuông bo góc 48px ở góc phải dưới. Viền ngoài là SVG: một ray mờ cố định
+ * và một nét màu chạy quanh theo tỉ lệ trang đã cuộn (ui.js đặt
+ * stroke-dashoffset). Ẩn bằng visibility để không bấm hay tab vào được.
+ */
+.dql-len-dau {
+	display: none;
+}
+
+@media (min-width: 1025px) {
+	.dql-len-dau {
+		position: fixed;
+		right: var(--dql-k6);
+		bottom: var(--dql-k6);
+		z-index: 90;
+		display: grid;
+		place-items: center;
+		width: 48px;
+		height: 48px;
+		padding: 0;
+		border: 0;
+		border-radius: var(--dql-radius);
+		background: var(--global-palette9);
+		color: var(--global-palette3);
+		box-shadow: var(--dql-bong);
+		cursor: pointer;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(12px);
+		transition: opacity var(--dql-transition), transform var(--dql-transition), visibility 0s linear 0.2s, color var(--dql-transition);
+	}
+
+	.dql-len-dau.is-hien {
+		opacity: 1;
+		visibility: visible;
+		transform: none;
+		transition-delay: 0s;
+	}
+
+	/* Đè kiểu button:hover / :focus của Kadence (nền màu nút). */
+	.dql-len-dau:hover,
+	.dql-len-dau:focus,
+	.dql-len-dau:focus-visible {
+		background: var(--global-palette9);
+		color: var(--global-palette1);
+		box-shadow: var(--dql-bong);
+	}
+
+	.dql-len-dau:hover .dql-icon {
+		transform: translateY(-2px);
+	}
+
+	.dql-len-dau .dql-icon {
+		width: 20px;
+		height: 20px;
+		transition: transform var(--dql-transition);
+	}
+
+	.dql-len-dau__vien {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		fill: none;
+		stroke-width: 2;
+	}
+
+	.dql-len-dau__ray {
+		stroke: var(--dql-vien);
+	}
+
+	.dql-len-dau__chay {
+		stroke: var(--global-palette1);
+		stroke-dasharray: 100;
+		stroke-dashoffset: 100;
+		transition: stroke-dashoffset 0.1s linear;
+	}
+}
+
 /* ---------------------------------------------------------------------------
  * 11. Footer — đá tối, hai tầng
  * ------------------------------------------------------------------------- */
