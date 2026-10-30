@@ -111,6 +111,9 @@ function dql_litespeed_khong_hoan( $loai_tru ) {
 	$loai_tru   = is_array( $loai_tru ) ? $loai_tru : array();
 	$loai_tru[] = '/assets/js/ui.js';
 	$loai_tru[] = 'var dqlUi';
+	// Màn tìm kiếm (inc/tim.php): nút kính lúp cũng nằm trên header, cùng lý do.
+	$loai_tru[] = '/assets/js/tim.js';
+	$loai_tru[] = 'var dqlTim';
 	return $loai_tru;
 }
 add_filter( 'litespeed_optm_js_defer_exc', 'dql_litespeed_khong_hoan' );

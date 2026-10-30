@@ -38,3 +38,4 @@ require_once DQL_DIR . '/inc/patterns.php';
 require_once DQL_DIR . '/inc/footer.php';
 require_once DQL_DIR . '/inc/sidebar.php';
 require_once DQL_DIR . '/inc/search.php';
+require_once DQL_DIR . '/inc/tim.php';

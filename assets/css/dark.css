@@ -214,6 +214,13 @@ html[data-dql-theme="dark"] .dql-hat-da.dql-hat::before {
 	opacity: 0.1;
 }
 
+/* Màn tìm kiếm: lớp phủ phía sau đậm hơn, không thì trang tối phía sau vẫn
+   sáng ngang bảng và bảng không nổi lên. */
+html[data-dql-theme="dark"] .dql-tim {
+	--dql-tim-nen: rgba(8, 7, 6, 0.66);
+	--dql-tim-nhat: color-mix(in srgb, var(--global-palette1) 13%, transparent);
+}
+
 /* --- Nút đổi chế độ -------------------------------------------------------- */
 
 html[data-dql-theme="dark"] .dql-doi-nen__toi {

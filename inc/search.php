@@ -91,19 +91,23 @@ function dql_search_endpoint( $request ) {
 			'post_status'    => 'publish',
 			's'              => $q,
 			'posts_per_page' => 5,
-			'no_found_rows'  => true,
+			// Cần tổng số bài khớp cho nút "Xem cả N kết quả" của màn tìm kiếm.
+			'no_found_rows'  => false,
 		)
 	);
 
 	foreach ( $b->posts as $p ) {
-		$cats = get_the_category( $p->ID );
-		$img  = get_the_post_thumbnail_url( $p, 'thumbnail' );
+		$cat = dql_post_main_category( $p );
+		$img = get_the_post_thumbnail_url( $p, 'thumbnail' );
 
 		$bai[] = array(
 			'tieu_de'    => get_the_title( $p ),
 			'url'        => get_permalink( $p ),
-			'chuyen_muc' => $cats ? $cats[0]->name : '',
+			'chuyen_muc' => $cat ? $cat->name : '',
+			'mau'        => $cat ? dql_category_color_key( $cat ) : 'ruby',
 			'anh'        => $img ? $img : '',
+			'ngay'       => get_the_modified_date( 'd/m/Y', $p ),
+			'phut'       => (int) dql_reading_time( $p ),
 			'thoi_gian'  => sprintf(
 				/* translators: %d: số phút đọc. */
 				_n( '%d phút đọc', '%d phút đọc', dql_reading_time( $p ), 'kadence-daquylucyen' ),
@@ -117,6 +121,7 @@ function dql_search_endpoint( $request ) {
 			'tu_dien' => $tu_dien,
 			'bai'     => $bai,
 			'tong'    => count( $tu_dien ) + count( $bai ),
+			'so_bai'  => (int) $b->found_posts,
 			'xem_het' => add_query_arg( 's', rawurlencode( $q ), home_url( '/' ) ),
 		)
 	);

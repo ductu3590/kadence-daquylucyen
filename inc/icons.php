@@ -154,6 +154,9 @@ function dql_icon_giao_dien() {
 		'ra-ngoai'   => '<path d="M7 17 17 7M8 7h9v9"/>',
 		'lien-ket'   => '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
 		'dung'       => '<path d="m5 12 5 5 9-10"/>',
+		'dong'       => '<path d="M6 6l12 12M18 6 6 18"/>',
+		'mui-ten'    => '<path d="M5 12h14M13 6l6 6-6 6"/>',
+		'xu-huong'   => '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
 	);
 }
 

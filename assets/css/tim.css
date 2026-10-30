@@ -1,0 +1,921 @@
+/*
+ * Màn tìm kiếm — bảng mở từ nút kính lúp trên header.
+ *
+ * Dựng theo artboard "10 · Màn tìm kiếm (điện thoại 390)" và "11 · Màn tìm
+ * kiếm (desktop)" trên canvas Đá Thô, trang Bản 1. Máy tính: bảng 760px nổi
+ * giữa trang, trang phía sau mờ đi. Điện thoại: chiếm trọn màn hình, ô tìm
+ * kiếm dính trên cùng, nút chữ "Đóng" như iOS.
+ *
+ * Chỉ dùng biến màu của theme, nên chế độ tối tự đổi theo (dark.css chỉ đặt
+ * thêm độ tối của lớp nền phía sau).
+ */
+
+.dql-tim {
+	--dql-tim-nen: rgba(28, 25, 23, 0.42);
+	--dql-tim-nhat: color-mix(in srgb, var(--global-palette1) 10%, transparent);
+
+	position: fixed;
+	inset: 0;
+	z-index: 100000; /* Trên cả thanh quản trị của WordPress (99999). */
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding: 84px var(--dql-k5) var(--dql-k5);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	color: var(--global-palette3);
+}
+
+.dql-tim[hidden] {
+	display: none;
+}
+
+/* Khóa cuộn trang phía sau khi bảng đang mở. */
+html.dql-tim-mo {
+	overflow: hidden;
+}
+
+.dql-tim__nen {
+	position: fixed;
+	inset: 0;
+	background: var(--dql-tim-nen);
+	-webkit-backdrop-filter: blur(10px) saturate(120%);
+	backdrop-filter: blur(10px) saturate(120%);
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+/* Cao tối đa bằng màn hình: phần thân tự cuộn, đầu và chân bảng đứng yên. */
+.dql-tim__bang {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: min(760px, 100%);
+	max-height: calc(100vh - 84px - var(--dql-k5));
+	max-height: calc(100dvh - 84px - var(--dql-k5));
+	border: var(--dql-border);
+	border-radius: 24px;
+	background: var(--global-palette9);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 32px 80px -24px rgba(0, 0, 0, 0.45);
+	overflow: hidden;
+	opacity: 0;
+	transform: translateY(-8px) scale(0.985);
+	transition: opacity 0.2s ease, transform var(--dql-transition);
+}
+
+/* Viên đá mờ ở góc — cùng họa tiết với đầu trang chuyên mục. */
+.dql-tim__bang::before {
+	content: "";
+	position: absolute;
+	top: -70px;
+	right: -60px;
+	width: 220px;
+	height: 220px;
+	clip-path: var(--dql-da-hinh);
+	background: var(--global-palette1);
+	opacity: 0.06;
+	pointer-events: none;
+}
+
+.dql-tim.is-mo .dql-tim__nen,
+.dql-tim.is-mo .dql-tim__bang {
+	opacity: 1;
+}
+
+.dql-tim.is-mo .dql-tim__bang {
+	transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * 1. Đầu bảng và ô tìm kiếm
+ * ------------------------------------------------------------------------- */
+
+.dql-tim__dau {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 22px 28px 0;
+}
+
+.dql-tim__ten {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: var(--dql-k2);
+	margin: 0;
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1.35;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--global-palette1);
+}
+
+.dql-tim__da {
+	flex: none;
+	width: 14px;
+	height: 14px;
+	clip-path: var(--dql-da-hinh);
+	background: var(--global-palette1);
+}
+
+.dql-tim__phim {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	min-width: 22px;
+	height: 22px;
+	padding: 0 6px;
+	border: 1px solid var(--dql-vien);
+	border-bottom-width: 2px;
+	border-radius: 6px;
+	background: var(--global-palette9);
+	font-family: inherit;
+	font-size: 0.6875rem;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--global-palette4);
+}
+
+.dql-tim__dong {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	border: var(--dql-border);
+	border-radius: 999px;
+	background: var(--global-palette9);
+	color: var(--global-palette3);
+	cursor: pointer;
+	transition: border-color var(--dql-transition);
+}
+
+.dql-tim__dong:hover,
+.dql-tim__dong:focus-visible {
+	border-color: var(--global-palette3);
+	background: var(--global-palette9);
+	color: var(--global-palette3);
+}
+
+.dql-tim__dong .dql-icon {
+	width: 18px;
+	height: 18px;
+}
+
+.dql-tim__form {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 14px 28px 0;
+}
+
+.dql-tim__o {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: 14px;
+	min-width: 0;
+	height: 62px;
+	padding: 0 8px 0 20px;
+	border: 1.5px solid var(--dql-vien);
+	border-radius: 18px;
+	background: var(--global-palette9);
+	transition: border-color var(--dql-transition), box-shadow var(--dql-transition);
+}
+
+.dql-tim__o:focus-within {
+	border-color: var(--global-palette3);
+	box-shadow: 0 0 0 4px var(--dql-tim-nhat);
+}
+
+.dql-tim__kinh {
+	flex: none;
+	width: 22px;
+	height: 22px;
+	color: var(--global-palette6);
+}
+
+/* Bộ chọn dài để thắng kiểu ô nhập chung của Kadence (viền, đệm, bóng). */
+.dql-tim .dql-tim__o .dql-tim__nhap {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	outline: 0;
+	font-family: inherit;
+	font-size: 1.1875rem;
+	font-weight: 500;
+	color: var(--global-palette3);
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.dql-tim .dql-tim__nhap::placeholder {
+	font-weight: 400;
+	color: var(--global-palette6);
+	opacity: 1;
+}
+
+.dql-tim .dql-tim__nhap::-webkit-search-cancel-button,
+.dql-tim .dql-tim__nhap::-webkit-search-decoration {
+	-webkit-appearance: none;
+	display: none;
+}
+
+.dql-tim__xoa {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: 999px;
+	background: var(--global-palette8);
+	color: var(--global-palette6);
+	cursor: pointer;
+}
+
+.dql-tim__xoa[hidden] {
+	display: none;
+}
+
+.dql-tim__xoa:hover {
+	background: var(--global-palette8);
+	color: var(--global-palette3);
+}
+
+.dql-tim__xoa .dql-icon {
+	width: 14px;
+	height: 14px;
+}
+
+.dql-tim__gui {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: var(--dql-k2);
+	height: 46px;
+	padding: 0 20px;
+	border: 0;
+	border-radius: 13px;
+	background: var(--global-palette1);
+	font-family: inherit;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--dql-gem-net);
+	cursor: pointer;
+	transition: background-color var(--dql-transition);
+}
+
+.dql-tim__gui:hover,
+.dql-tim__gui:focus-visible {
+	background: var(--global-palette2);
+	color: var(--dql-gem-net);
+}
+
+.dql-tim__gui .dql-icon {
+	width: 16px;
+	height: 16px;
+}
+
+/* Nút chữ "Đóng" chỉ dùng trên điện thoại. */
+.dql-tim__huy {
+	display: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Trạng thái vừa mở: hay tìm, bài mới, chuyên mục
+ * ------------------------------------------------------------------------- */
+
+.dql-tim__than {
+	position: relative;
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+.dql-tim__goi[hidden],
+.dql-tim__kq[hidden] {
+	display: none;
+}
+
+.dql-tim__khoi--hay {
+	padding: 22px 28px 6px;
+}
+
+.dql-tim .dql-tim__nhan {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin: 0 0 10px;
+	font-family: inherit;
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1.35;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--global-palette6);
+}
+
+.dql-tim__nhan small {
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+.dql-tim__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--dql-k2);
+}
+
+.dql-tim__chip {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: var(--dql-k2);
+	height: 36px;
+	padding: 0 14px 0 10px;
+	border: var(--dql-border);
+	border-radius: 999px;
+	background: var(--global-palette8);
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--global-palette3);
+	white-space: nowrap;
+	text-decoration: none;
+	transition: border-color var(--dql-transition);
+}
+
+.dql-tim__chip:hover,
+.dql-tim__chip:focus-visible {
+	border-color: var(--global-palette3);
+	color: var(--global-palette3);
+}
+
+.dql-tim__chip .dql-icon {
+	width: 14px;
+	height: 14px;
+	color: var(--global-palette6);
+}
+
+.dql-tim__luoi {
+	display: grid;
+	grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+	gap: 36px;
+	padding: 20px 28px 24px;
+}
+
+/* Một dòng bài — dùng chung cho bài mới và kết quả gợi ý. */
+.dql-tim__bai {
+	display: grid;
+	grid-template-columns: 56px minmax(0, 1fr);
+	gap: 14px;
+	align-items: center;
+	margin: 0 -12px;
+	padding: 10px 12px;
+	border-radius: 14px;
+	color: var(--global-palette3);
+	text-decoration: none;
+}
+
+.dql-tim__bai:hover,
+.dql-tim__bai:focus-visible,
+.dql-tim__bai.is-chon {
+	background: var(--global-palette8);
+	color: var(--global-palette3);
+}
+
+.dql-tim__bai.is-chon {
+	box-shadow: inset 3px 0 0 var(--global-palette1);
+}
+
+.dql-tim__anh {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	border-radius: var(--dql-radius);
+	background: var(--global-palette8);
+	overflow: hidden;
+}
+
+.dql-tim__anh img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 0;
+}
+
+.dql-tim__anh--trong {
+	background: color-mix(in srgb, var(--dql-gem) 12%, transparent);
+	color: var(--dql-gem);
+}
+
+.dql-tim__anh--trong .dql-icon {
+	width: 26px;
+	height: 26px;
+}
+
+.dql-tim__chu {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.dql-tim__muc {
+	font-size: 0.6875rem;
+	font-weight: 600;
+	line-height: 1.3;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--dql-gem);
+}
+
+.dql-tim__tieu-de {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	line-height: 1.4;
+	text-wrap: pretty;
+}
+
+.dql-tim__meta {
+	font-size: 0.75rem;
+	line-height: 1.35;
+	color: var(--global-palette6);
+}
+
+.dql-tim__cmuc {
+	display: flex;
+	flex-direction: column;
+}
+
+.dql-tim__cm {
+	display: flex;
+	align-items: center;
+	gap: var(--dql-k3);
+	min-height: 44px;
+	margin: 0 -10px;
+	padding: 0 10px;
+	border-radius: var(--dql-radius);
+	font-size: 0.9375rem;
+	font-weight: 500;
+	color: var(--global-palette3);
+	text-decoration: none;
+}
+
+.dql-tim__cm:hover,
+.dql-tim__cm:focus-visible {
+	background: var(--global-palette8);
+	color: var(--global-palette3);
+}
+
+.dql-tim__cm-ten {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dql-tim__cm-so {
+	font-size: 0.8125rem;
+	color: var(--global-palette6);
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Trạng thái đang gõ: thuật ngữ, bài khớp, nút xem hết
+ * ------------------------------------------------------------------------- */
+
+.dql-tim__kq {
+	padding: 22px 28px;
+}
+
+.dql-tim__kq .dql-tim__khoi + .dql-tim__khoi {
+	margin-top: 20px;
+}
+
+.dql-tim__tu {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	margin-bottom: var(--dql-k2);
+	padding: 14px 16px;
+	border-radius: 16px;
+	background: var(--dql-tim-nhat);
+	color: var(--global-palette3);
+	text-decoration: none;
+}
+
+.dql-tim__tu:hover,
+.dql-tim__tu:focus-visible,
+.dql-tim__tu.is-chon {
+	color: var(--global-palette3);
+	box-shadow: inset 0 0 0 1.5px var(--global-palette1);
+}
+
+.dql-tim__tu-da {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	clip-path: var(--dql-da-hinh);
+	background: var(--global-palette1);
+	color: var(--dql-gem-net);
+}
+
+.dql-tim__tu-da .dql-icon {
+	width: 18px;
+	height: 18px;
+}
+
+.dql-tim__tu-chu {
+	flex: 1;
+	min-width: 0;
+}
+
+.dql-tim__tu-ten {
+	display: block;
+	font-family: var(--global-heading-font-family, Georgia, serif);
+	font-size: 1.125rem;
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.dql-tim__tu-nghia {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.45;
+	color: var(--global-palette4);
+}
+
+.dql-tim__tu-di {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 4px;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--global-palette1);
+	white-space: nowrap;
+}
+
+.dql-tim__tu-di .dql-icon {
+	width: 14px;
+	height: 14px;
+}
+
+.dql-tim__het {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--dql-k2);
+	min-height: 48px;
+	margin-top: 14px;
+	padding: 0 var(--dql-k4);
+	border: 1px solid var(--global-palette3);
+	border-radius: 999px;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--global-palette3);
+	text-align: center;
+	text-decoration: none;
+	transition: background-color var(--dql-transition), color var(--dql-transition);
+}
+
+.dql-tim__het:hover,
+.dql-tim__het:focus-visible,
+.dql-tim__het.is-chon {
+	background: var(--global-palette3);
+	color: var(--global-palette9);
+}
+
+.dql-tim__het .dql-icon {
+	flex: none;
+	width: 16px;
+	height: 16px;
+}
+
+.dql-tim__trong {
+	margin: 0;
+	padding: var(--dql-k2) 0 var(--dql-k3);
+	font-size: 0.9375rem;
+	line-height: 1.55;
+	color: var(--global-palette4);
+}
+
+.dql-tim mark {
+	padding: 0 2px;
+	border-radius: 4px;
+	background: var(--dql-tim-nhat);
+	color: var(--global-palette1);
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Chân bảng
+ * ------------------------------------------------------------------------- */
+
+.dql-tim__chan {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--dql-k4);
+	padding: var(--dql-k3) 28px;
+	border-top: var(--dql-border);
+	background: var(--global-palette8);
+}
+
+.dql-tim__goi-y-phim {
+	display: flex;
+	gap: 14px;
+	font-size: 0.75rem;
+	color: var(--global-palette6);
+}
+
+.dql-tim__goi-y-phim > span {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.dql-tim__goi-y-phim .dql-tim__phim + .dql-tim__phim {
+	margin-left: -2px;
+}
+
+.dql-tim__tu-dien {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--global-palette1);
+	text-decoration: none;
+}
+
+.dql-tim__tu-dien:hover {
+	color: var(--global-palette2);
+}
+
+.dql-tim__tu-dien .dql-icon {
+	width: 14px;
+	height: 14px;
+}
+
+/* Gợi ý phím tắt vô nghĩa trên máy cảm ứng. */
+@media (hover: none) {
+	.dql-tim__chi-may {
+		display: none;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Điện thoại: chiếm trọn màn hình
+ * ------------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+	.dql-tim {
+		align-items: stretch;
+		padding: 0;
+	}
+
+	/* Điện thoại: cả bảng cuộn như một trang, ô tìm kiếm dính trên cùng. */
+	.dql-tim__bang {
+		width: 100%;
+		min-height: 100%;
+		max-height: none;
+		border: 0;
+		border-radius: 0;
+		background: var(--global-palette8);
+		box-shadow: none;
+		overflow: visible;
+		transform: translateY(12px);
+	}
+
+	.dql-tim__bang::before {
+		top: -60px;
+		right: -80px;
+	}
+
+	.dql-tim__dau,
+	.dql-tim__chi-may,
+	.dql-tim__gui {
+		display: none;
+	}
+
+	.dql-tim__than {
+		flex: none;
+		overflow: visible;
+	}
+
+	.dql-tim__form {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		margin: 0;
+		padding: 14px var(--dql-k4) var(--dql-k3);
+		border-bottom: var(--dql-border);
+		background: var(--global-palette8);
+	}
+
+	.dql-tim__o {
+		gap: 10px;
+		height: 48px;
+		padding: 0 6px 0 14px;
+		border-radius: 14px;
+	}
+
+	.dql-tim__kinh {
+		width: 20px;
+		height: 20px;
+	}
+
+	/* 16px: nhỏ hơn thì Safari iOS tự phóng to trang khi chạm vào ô. */
+	.dql-tim .dql-tim__o .dql-tim__nhap {
+		font-size: 1rem;
+	}
+
+	.dql-tim__xoa {
+		width: 36px;
+		height: 36px;
+	}
+
+	.dql-tim__huy {
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+		height: 44px;
+		padding: 0 4px;
+		border: 0;
+		background: none;
+		font-family: inherit;
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--global-palette1);
+		cursor: pointer;
+	}
+
+	.dql-tim__huy:hover,
+	.dql-tim__huy:focus-visible {
+		background: none;
+		color: var(--global-palette1);
+	}
+
+	.dql-tim__khoi--hay {
+		padding: 20px 0 4px;
+	}
+
+	.dql-tim__khoi--hay .dql-tim__nhan {
+		padding: 0 var(--dql-k4);
+	}
+
+	.dql-tim__chips {
+		flex-wrap: nowrap;
+		padding: 0 var(--dql-k4) 4px;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.dql-tim__chips::-webkit-scrollbar {
+		display: none;
+	}
+
+	.dql-tim__chip {
+		height: 44px;
+		padding: 0 16px 0 12px;
+		background: var(--global-palette9);
+		font-size: 0.9375rem;
+	}
+
+	/* Chuyên mục lên trước bài mới, thành lưới hai cột thẻ. */
+	.dql-tim__luoi {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		padding: 0;
+	}
+
+	.dql-tim__khoi--muc {
+		order: -1;
+		padding: 20px var(--dql-k4) 4px;
+	}
+
+	.dql-tim__cmuc {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--dql-k2);
+	}
+
+	.dql-tim__cm {
+		gap: var(--dql-k2);
+		min-height: 52px;
+		margin: 0;
+		padding: 0 12px;
+		border: var(--dql-border);
+		border-radius: 14px;
+		background: var(--global-palette9);
+	}
+
+	.dql-tim__cm:hover {
+		background: var(--global-palette9);
+	}
+
+	.dql-tim__khoi--bai {
+		padding: 24px var(--dql-k4) 8px;
+	}
+
+	.dql-tim__bai {
+		grid-template-columns: 64px minmax(0, 1fr);
+		margin: 0;
+		padding: 12px 0;
+		border-bottom: var(--dql-border);
+		border-radius: 0;
+	}
+
+	.dql-tim__bai:last-child {
+		border-bottom: 0;
+	}
+
+	.dql-tim__bai:hover,
+	.dql-tim__bai.is-chon {
+		background: none;
+		box-shadow: none;
+	}
+
+	.dql-tim__anh {
+		width: 64px;
+		height: 64px;
+		border-radius: 14px;
+	}
+
+	.dql-tim__kq {
+		padding: 20px var(--dql-k4) 8px;
+	}
+
+	.dql-tim__tu {
+		align-items: flex-start;
+		flex-wrap: wrap;
+		padding: 14px;
+	}
+
+	.dql-tim__tu-da {
+		width: 36px;
+		height: 36px;
+	}
+
+	/* Chữ giải nghĩa lấy trọn chiều ngang; "Từ điển →" xuống dòng dưới. */
+	.dql-tim__tu-chu {
+		flex: 1 1 calc(100% - 52px);
+	}
+
+	.dql-tim__tu-di {
+		margin-left: 50px;
+	}
+
+	.dql-tim__chan {
+		justify-content: center;
+		margin-top: auto;
+		padding: 20px var(--dql-k4) calc(20px + env(safe-area-inset-bottom));
+		border: 0;
+		background: none;
+	}
+
+	.dql-tim__tu-dien {
+		margin: 0;
+		font-size: 0.875rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dql-tim__nen,
+	.dql-tim__bang {
+		transition: none;
+	}
+}
